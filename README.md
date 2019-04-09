@@ -7,6 +7,12 @@ Project: Anaphora Resolution
 Author: Tanmai Khanna
 
 ## Executing the code
+Use Python 3 to execute the code.
+
+Apertium Streamparser is required to run the code.
+Install from requirements using:
+
+`pip3 install -r requirements.txt`
 
 Anaphora Resolution where input is read byte by byte:
 
