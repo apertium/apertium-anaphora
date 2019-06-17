@@ -25,7 +25,45 @@ public:
 
 		for (auto i = input_LU.begin(); i != input_LU.end(); ++i)
 		{
-			if(*i == '/')
+			if(*i == '\\') //dealing with escaped characters
+			{	
+				if(seenSlash == 0) //sl
+				{	
+					if(seenTag == 1) //in a tag
+					{
+						temptag.push_back(*i);
+						sl_form.push_back(*i);
+						++i;
+						temptag.push_back(*i);
+						sl_form.push_back(*i);
+					}
+					else //not in a tag
+					{
+						sl_form.push_back(*i);
+						++i;
+						sl_form.push_back(*i);
+					}
+				}
+				else //tl
+				{
+					if(seenTag == 1) //in a tag
+					{
+						temptag.push_back(*i);
+						tl_form.push_back(*i);
+						++i;
+						temptag.push_back(*i);
+						tl_form.push_back(*i);
+					}
+					else //not in a tag
+					{
+						tl_form.push_back(*i);
+						++i;
+						tl_form.push_back(*i);
+					}
+				}
+			}
+
+			else if(*i == '/')
 				seenSlash++;
 
 			else if(seenSlash == 0) //sl
