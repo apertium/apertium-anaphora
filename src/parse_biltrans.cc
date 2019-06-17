@@ -1,140 +1,129 @@
+#include "parse_biltrans.h"
+
 #include<vector>
 #include<iostream>
 
 using namespace std;
 
-class LexicalUnit
+LexicalUnit::LexicalUnit(vector<char> input_LU)
 {
+	int seenSlash = 0;
+	int seenTag = 0;
 
-private:
+	vector<char> temptag;
 
-	vector<char> sl_form;
-	vector<char> tl_form;
-
-	vector< vector<char> > sl_tags;
-	vector< vector<char> > tl_tags;
-
-public:
-
-	LexicalUnit(vector<char> input_LU)
+	for (auto i = input_LU.begin(); i != input_LU.end(); ++i)
 	{
-		int seenSlash = 0;
-		int seenTag = 0;
-
-		vector<char> temptag;
-
-		for (auto i = input_LU.begin(); i != input_LU.end(); ++i)
-		{
-			if(*i == '\\') //dealing with escaped characters
+		if(*i == '\\') //dealing with escaped characters
+		{	
+			if(seenSlash == 0) //sl
 			{	
-				if(seenSlash == 0) //sl
-				{	
-					if(seenTag == 1) //in a tag
-					{
-						temptag.push_back(*i);
-						sl_form.push_back(*i);
-						++i;
-						temptag.push_back(*i);
-						sl_form.push_back(*i);
-					}
-					else //not in a tag
-					{
-						sl_form.push_back(*i);
-						++i;
-						sl_form.push_back(*i);
-					}
-				}
-				else //tl
+				if(seenTag == 1) //in a tag
 				{
-					if(seenTag == 1) //in a tag
-					{
-						temptag.push_back(*i);
-						tl_form.push_back(*i);
-						++i;
-						temptag.push_back(*i);
-						tl_form.push_back(*i);
-					}
-					else //not in a tag
-					{
-						tl_form.push_back(*i);
-						++i;
-						tl_form.push_back(*i);
-					}
+					temptag.push_back(*i);
+					sl_form.push_back(*i);
+					++i;
+					temptag.push_back(*i);
+					sl_form.push_back(*i);
+				}
+				else //not in a tag
+				{
+					sl_form.push_back(*i);
+					++i;
+					sl_form.push_back(*i);
 				}
 			}
-
-			else if(*i == '/')
-				seenSlash++;
-
-			else if(seenSlash == 0) //sl
-			{
-				sl_form.push_back(*i); //add to the sl form
-
-				if(*i == '<') //start reading tag
-					seenTag++;
-
-				else if(seenTag == 1) //inside a tag
-				{
-					if(*i == '>') //if tag ends
-					{
-						seenTag--;
-						sl_tags.push_back(temptag); //add tag to list of sl tags
-
-						temptag.clear();
-					}
-					else
-					{
-						temptag.push_back(*i); //add char to current tag
-					}
-				}
-			}
-
 			else //tl
 			{
-				tl_form.push_back(*i); //add to the tl form
-
-				if(*i == '<') //start reading tag
-					seenTag++;
-
-				else if(seenTag == 1) //inside a tag
+				if(seenTag == 1) //in a tag
 				{
-					if(*i == '>') //if tag ends
-					{
-						seenTag--;
-						tl_tags.push_back(temptag); //add tag to list of tl tags
+					temptag.push_back(*i);
+					tl_form.push_back(*i);
+					++i;
+					temptag.push_back(*i);
+					tl_form.push_back(*i);
+				}
+				else //not in a tag
+				{
+					tl_form.push_back(*i);
+					++i;
+					tl_form.push_back(*i);
+				}
+			}
+		}
 
-						temptag.clear();
-					}
-					else
-					{
-						temptag.push_back(*i); //add char to current tag
-					}
+		else if(*i == '/')
+			seenSlash++;
+
+		else if(seenSlash == 0) //sl
+		{
+			sl_form.push_back(*i); //add to the sl form
+
+			if(*i == '<') //start reading tag
+				seenTag++;
+
+			else if(seenTag == 1) //inside a tag
+			{
+				if(*i == '>') //if tag ends
+				{
+					seenTag--;
+					sl_tags.push_back(temptag); //add tag to list of sl tags
+
+					temptag.clear();
+				}
+				else
+				{
+					temptag.push_back(*i); //add char to current tag
+				}
+			}
+		}
+
+		else //tl
+		{
+			tl_form.push_back(*i); //add to the tl form
+
+			if(*i == '<') //start reading tag
+				seenTag++;
+
+			else if(seenTag == 1) //inside a tag
+			{
+				if(*i == '>') //if tag ends
+				{
+					seenTag--;
+					tl_tags.push_back(temptag); //add tag to list of tl tags
+
+					temptag.clear();
+				}
+				else
+				{
+					temptag.push_back(*i); //add char to current tag
 				}
 			}
 		}
 	}
+}
 
-	vector<char> get_sl_form()
-	{
-		return sl_form;
-	}
+vector<char> LexicalUnit::get_sl_form()
+{
+	return sl_form;
+}
 
-	vector<char> get_tl_form()
-	{
-		return tl_form;
-	}
+vector<char> LexicalUnit::get_tl_form()
+{
+	return tl_form;
+}
 
-	vector< vector<char> > get_sl_tags()
-	{
-		return sl_tags;
-	}
+vector< vector<char> > LexicalUnit::get_sl_tags()
+{
+	return sl_tags;
+}
 
-	vector< vector<char> > get_tl_tags()
-	{
-		return tl_tags;
-	}
+vector< vector<char> > LexicalUnit::get_tl_tags()
+{
+	return tl_tags;
+}
 	
-};
+/* Uncomment to test this code
 
 void print(vector<char> const &input)
 {
@@ -181,6 +170,8 @@ int main()
 
 	return 0;
 }
+
+*/
 
 
 
