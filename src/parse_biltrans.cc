@@ -33,7 +33,7 @@ LexicalUnit::LexicalUnit(vector<char> input_LU)
 					sl_form.push_back(*i);
 				}
 			}
-			else //tl
+			else if(seenSlash == 1) //tl (only first entry)
 			{
 				if(seenTag == 1) //in a tag
 				{
@@ -49,6 +49,10 @@ LexicalUnit::LexicalUnit(vector<char> input_LU)
 					++i;
 					tl_form.push_back(*i);
 				}
+			}
+			else
+			{
+				break;
 			}
 		}
 
@@ -78,7 +82,7 @@ LexicalUnit::LexicalUnit(vector<char> input_LU)
 			}
 		}
 
-		else //tl
+		else if(seenSlash == 1) //tl (only first entry in tl)
 		{
 			tl_form.push_back(*i); //add to the tl form
 
@@ -99,6 +103,11 @@ LexicalUnit::LexicalUnit(vector<char> input_LU)
 					temptag.push_back(*i); //add char to current tag
 				}
 			}
+		}
+
+		else //if tl has more than one entry
+		{
+			break;
 		}
 	}
 }
@@ -123,7 +132,7 @@ vector< vector<char> > LexicalUnit::get_tl_tags()
 	return tl_tags;
 }
 	
-/* Uncomment to test this code
+/* //Uncomment to test this code
 
 void print(vector<char> const &input)
 {
@@ -172,6 +181,5 @@ int main()
 }
 
 */
-
 
 

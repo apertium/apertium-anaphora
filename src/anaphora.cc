@@ -126,9 +126,9 @@ int main()
 				fprintf(stdout, "%c", input_char);
 				
 			}
-
-			input_char = fgetc(stdin);
 		}
+
+		input_char = fgetc(stdin);
 	}
 
 	//fclose(fin);
