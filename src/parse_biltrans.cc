@@ -13,7 +13,7 @@ LexicalUnit::LexicalUnit(wstring input_LU)
 
 	wstring temptag;
 
-	for (auto i = input_LU.begin(); i != input_LU.end(); ++i)
+	for (std::wstring::iterator i = input_LU.begin(); i != input_LU.end(); ++i)
 	{
 		if(*i == '\\') //dealing with escaped characters
 		{	
@@ -133,7 +133,7 @@ vector< wstring > LexicalUnit::get_tl_tags()
 	return tl_tags;
 }
 	
- /* //Uncomment to test this code
+/* //Uncomment to test this code
 
 void print_tags(vector< wstring > input)
 {
@@ -172,7 +172,6 @@ int main()
 
 	return 0;
 }
-
 */
 
 

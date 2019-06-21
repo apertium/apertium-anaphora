@@ -4,18 +4,11 @@
 #include<fstream>
 #include<string>
 #include<iostream>
+#include<vector>
 
 using namespace std;
 
-void print(vector<char> const &input)
-{
-	for (int i = 0; i < input.size(); i++) 
-	{
-		fprintf(stdout, "%c", input.at(i));
-	}
-}
-
-int contains(vector< vector<char> > tags, vector<char> tag)
+int contains(vector<wstring> tags, wstring tag)
 {
 	if(std::find(tags.begin(), tags.end(), tag) != tags.end())
 		return 1;
@@ -23,34 +16,38 @@ int contains(vector< vector<char> > tags, vector<char> tag)
 		return 0;
 }
 
-vector<char> string_to_vector(char *string_in)
+int contains_any(vector<wstring> tags, vector<wstring> candidates)
 {
-	vector<char> temp;
+	for(vector<wstring>::iterator it=candidates.begin();it!=candidates.end();++it)
+	{
+		if(std::find(tags.begin(), tags.end(), *it) != tags.end())
+			return 1; //if any of the tags in candidates matches the tags list
+	}
 
-	for(int i = 0; i < strlen(string_in); i++)
-		temp.push_back(string_in[i]);
-
-	return temp;
+	return 0; //if no matches
 }
+
+struct sal_score
+{
+	wstring wordform;
+	int score;
+};
 
 int main()
 {
+
+	vector< sal_score > scores;
+	sal_score unit;
+
 	char input_char;
 
 	input_char = fgetc(stdin);
 
-	vector<char> input_stream;
-	vector<char> last_noun;
+	wstring input_stream;
+	wstring last_noun;
 
-	vector<char> temp_form;
-	vector< vector<char> > temp_tags;
-
-	vector<char> antecedent_tag = string_to_vector("n");
-
-	vector<char> r1_tag1 = string_to_vector("det");
-	vector<char> r1_tag2 = string_to_vector("pos");
-
-	vector<char> r2_tag1 = string_to_vector("prn");
+	wstring temp_form;
+	vector< wstring > temp_tags;
 
 	int flag_LU = 0;
 
@@ -102,16 +99,16 @@ int main()
 
 					if(!temp_form.empty()) //if TL exists
 					{
-						if(contains(temp_tags, antecedent_tag)) 
+						if(contains(temp_tags, L"n")) 
 							/* if TL contains antecedent tag */
 						{
 							last_noun = temp_form;
 						}
 
-						if((contains(temp_tags, r1_tag1) && contains(temp_tags, r1_tag2)) || contains(temp_tags, r2_tag1))
+						if((contains(temp_tags, L"det") && contains(temp_tags, L"pos")) || contains(temp_tags, L"prn"))
 							/* if TL tags has det and pos OR just prn*/
 						{
-							print(last_noun); //add last seen noun to LU
+							wcout << last_noun; //add last seen noun to LU //CHANGE
 						}
 					}
 
