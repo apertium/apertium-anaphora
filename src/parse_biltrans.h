@@ -2,6 +2,7 @@
 #define _PARSEBILTRANS_
 
 #include<vector>
+#include<string>
 
 using namespace std;
 
@@ -15,49 +16,49 @@ private:
 	/**
    	 * Source language word and tags
      */
-	vector<char> sl_form;
+	wstring sl_form;
 
 	/**
    	 * Target language word and tags
      */
-	vector<char> tl_form;
+	wstring tl_form;
 
 	/**
    	 * Source language tags
      */
-	vector< vector<char> > sl_tags;
+	vector< wstring > sl_tags;
 
 	/**
    	 * Target language tags
      */
-	vector< vector<char> > tl_tags;
+	vector< wstring > tl_tags;
 
 public:
 	/**
    	 * Constructor to fill all variables
    	 * @param input_LU one lexical unit between ^ and $ (excluded)
      */
-	LexicalUnit(vector<char> input_LU);
+	LexicalUnit(wstring input_LU);
 
 	/**
    	 * Return the Source Language Form
      */
-	vector<char> get_sl_form();
+	wstring get_sl_form();
 
 	/**
    	 * Return the Target Language Form
      */
-	vector<char> get_tl_form();
+	wstring get_tl_form();
 
 	/**
    	 * Return the Source Language Tags
      */
-	vector< vector<char> > get_sl_tags();
+	vector< wstring > get_sl_tags();
 
 	/**
    	 * Return the Target Language Form
      */
-	vector< vector<char> > get_tl_tags();
+	vector< wstring > get_tl_tags();
 
 };
 

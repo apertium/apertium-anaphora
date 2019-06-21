@@ -2,15 +2,16 @@
 
 #include<vector>
 #include<iostream>
+#include<string>
 
 using namespace std;
 
-LexicalUnit::LexicalUnit(vector<char> input_LU)
+LexicalUnit::LexicalUnit(wstring input_LU)
 {
 	int seenSlash = 0;
 	int seenTag = 0;
 
-	vector<char> temptag;
+	wstring temptag;
 
 	for (auto i = input_LU.begin(); i != input_LU.end(); ++i)
 	{
@@ -112,48 +113,40 @@ LexicalUnit::LexicalUnit(vector<char> input_LU)
 	}
 }
 
-vector<char> LexicalUnit::get_sl_form()
+wstring LexicalUnit::get_sl_form()
 {
 	return sl_form;
 }
 
-vector<char> LexicalUnit::get_tl_form()
+wstring LexicalUnit::get_tl_form()
 {
 	return tl_form;
 }
 
-vector< vector<char> > LexicalUnit::get_sl_tags()
+vector< wstring > LexicalUnit::get_sl_tags()
 {
 	return sl_tags;
 }
 
-vector< vector<char> > LexicalUnit::get_tl_tags()
+vector< wstring > LexicalUnit::get_tl_tags()
 {
 	return tl_tags;
 }
 	
-/* //Uncomment to test this code
+ /* //Uncomment to test this code
 
-void print(vector<char> const &input)
+void print_tags(vector< wstring > input)
 {
-	for (int i = 0; i < input.size(); i++) {
-		std::cout << input.at(i);
-	}
-}
-
-void print_tags(vector< vector<char> > const &input)
-{
-	for (int i = 0; i < input.size(); i++) {
-		for(int j = 0; j < input.at(i).size(); j++) {
-			cout << input.at(i).at(j);
-		}
+	for (int i = 0; i < input.size(); i++) 
+	{
+		wcout << input[i];
 		cout << " ";
 	}
 }
 
 int main()
 {
-	vector<char> inputlu;
+	wstring inputlu;
 	char input_char;
 	
 	input_char = fgetc(stdin);
@@ -168,11 +161,11 @@ int main()
 	LexicalUnit lu(inputlu);
 
 	cout << "SL: ";
-	print(lu.get_sl_form());
+	wcout << lu.get_sl_form();
 	cout << endl << "SL tags: ";
 	print_tags(lu.get_sl_tags());
 	cout << endl << "TL: ";
-	print(lu.get_tl_form());
+	wcout << lu.get_tl_form();
 	cout << endl << "TL tags: ";
 	print_tags(lu.get_tl_tags());
 	cout << endl;
