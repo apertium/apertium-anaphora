@@ -33,15 +33,22 @@ struct sal_score
 	int score;
 };
 
-int main()
+int main(int argc, char **argv)
 {
+	int nullFlush = 0;
+
+	if(argc > 1) //flag given
+	{
+		if(strcmp(argv[1], "-z") == 0)
+			nullFlush = 1;
+	}
 
 	vector< sal_score > scores;
 	sal_score unit;
 
 	char input_char;
 
-	input_char = fgetc(stdin);
+	input_char = fgetc(stdin); //change to fgetwc ?
 
 	wstring input_stream;
 	wstring last_noun;
@@ -51,10 +58,20 @@ int main()
 
 	int flag_LU = 0;
 
-	while(input_char!=EOF)
+	while(input_char!=EOF) // should I made feof(input_char) ?
 	{
+		if(nullFlush && input_char == '\0') //nullFlush
+		{
+			scores.clear();
+			input_stream.clear();
+			last_noun.clear();
+			temp_form.clear();
+			temp_tags.clear();
 
-		if(input_char == '\\') //dealing with escaped characters
+			flag_LU = 0;
+		}
+
+		else if(input_char == '\\') //dealing with escaped characters
 		{
 			if(flag_LU == 0) // not inside LU
 			{
@@ -99,14 +116,14 @@ int main()
 
 					if(!temp_form.empty()) //if TL exists
 					{
-						if(contains(temp_tags, L"n")) 
+						if(contains(temp_tags, L"n"))
 							/* if TL contains antecedent tag */
 						{
 							last_noun = temp_form;
 						}
 
-						if((contains(temp_tags, L"det") && contains(temp_tags, L"pos")) || contains(temp_tags, L"prn"))
-							/* if TL tags has det and pos OR just prn*/
+						if( (contains(temp_tags, L"det") && contains(temp_tags, L"pos") ) || contains(temp_tags, L"prn") || contains(temp_tags, L"vblex") || contains(temp_tags, L"vbser") || contains(temp_tags, L"vbhaver") || contains(temp_tags, L"vbmod") )
+							/* if TL tags has det and pos OR just prn OR any verb*/
 						{
 							wcout << last_noun; //add last seen noun to LU //CHANGE
 						}
