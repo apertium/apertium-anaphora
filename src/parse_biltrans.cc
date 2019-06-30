@@ -6,7 +6,7 @@
 
 using namespace std;
 
-LexicalUnit::LexicalUnit(wstring input_LU)
+ParseLexicalUnit::ParseLexicalUnit(wstring input_LU)
 {
 	int seenSlash = 0;
 	int seenTag = 0;
@@ -113,22 +113,22 @@ LexicalUnit::LexicalUnit(wstring input_LU)
 	}
 }
 
-wstring LexicalUnit::get_sl_form()
+wstring ParseLexicalUnit::get_sl_form()
 {
 	return sl_form;
 }
 
-wstring LexicalUnit::get_tl_form()
+wstring ParseLexicalUnit::get_tl_form()
 {
 	return tl_form;
 }
 
-vector< wstring > LexicalUnit::get_sl_tags()
+vector< wstring > ParseLexicalUnit::get_sl_tags()
 {
 	return sl_tags;
 }
 
-vector< wstring > LexicalUnit::get_tl_tags()
+vector< wstring > ParseLexicalUnit::get_tl_tags()
 {
 	return tl_tags;
 }
@@ -158,7 +158,7 @@ int main()
 		input_char = fgetc(stdin);
 	}
 
-	LexicalUnit lu(inputlu);
+	ParseLexicalUnit lu(inputlu);
 
 	cout << "SL: ";
 	wcout << lu.get_sl_form();

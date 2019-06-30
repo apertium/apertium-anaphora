@@ -9,7 +9,7 @@ using namespace std;
 /**
  * Parsing Lexical Unit from biltrans for the Anaphora Module
  */
-class LexicalUnit
+class ParseLexicalUnit
 {
 
 private:
@@ -38,7 +38,7 @@ public:
    	 * Constructor to fill all variables
    	 * @param input_LU one lexical unit between ^ and $ (excluded)
      */
-	LexicalUnit(wstring input_LU);
+	ParseLexicalUnit(wstring input_LU);
 
 	/**
    	 * Return the Source Language Form

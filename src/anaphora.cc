@@ -1,4 +1,5 @@
 #include "parse_biltrans.h"
+#include "score.h"
 
 #include<cstdio>
 #include<fstream>
@@ -7,31 +8,6 @@
 #include<vector>
 
 using namespace std;
-
-int contains(vector<wstring> tags, wstring tag)
-{
-	if(std::find(tags.begin(), tags.end(), tag) != tags.end())
-		return 1;
-	else
-		return 0;
-}
-
-int contains_any(vector<wstring> tags, vector<wstring> candidates)
-{
-	for(vector<wstring>::iterator it=candidates.begin();it!=candidates.end();++it)
-	{
-		if(std::find(tags.begin(), tags.end(), *it) != tags.end())
-			return 1; //if any of the tags in candidates matches the tags list
-	}
-
-	return 0; //if no matches
-}
-
-struct sal_score
-{
-	wstring wordform;
-	int score;
-};
 
 int main(int argc, char **argv)
 {
@@ -109,7 +85,7 @@ int main(int argc, char **argv)
 					fprintf(stdout, "/"); //for extra LU
 
 					flag_LU = 0;
-					LexicalUnit LU(input_stream); //Parse Lexical Unit using parse_biltrans
+					ParseLexicalUnit LU(input_stream); //Parse Lexical Unit using parse_biltrans
 
 					temp_form = LU.get_tl_form();  
 					temp_tags = LU.get_tl_tags();
