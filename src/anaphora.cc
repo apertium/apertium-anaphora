@@ -19,15 +19,15 @@ int main(int argc, char **argv)
 			nullFlush = 1;
 	}
 
-	vector< sal_score > scores;
-	sal_score unit;
-
 	char input_char;
 
 	input_char = fgetc(stdin); //change to fgetwc ?
 
 	wstring input_stream;
-	wstring last_noun;
+
+	wstring final_ref;
+	Scoring score_module;
+	unsigned int gen_id = 0;
 
 	wstring temp_form;
 	vector< wstring > temp_tags;
@@ -38,11 +38,11 @@ int main(int argc, char **argv)
 	{
 		if(nullFlush && input_char == '\0') //nullFlush
 		{
-			scores.clear();
 			input_stream.clear();
-			last_noun.clear();
 			temp_form.clear();
 			temp_tags.clear();
+			gen_id = 0;
+			score_module.clear();
 
 			flag_LU = 0;
 		}
@@ -82,7 +82,9 @@ int main(int argc, char **argv)
 			{
 				if(input_char == '$')
 				{
-					fprintf(stdout, "/"); //for extra LU
+					gen_id++; //generate ids for LUs
+
+					fprintf(stdout, "/"); //for adding ref
 
 					flag_LU = 0;
 					ParseLexicalUnit LU(input_stream); //Parse Lexical Unit using parse_biltrans
@@ -92,21 +94,18 @@ int main(int argc, char **argv)
 
 					if(!temp_form.empty()) //if TL exists
 					{
-						if(contains(temp_tags, L"n"))
-							/* if TL contains antecedent tag */
-						{
-							last_noun = temp_form;
-						}
+						score_module.add_word(gen_id, temp_form, temp_tags);
 
-						if( (contains(temp_tags, L"det") && contains(temp_tags, L"pos") ) || contains(temp_tags, L"prn") || contains(temp_tags, L"vblex") || contains(temp_tags, L"vbser") || contains(temp_tags, L"vbhaver") || contains(temp_tags, L"vbmod") )
+						if( (contains(temp_tags, L"det") && contains(temp_tags, L"pos") ) )//|| contains(temp_tags, L"prn") || contains(temp_tags, L"vblex") || contains(temp_tags, L"vbser") || contains(temp_tags, L"vbhaver") || contains(temp_tags, L"vbmod") )
 							/* if TL tags has det and pos OR just prn OR any verb*/
 						{
-							wcout << last_noun; //add last seen noun to LU //CHANGE
+							//cout << "\n\nHERE!!\n\n";
+							final_ref = score_module.get_antecedent();
+							wcout << final_ref; //add antecedent to side ref of LU
 						}
 					}
 
 					input_stream.clear();
-
 				}
 				else
 				{
