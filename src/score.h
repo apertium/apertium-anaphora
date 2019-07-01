@@ -17,6 +17,7 @@ struct antecedent
 	unsigned int id;
 	wstring wordform;
 	int score;
+	wstring tl_wordform;
 };
 
 int contains(vector<wstring> tags, wstring tag);
@@ -29,7 +30,7 @@ private:
 	vector<antecedent> antecedent_list;
 
 public:
-	void add_word(unsigned int input_id, wstring input_wordform, vector< wstring > pos_tags);
+	void add_word(unsigned int input_id, wstring input_wordform, vector< wstring > pos_tags, wstring input_tl_wordform);
 	void referential_distance();
 	wstring get_antecedent();
 	void clear();

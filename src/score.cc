@@ -25,14 +25,14 @@ int contains_any(vector<wstring> tags, vector<wstring> candidates)
 	return 0; //if no matches
 }
 
-void Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wstring > pos_tags)
+void Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wstring > pos_tags, wstring input_tl_wordform)
 {
 	unique_LU input_LU = {input_id, input_wordform};
 	context.push_back(input_LU); //add to context
 
 	if(contains(pos_tags, L"n")) //if word is a noun, add to antecedents list with score=2 as it is in current context(referential distance)
 	{
-		antecedent input_antecedent = {input_id, input_wordform, 2};
+		antecedent input_antecedent = {input_id, input_wordform, 2, input_tl_wordform};
 		antecedent_list.push_back(input_antecedent);
 	}
 
@@ -44,7 +44,7 @@ void Scoring::referential_distance()
 {
 	for(vector<antecedent>::iterator it=antecedent_list.begin();it!=antecedent_list.end();++it)
 	{
-		if((*it).score > -2) //-2 is minimum score
+		if((*it).score > -1) //-1 is minimum score
 			(*it).score--;
 	}
 }
@@ -64,10 +64,11 @@ wstring Scoring::get_antecedent()
 			final_antecedent.id = (*it).id;
 			final_antecedent.wordform = (*it).wordform;
 			final_antecedent.score = (*it).score;
+			final_antecedent.tl_wordform = (*it).tl_wordform;
 		}
 	}
 
-	return final_antecedent.wordform;
+	return final_antecedent.tl_wordform;
 }
 
 void Scoring::clear()
