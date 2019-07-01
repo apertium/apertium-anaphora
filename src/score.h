@@ -29,7 +29,10 @@ private:
 	vector<unique_LU> context;
 	vector<antecedent> antecedent_list;
 
+	int firstNP_flag;
+
 public:
+	Scoring();
 	void add_word(unsigned int input_id, wstring input_wordform, vector< wstring > pos_tags, wstring input_tl_wordform);
 	void referential_distance();
 	wstring get_antecedent();

@@ -25,6 +25,11 @@ int contains_any(vector<wstring> tags, vector<wstring> candidates)
 	return 0; //if no matches
 }
 
+Scoring::Scoring()
+{
+	firstNP_flag = 1;
+}
+
 void Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wstring > pos_tags, wstring input_tl_wordform)
 {
 	unique_LU input_LU = {input_id, input_wordform};
@@ -33,11 +38,21 @@ void Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< ws
 	if(contains(pos_tags, L"n")) //if word is a noun, add to antecedents list with score=2 as it is in current context(referential distance)
 	{
 		antecedent input_antecedent = {input_id, input_wordform, 2, input_tl_wordform};
+
+		if(firstNP_flag == 1)
+		{
+			input_antecedent.score++; //+1 for First NP in a sentence
+			firstNP_flag = 0;
+		}
+		
 		antecedent_list.push_back(input_antecedent);
 	}
 
 	if(contains(pos_tags, L"sent")) //if reached sentence boundary, reduce scores (referential distance)
+	{
+		firstNP_flag = 1;
 		referential_distance();
+	}
 }
 
 void Scoring::referential_distance()
