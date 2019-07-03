@@ -16,6 +16,9 @@ struct unique_LU
 	int score;
 };
 
+void showq(queue < vector<unique_LU> > gq);
+void clearq(queue <unique_LU> q);
+
 int contains(vector<wstring> tags, wstring tag);
 int contains_any(vector<wstring> tags, vector<wstring> candidates);
 
@@ -28,8 +31,8 @@ private:
 
 public:
 	void add_word(unsigned int input_id, wstring input_wordform, vector< wstring > pos_tags, wstring input_tl_wordform);
-	void referential_distance();
-	wstring get_antecedent();
+	//void referential_distance();
+	//wstring get_antecedent();
 	void clear();
 };
 

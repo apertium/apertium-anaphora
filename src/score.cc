@@ -7,18 +7,29 @@
 
 using namespace std;
 
-void showq(queue <int> gq) 
+void showq(queue < vector<unique_LU> > gq) 
 { 
-    queue <int> g = gq; 
+    queue < vector<unique_LU> > g = gq; 
+    
     while (!g.empty()) 
     { 
-        cout << '\t' << g.front(); 
+    	vector<unique_LU> temp_sentence = g.front();
+    	
+    	cout << "\n";
+    	for (std::vector<unique_LU>::iterator i = temp_sentence.begin(); i != temp_sentence.end(); ++i)
+    	{
+    		wcout << (*i).wordform;
+    		cout << ": " << (*i).score << " ";
+    	}
+
+    	cout << "\n";
+
         g.pop(); 
     } 
     cout << '\n'; 
 } 
 
-void clearq(queue <unique_LU> q)
+void clearq(queue < vector<unique_LU> > q)
 {
 	while(!q.empty())
 	{
@@ -67,7 +78,7 @@ void Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< ws
 	{
 		context.back().push_back(input_LU); //add word to the latest added sentence in the queue
 
-		if((contains(input_LU.pos_tags, L"sent")))
+		if(contains(input_LU.pos_tags, L"sent"))
 		{
 			vector<unique_LU> new_sentence;
 
@@ -75,9 +86,16 @@ void Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< ws
 
 			if(context.size() > 4)
 				context.pop(); //remove the earliest added sentence (We only want current and three previous sentences in context)
-		}	
+		}
+		else if( contains(input_LU.pos_tags, L"det") && contains(input_LU.pos_tags, L"pos")	)
+		{
+			anaphor = input_LU;
+			showq(context);
+		}
 	}
 }
+
+/*
 
 void Scoring::referential_distance()
 {
@@ -109,9 +127,11 @@ wstring Scoring::get_antecedent()
 
 	return final_antecedent.tl_wordform;
 }
-
-void Scoring::clear()
+*/
+void Scoring::clear() //use a destructor?
 {
-	context.clear();
-	antecedent_list.clear();
+	clearq(context); //empty queue
+
+	unique_LU EmptyStruct;
+	anaphor = EmptyStruct; //empty anaphor variable
 }

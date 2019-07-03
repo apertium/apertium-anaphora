@@ -104,12 +104,14 @@ int main(int argc, char **argv)
 					{
 						score_module.add_word(gen_id, sl_form, sl_tags, tl_form);
 
+						/*
 						if( (contains(sl_tags, L"det") && contains(sl_tags, L"pos") ) )//|| contains(temp_tags, L"prn") || contains(temp_tags, L"vblex") || contains(temp_tags, L"vbser") || contains(temp_tags, L"vbhaver") || contains(temp_tags, L"vbmod") )
-							/* if TL tags has det and pos OR just prn OR any verb*/
+							//if TL tags has det and pos OR just prn OR any verb
 						{
 							final_ref = score_module.get_antecedent();
 							wcout << final_ref; //add antecedent to side ref of LU //CHANGE
 						}
+						*/
 					}
 
 					input_stream.clear();
