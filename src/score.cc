@@ -3,8 +3,28 @@
 #include<string>
 #include<vector>
 #include<iostream>
+#include<queue>
 
 using namespace std;
+
+void showq(queue <int> gq) 
+{ 
+    queue <int> g = gq; 
+    while (!g.empty()) 
+    { 
+        cout << '\t' << g.front(); 
+        g.pop(); 
+    } 
+    cout << '\n'; 
+} 
+
+void clearq(queue <unique_LU> q)
+{
+	while(!q.empty())
+	{
+		q.pop();
+	}
+}
 
 int contains(vector<wstring> tags, wstring tag)
 {
@@ -25,33 +45,37 @@ int contains_any(vector<wstring> tags, vector<wstring> candidates)
 	return 0; //if no matches
 }
 
-Scoring::Scoring()
+void Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wstring > input_pos_tags, wstring input_tl_wordform)
 {
-	firstNP_flag = 1;
-}
+	unique_LU input_LU = {input_id, input_wordform, input_tl_wordform, input_pos_tags, 0}; //initialise in context with score 0
 
-void Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wstring > pos_tags, wstring input_tl_wordform)
-{
-	unique_LU input_LU = {input_id, input_wordform};
-	context.push_back(input_LU); //add to context
-
-	if(contains(pos_tags, L"n")) //if word is a noun, add to antecedents list with score=2 as it is in current context(referential distance)
+	if(context.empty()) //if queue is empty 
 	{
-		antecedent input_antecedent = {input_id, input_wordform, 2, input_tl_wordform};
+		vector<unique_LU> sentence; //initialise a sentence
+		sentence.push_back(input_LU); //add the first word to the sentence
 
-		if(firstNP_flag == 1)
+		context.push(sentence);
+
+		if(contains(input_LU.pos_tags, L"sent")) //if sentence end (somehow the first LU is a sentence end)
 		{
-			input_antecedent.score++; //+1 for First NP in a sentence
-			firstNP_flag = 0;
-		}
-		
-		antecedent_list.push_back(input_antecedent);
-	}
+			vector<unique_LU> new_sentence;
 
-	if(contains(pos_tags, L"sent")) //if reached sentence boundary, reduce scores (referential distance)
+			context.push(new_sentence); //add an empty sentence
+		}
+	}
+	else //if queue is not empty
 	{
-		firstNP_flag = 1;
-		referential_distance();
+		context.back().push_back(input_LU); //add word to the latest added sentence in the queue
+
+		if((contains(input_LU.pos_tags, L"sent")))
+		{
+			vector<unique_LU> new_sentence;
+
+			context.push(new_sentence); //add an empty sentence
+
+			if(context.size() > 4)
+				context.pop(); //remove the earliest added sentence (We only want current and three previous sentences in context)
+		}	
 	}
 }
 
