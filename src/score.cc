@@ -86,19 +86,35 @@ void Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< ws
 		}
 		else if( contains(input_LU.pos_tags, L"det") && contains(input_LU.pos_tags, L"pos")	)
 		{
-			//apply_indicators(input_LU);
-			showq(context);
+			apply_indicators(input_LU);
 		}
 	}
 }
-/*
+
 void Scoring::apply_indicators(unique_LU anaphor)
 {
-	//Start going through sentences(current to earliest) and apply all indicators to modify scores of the NPs
+	int distance_marker = 2; //starts from 2 for current sentence and reduces till -1 as we go to previous sentences
 
+	//Start going through sentences(current to earliest) and apply all indicators to modify scores of the NPs 
+	for(deque< vector<unique_LU> >::reverse_iterator i = context.rbegin(); i!=context.rend(); ++i) //read through the queue in reverse
+	{
+		cout<<"\nSentence:" << distance_marker << "\n";
+		for (vector<unique_LU>::iterator j = (*i).begin(); j!=(*i).end(); ++j) //read through sentence
+		{
+			if(contains((*j).pos_tags, L"n"))
+			{
+				
+				wcout<<(*j).wordform;
+				cout << ": " << (*j).score << "\n";
+			}
+		}
+
+		if(distance_marker > -1)
+			distance_marker--;
+	}
 }
 
-
+/*
 
 void Scoring::referential_distance()
 {
