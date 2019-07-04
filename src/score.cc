@@ -4,16 +4,15 @@
 #include<vector>
 #include<iostream>
 #include<queue>
+#include<deque>
 
 using namespace std;
 
-void showq(queue < vector<unique_LU> > gq) 
-{ 
-    queue < vector<unique_LU> > g = gq; 
-    
-    while (!g.empty()) 
-    { 
-    	vector<unique_LU> temp_sentence = g.front();
+void showq(deque < vector<unique_LU> > gq) 
+{   
+    for(std::deque < vector<unique_LU> >::iterator j = gq.begin(); j != gq.end(); ++j)
+    {
+    	vector<unique_LU> temp_sentence = *j;
     	
     	cout << "\n";
     	for (std::vector<unique_LU>::iterator i = temp_sentence.begin(); i != temp_sentence.end(); ++i)
@@ -23,8 +22,6 @@ void showq(queue < vector<unique_LU> > gq)
     	}
 
     	cout << "\n";
-
-        g.pop(); 
     } 
     cout << '\n'; 
 } 
@@ -65,13 +62,13 @@ void Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< ws
 		vector<unique_LU> sentence; //initialise a sentence
 		sentence.push_back(input_LU); //add the first word to the sentence
 
-		context.push(sentence);
+		context.push_back(sentence);
 
 		if(contains(input_LU.pos_tags, L"sent")) //if sentence end (somehow the first LU is a sentence end)
 		{
 			vector<unique_LU> new_sentence;
 
-			context.push(new_sentence); //add an empty sentence
+			context.push_back(new_sentence); //add an empty sentence
 		}
 	}
 	else //if queue is not empty
@@ -82,20 +79,26 @@ void Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< ws
 		{
 			vector<unique_LU> new_sentence;
 
-			context.push(new_sentence); //add an empty sentence
+			context.push_back(new_sentence); //add an empty sentence
 
 			if(context.size() > 4)
-				context.pop(); //remove the earliest added sentence (We only want current and three previous sentences in context)
+				context.pop_front(); //remove the earliest added sentence (We only want current and three previous sentences in context)
 		}
 		else if( contains(input_LU.pos_tags, L"det") && contains(input_LU.pos_tags, L"pos")	)
 		{
-			anaphor = input_LU;
+			//apply_indicators(input_LU);
 			showq(context);
 		}
 	}
 }
-
 /*
+void Scoring::apply_indicators(unique_LU anaphor)
+{
+	//Start going through sentences(current to earliest) and apply all indicators to modify scores of the NPs
+
+}
+
+
 
 void Scoring::referential_distance()
 {
@@ -130,8 +133,8 @@ wstring Scoring::get_antecedent()
 */
 void Scoring::clear() //use a destructor?
 {
-	clearq(context); //empty queue
+	context.clear(); //empty queue
 
-	unique_LU EmptyStruct;
-	anaphor = EmptyStruct; //empty anaphor variable
+	//unique_LU EmptyStruct;
+	//anaphor = EmptyStruct; //empty anaphor variable
 }

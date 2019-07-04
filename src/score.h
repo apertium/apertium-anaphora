@@ -4,6 +4,7 @@
 #include<string>
 #include<vector>
 #include<queue>
+#include<deque>
 
 using namespace std;
 
@@ -16,8 +17,7 @@ struct unique_LU
 	int score;
 };
 
-void showq(queue < vector<unique_LU> > gq);
-void clearq(queue <unique_LU> q);
+void showq(deque < vector<unique_LU> > gq);
 
 int contains(vector<wstring> tags, wstring tag);
 int contains_any(vector<wstring> tags, vector<wstring> candidates);
@@ -25,8 +25,8 @@ int contains_any(vector<wstring> tags, vector<wstring> candidates);
 class Scoring
 {
 private:
-	queue< vector<unique_LU> > context; //A queue of sentences. Each sentence is a vector of Lexical Units
-	unique_LU anaphor;
+	deque< vector<unique_LU> > context; //A queue of sentences. Each sentence is a vector of Lexical Units
+	//unique_LU anaphor;
 	//vector<antecedent> antecedent_list; //A list of antecedents
 
 public:
