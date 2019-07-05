@@ -31,6 +31,7 @@ private:
 public:
 	void add_word(unsigned int input_id, wstring input_wordform, vector< wstring > pos_tags, wstring input_tl_wordform);
 	void apply_indicators(unique_LU anaphor);
+	int check_agreement(vector<wstring> antecedent_tags, vector<wstring> anaphor_tags);
 	//void referential_distance();
 	//wstring get_antecedent();
 	void clear();

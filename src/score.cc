@@ -103,9 +103,28 @@ void Scoring::apply_indicators(unique_LU anaphor)
 		{
 			if(contains((*j).pos_tags, L"n"))
 			{
-				
-				wcout<<(*j).wordform;
-				cout << ": " << (*j).score << "\n";
+				unique_LU antecedent = *j; //create a temp copy of the potential antecedent
+
+				//Check Agreement
+				if(check_agreement(antecedent.pos_tags, anaphor.pos_tags))
+				{
+					//Add or Remove Indicators Here
+					
+
+					//Boosting Indicators
+
+
+					//Impeding Indicators
+
+					wcout << antecedent.wordform;
+					cout << ": " << antecedent.score << "\n";
+				}
+				else
+				{
+					cout << "\nAgreement Failed for:";
+					wcout << antecedent.wordform;
+					cout << "\n";
+				}
 			}
 		}
 
@@ -114,16 +133,29 @@ void Scoring::apply_indicators(unique_LU anaphor)
 	}
 }
 
-/*
-
-void Scoring::referential_distance()
+int Scoring::check_agreement(vector<wstring> antecedent_tags, vector<wstring> anaphor_tags)
 {
-	for(vector<antecedent>::iterator it=antecedent_list.begin();it!=antecedent_list.end();++it)
-	{
-		if((*it).score > -1) //-1 is minimum score
-			(*it).score--;
-	}
+	if(contains(anaphor_tags, L"f") && contains(antecedent_tags, L"m"))
+		return 0;
+
+	if(contains(anaphor_tags, L"m") && contains(antecedent_tags, L"f"))
+		return 0;
+
+	if(contains(anaphor_tags, L"sg") && contains(antecedent_tags, L"pl"))
+		return 0;
+
+	if(contains(anaphor_tags, L"pl") && contains(antecedent_tags, L"sg"))
+		return 0;
+
+	return 1;
 }
+
+/*
+void Scoring::referential_distance(int distance)
+{
+	
+}
+
 
 wstring Scoring::get_antecedent()
 {
