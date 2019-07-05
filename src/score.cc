@@ -18,7 +18,6 @@ void showq(deque < vector<unique_LU> > gq)
     	for (std::vector<unique_LU>::iterator i = temp_sentence.begin(); i != temp_sentence.end(); ++i)
     	{
     		wcout << (*i).wordform;
-    		cout << ": " << (*i).score << " ";
     	}
 
     	cout << "\n";
@@ -53,9 +52,9 @@ int contains_any(vector<wstring> tags, vector<wstring> candidates)
 	return 0; //if no matches
 }
 
-void Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wstring > input_pos_tags, wstring input_tl_wordform)
+int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wstring > input_pos_tags, wstring input_tl_wordform)
 {
-	unique_LU input_LU = {input_id, input_wordform, input_tl_wordform, input_pos_tags, 0}; //initialise in context with score 0
+	unique_LU input_LU = {input_id, input_wordform, input_tl_wordform, input_pos_tags}; //initialise in context with score 0
 
 	if(context.empty()) //if queue is empty 
 	{
@@ -87,42 +86,50 @@ void Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< ws
 		else if( contains(input_LU.pos_tags, L"det") && contains(input_LU.pos_tags, L"pos")	)
 		{
 			apply_indicators(input_LU);
+			return 1; //To show that something will be added in side ref
 		}
 	}
+
+	return 0; //To show that nothing will be added in side ref
 }
 
 void Scoring::apply_indicators(unique_LU anaphor)
 {
 	int distance_marker = 2; //starts from 2 for current sentence and reduces till -1 as we go to previous sentences
+	int temp_score;
+
+	antecedent_list.clear(); //clear it from the last anaphor (might not want it as a class variable)
 
 	//Start going through sentences(current to earliest) and apply all indicators to modify scores of the NPs 
 	for(deque< vector<unique_LU> >::reverse_iterator i = context.rbegin(); i!=context.rend(); ++i) //read through the queue in reverse
 	{
-		cout<<"\nSentence:" << distance_marker << "\n";
 		for (vector<unique_LU>::iterator j = (*i).begin(); j!=(*i).end(); ++j) //read through sentence
 		{
 			if(contains((*j).pos_tags, L"n"))
 			{
-				unique_LU antecedent = *j; //create a temp copy of the potential antecedent
+				temp_score = 0;
+
+				unique_LU antecedent_LU = *j; //create a temp copy of the potential antecedent
 
 				//Check Agreement
-				if(check_agreement(antecedent.pos_tags, anaphor.pos_tags))
+				if(check_agreement(antecedent_LU.pos_tags, anaphor.pos_tags))
 				{
 					//Add or Remove Indicators Here
-					
+					temp_score += distance_marker; //Referential Distance (based on how close the antecedent is to the pronoun)
 
 					//Boosting Indicators
 
 
 					//Impeding Indicators
 
-					wcout << antecedent.wordform;
-					cout << ": " << antecedent.score << "\n";
+					//Add to Antecedent List with Score
+					antecedent antecedent_with_score = {antecedent_LU, temp_score};
+					antecedent_list.push_back(antecedent_with_score);
 				}
 				else
 				{
 					cout << "\nAgreement Failed for:";
-					wcout << antecedent.wordform;
+					wcout << antecedent_LU.wordform;
 					cout << "\n";
 				}
 			}
@@ -141,44 +148,28 @@ int Scoring::check_agreement(vector<wstring> antecedent_tags, vector<wstring> an
 	if(contains(anaphor_tags, L"m") && contains(antecedent_tags, L"f"))
 		return 0;
 
-	if(contains(anaphor_tags, L"sg") && contains(antecedent_tags, L"pl"))
-		return 0;
-
-	if(contains(anaphor_tags, L"pl") && contains(antecedent_tags, L"sg"))
-		return 0;
-
 	return 1;
-}
-
-/*
-void Scoring::referential_distance(int distance)
-{
-	
 }
 
 
 wstring Scoring::get_antecedent()
 {
-	antecedent final_antecedent = {0, L"", -5};
+	unique_LU final_antecedent_LU;
+	antecedent final_antecedent = {final_antecedent_LU, -5};
 
-	for(vector<antecedent>::iterator it=antecedent_list.begin();it!=antecedent_list.end();++it)
+	for(vector<antecedent>::reverse_iterator it=antecedent_list.rbegin();it!=antecedent_list.rend();++it) //read it in reverse so that we read from furthest to nearest
 	{
-		cout << "\n" << (*it).id << ": ";
-		wcout << (*it).wordform;
+		cout << "\n" << (*it).LU.id << ": ";
+		wcout << (*it).LU.wordform;
 		cout << " : " << (*it).score << "\n";
 
 		if((*it).score >= final_antecedent.score) //picking the highest scored and latest added (most recent) antecedent
-		{
-			final_antecedent.id = (*it).id;
-			final_antecedent.wordform = (*it).wordform;
-			final_antecedent.score = (*it).score;
-			final_antecedent.tl_wordform = (*it).tl_wordform;
-		}
+			final_antecedent = (*it);
 	}
 
-	return final_antecedent.tl_wordform;
+	return final_antecedent.LU.tl_wordform;
 }
-*/
+
 void Scoring::clear() //use a destructor?
 {
 	context.clear(); //empty queue

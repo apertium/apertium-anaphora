@@ -102,16 +102,17 @@ int main(int argc, char **argv)
 
 					if(!tl_form.empty()) //if TL exists
 					{
-						score_module.add_word(gen_id, sl_form, sl_tags, tl_form);
+						int retval;
 
-						/*
-						if( (contains(sl_tags, L"det") && contains(sl_tags, L"pos") ) )//|| contains(temp_tags, L"prn") || contains(temp_tags, L"vblex") || contains(temp_tags, L"vbser") || contains(temp_tags, L"vbhaver") || contains(temp_tags, L"vbmod") )
-							//if TL tags has det and pos OR just prn OR any verb
+						retval = score_module.add_word(gen_id, sl_form, sl_tags, tl_form); //Give word to Scoring Module
+						//If retval is 0, nothing will be added in side ref
+
+						//If retval is 1, we call get_antecedent() and add it to ref
+						if(retval == 1)
 						{
 							final_ref = score_module.get_antecedent();
 							wcout << final_ref; //add antecedent to side ref of LU //CHANGE
 						}
-						*/
 					}
 
 					input_stream.clear();

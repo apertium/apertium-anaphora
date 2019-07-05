@@ -14,6 +14,11 @@ struct unique_LU
 	wstring wordform;
 	wstring tl_wordform;
 	vector<wstring> pos_tags;
+};
+
+struct antecedent
+{
+	unique_LU LU;
 	int score;
 };
 
@@ -26,14 +31,13 @@ class Scoring
 {
 private:
 	deque< vector<unique_LU> > context; //A queue of sentences. Each sentence is a vector of Lexical Units
-	vector<unique_LU> antecedent_list; //A list of antecedents
+	vector<antecedent> antecedent_list; //A list of antecedents
 
 public:
-	void add_word(unsigned int input_id, wstring input_wordform, vector< wstring > pos_tags, wstring input_tl_wordform);
+	int add_word(unsigned int input_id, wstring input_wordform, vector< wstring > pos_tags, wstring input_tl_wordform);
 	void apply_indicators(unique_LU anaphor);
 	int check_agreement(vector<wstring> antecedent_tags, vector<wstring> anaphor_tags);
-	//void referential_distance();
-	//wstring get_antecedent();
+	wstring get_antecedent();
 	void clear();
 };
 
