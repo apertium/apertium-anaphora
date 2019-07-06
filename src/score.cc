@@ -97,12 +97,15 @@ void Scoring::apply_indicators(unique_LU anaphor)
 {
 	int distance_marker = 2; //starts from 2 for current sentence and reduces till -1 as we go to previous sentences
 	int temp_score;
+	int firstNP; //first NP flag
 
-	antecedent_list.clear(); //clear it from the last anaphor (might not want it as a class variable)
+	antecedent_list.clear(); //clear it from the last anaphor
 
 	//Start going through sentences(current to earliest) and apply all indicators to modify scores of the NPs 
 	for(deque< vector<unique_LU> >::reverse_iterator i = context.rbegin(); i!=context.rend(); ++i) //read through the queue in reverse
 	{
+		firstNP = 1; //firstNP flag true
+
 		for (vector<unique_LU>::iterator j = (*i).begin(); j!=(*i).end(); ++j) //read through sentence
 		{
 			if(contains((*j).pos_tags, L"n"))
@@ -118,7 +121,11 @@ void Scoring::apply_indicators(unique_LU anaphor)
 					temp_score += distance_marker; //Referential Distance (based on how close the antecedent is to the pronoun)
 
 					//Boosting Indicators
-
+					if(firstNP)
+					{
+						temp_score += 1; //First NP
+						firstNP = 0;
+					}
 
 					//Impeding Indicators
 
@@ -167,13 +174,13 @@ wstring Scoring::get_antecedent()
 			final_antecedent = (*it);
 	}
 
+	antecedent_list.clear();
+
 	return final_antecedent.LU.tl_wordform;
 }
 
 void Scoring::clear() //use a destructor?
 {
 	context.clear(); //empty queue
-
-	//unique_LU EmptyStruct;
-	//anaphor = EmptyStruct; //empty anaphor variable
+	antecedent_list.clear(); //empty antecedent list
 }
