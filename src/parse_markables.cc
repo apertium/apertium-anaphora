@@ -4,21 +4,22 @@
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 
+#include "parse_markables.h"
+
 //  g++ parse_markables.cc -I /opt/local/include/libxml2/ -L /usr/lib -lxml2 -lz -lpthread -lm
 
-void
-parseCatItem (xmlDocPtr doc, xmlNodePtr cur) 
+void parseCatItem (xmlDocPtr doc, xmlNodePtr cur) 
 {
-	xmlChar *tagsAttr;
+	xmlChar *Attr;
 	cur = cur->xmlChildrenNode;
 
 	while (cur != NULL) 
 	{
 	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"cat-item"))) 
 	    {
-	    	tagsAttr = xmlGetProp(cur, (const xmlChar *)"tags");
-	    	printf("catItem: %s\n", tagsAttr);
-		    xmlFree(tagsAttr);
+	    	Attr = xmlGetProp(cur, (const xmlChar *)"tags");
+	    	printf("catItem: %s\n", Attr);
+		    xmlFree(Attr);
 		    
 		    //key = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
  	    }
@@ -28,19 +29,18 @@ parseCatItem (xmlDocPtr doc, xmlNodePtr cur)
     return;
 }
 
-void
-parseCats (xmlDocPtr doc, xmlNodePtr cur) 
+void parseCats (xmlDocPtr doc, xmlNodePtr cur) 
 {
-	xmlChar *nameAttr;
+	xmlChar *Attr;
 	cur = cur->xmlChildrenNode;
 
 	while (cur != NULL) 
 	{
 	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"def-cat")))
 	    {
-	    	nameAttr = xmlGetProp(cur, (const xmlChar *)"n");
-	    	printf("catName: %s\n", nameAttr);
-		    xmlFree(nameAttr);	
+	    	Attr = xmlGetProp(cur, (const xmlChar *)"n");
+	    	printf("catName: %s\n", Attr);
+		    xmlFree(Attr);	
 	    	
 	    	parseCatItem(doc,cur);
 	    } 
@@ -50,8 +50,68 @@ parseCats (xmlDocPtr doc, xmlNodePtr cur)
     return;
 }
 
-static void
-parseDoc(char *docname) 
+void parsePatternItem (xmlDocPtr doc, xmlNodePtr cur) 
+{
+	xmlChar *Attr;
+	cur = cur->xmlChildrenNode;
+
+	while (cur != NULL) 
+	{
+	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"pattern-item"))) 
+	    {
+	    	Attr = xmlGetProp(cur, (const xmlChar *)"n");
+	    	printf("patternItem: %s\n", Attr);
+		    xmlFree(Attr);
+
+		    Attr = xmlGetProp(cur, (const xmlChar *)"head");
+
+		    if(Attr != NULL)
+		    	printf("HEAD!\n");
+
+		    xmlFree(Attr);
+ 	    }
+
+		cur = cur->next;
+	}
+    return;
+}
+
+void parsePatterns (xmlDocPtr doc, xmlNodePtr cur) 
+{
+	cur = cur->xmlChildrenNode;
+
+	while (cur != NULL) 
+	{
+	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"pattern")))
+	    	parsePatternItem(doc,cur);
+	    	
+		cur = cur->next;
+	}
+    return;
+}
+
+void parseMarkables (xmlDocPtr doc, xmlNodePtr cur) 
+{
+	xmlChar *Attr;
+	cur = cur->xmlChildrenNode;
+
+	while (cur != NULL) 
+	{
+	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"markable")))
+	    {
+	    	Attr = xmlGetProp(cur, (const xmlChar *)"n");
+	    	printf("MarkableName: %s\n", Attr);
+		    xmlFree(Attr);	
+	    	
+	    	parsePatterns(doc,cur);
+	    } 
+	    	
+		cur = cur->next;
+	}
+    return;
+}
+
+static void parseDoc(char *docname) 
 {
 	xmlDocPtr doc;
 	xmlNodePtr cur;
@@ -87,6 +147,11 @@ parseDoc(char *docname)
 		{
 			parseCats (doc, cur);
 		}
+
+		else if ((!xmlStrcmp(cur->name, (const xmlChar *)"section-markables")))
+		{
+			parseMarkables (doc, cur);
+		}
 		 
 		cur = cur->next;
 	}
@@ -95,8 +160,7 @@ parseDoc(char *docname)
 	return;
 }
 
-int
-main(int argc, char **argv) 
+int main(int argc, char **argv) 
 {
 	char *docname;
 		
