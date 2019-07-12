@@ -1,3 +1,4 @@
+#include "parse_ref.h"
 #include "parse_biltrans.h"
 #include "score.h"
 
@@ -11,17 +12,41 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
+	char *refFileName;
+
 	int nullFlush = 0;
 
-	if(argc > 1) //flag given
+	if (argc < 2) //Need Name of Ref File
 	{
-		if(strcmp(argv[1], "-z") == 0)
-			nullFlush = 1;
+		fprintf(stderr,"Usage: %s -[Flags] RefFile \n", argv[0]);
+		return 0;
+	}
+	
+	else if(argc == 2) // No flag given
+	{
+		refFileName = argv[1];
+	}
+
+	else if(argc == 3) //flag given
+	{
+		for(int i=1; i < argc; i++) //at i=0 we have the program name
+		{
+			if(strcmp(argv[i], "-z") == 0)
+				nullFlush = 1;
+			else
+			{
+				refFileName = argv[i];
+			} 
+		}
+	}
+	else
+	{
+		fprintf(stderr, "Too many arguments provided.\n");
+		fprintf(stderr, "Usage: %s -[Flags] RefFile \n", argv[0]);
+		return 0;
 	}
 
 	wchar_t input_char;
-
-	input_char = fgetwc(stdin); //change to fgetwc ?
 
 	wstring input_stream;
 
@@ -34,7 +59,12 @@ int main(int argc, char **argv)
 	vector<wstring> sl_tags;
 	vector<wstring> tl_tags;
 
+	ParseRef ref_file;
+	ref_file.parseDoc(refFileName);
+
 	int flag_LU = 0;
+
+	input_char = fgetwc(stdin); //change to fgetwc ?
 
 	while(input_char!=EOF) // should I made feof(input_char) ?
 	{
@@ -132,6 +162,6 @@ int main(int argc, char **argv)
 
 	//fclose(fin);
 
-	return 0;
+	return 1;
 }
 

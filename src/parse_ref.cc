@@ -207,6 +207,7 @@ void ParseRef::parseDoc(char *docname)
 	return;
 }
 
+/* //Code for Testing
 int main(int argc, char **argv) 
 {
 	char *docname;
@@ -225,3 +226,4 @@ int main(int argc, char **argv)
 
 	return (1);
 }
+*/

@@ -1,6 +1,12 @@
 #ifndef _PARSEREF_
 #define _PARSEREF_
 
+#include <cstdio>
+#include <string>
+#include <cstdlib>
+#include <libxml/xmlmemory.h>
+#include <libxml/parser.h>
+
 using namespace std;
 
 class ParseRef
