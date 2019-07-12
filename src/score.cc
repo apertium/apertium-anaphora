@@ -166,9 +166,9 @@ wstring Scoring::get_antecedent()
 
 	for(vector<antecedent>::reverse_iterator it=antecedent_list.rbegin();it!=antecedent_list.rend();++it) //read it in reverse so that we read from furthest to nearest
 	{
-		cout << "\n" << (*it).LU.id << ": ";
-		wcout << (*it).LU.wordform;
-		cout << " : " << (*it).score << "\n";
+		//cout << "\n" << (*it).LU.id << ": ";
+		//wcout << (*it).LU.wordform;
+		//cout << " : " << (*it).score << "\n";
 
 		if((*it).score >= final_antecedent.score) //picking the highest scored and latest added (most recent) antecedent
 			final_antecedent = (*it);
