@@ -1,14 +1,16 @@
 #include <cstdio>
 #include <string>
 #include <cstdlib>
+#include <vector>
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
+#include<unordered_map>
 
 #include "parse_ref.h"
 
 //  g++ parse_ref.cc -I /opt/local/include/libxml2/ -L /usr/lib -lxml2 -lz -lpthread -lm
 
-void ParseRef::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur) 
+void ParseRef::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parameter_name) 
 {
 	xmlChar *Attr;
 	cur = cur->xmlChildrenNode;
@@ -40,9 +42,10 @@ void ParseRef::parseParameters (xmlDocPtr doc, xmlNodePtr cur)
 	    {
 	    	Attr = xmlGetProp(cur, (const xmlChar *)"n");
 	    	printf("ParameterName: %s\n", Attr);
+
 		    xmlFree(Attr);	
 	    	
-	    	parseParameterItem(doc,cur);
+	    	parseParameterItem(doc,cur,parameter_name);
 	    } 
 	    	
 		cur = cur->next;
