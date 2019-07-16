@@ -8,6 +8,7 @@
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 #include <unordered_map>
+#include <lttoolbox/xml_parse_util.h>
 
 using namespace std;
 
@@ -15,7 +16,7 @@ typedef vector< vector<wstring> > acceptable_tags;
 
 struct markable_pattern
 {
-	vector<wstring> name;
+	wstring name;
 	int head;
 };
 
@@ -32,14 +33,16 @@ private:
 public:
 	void parseDoc(char *docname);
 	void parseParameters (xmlDocPtr doc, xmlNodePtr cur);
-	void parseParameterItem (xmlDocPtr doc, xmlNodePtr cur);
+	void parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parameter_name);
 
 	void parseCats (xmlDocPtr doc, xmlNodePtr cur);
-	void parseCatItem (xmlDocPtr doc, xmlNodePtr cur); 
+	void parseCatItem (xmlDocPtr doc, xmlNodePtr cur, wstring cat_name); 
 
 	void parseMarkables (xmlDocPtr doc, xmlNodePtr cur);
-	void parsePatterns (xmlDocPtr doc, xmlNodePtr cur);
-	void parsePatternItem (xmlDocPtr doc, xmlNodePtr cur); 
+	void parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_name);
+	vector<markable_pattern> parsePatternItem (xmlDocPtr doc, xmlNodePtr cur); 
+
+	vector<wstring> parseTags (wstring tags);
 };
 
 #endif
