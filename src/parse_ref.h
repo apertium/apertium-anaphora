@@ -22,6 +22,8 @@ struct markable_pattern
 
 typedef vector< vector<markable_pattern> > acceptable_patterns;
 
+void print_tags(vector< wstring > input);
+
 class ParseRef
 {
 private:
@@ -43,6 +45,11 @@ public:
 	vector<markable_pattern> parsePatternItem (xmlDocPtr doc, xmlNodePtr cur); 
 
 	vector<wstring> parseTags (wstring tags);
+
+	unordered_map<wstring, acceptable_tags> get_parameters();
+	unordered_map<wstring, acceptable_tags> get_cats();
+
+	unordered_map<wstring, acceptable_patterns> get_markables();
 };
 
 #endif

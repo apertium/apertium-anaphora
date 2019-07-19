@@ -1,4 +1,5 @@
 #include "score.h"
+#include "parse_ref.h"
 
 #include<string>
 #include<vector>
@@ -14,15 +15,15 @@ void showq(deque < vector<unique_LU> > gq)
     {
     	vector<unique_LU> temp_sentence = *j;
     	
-    	cout << "\n";
+    	cerr << "\n";
     	for (std::vector<unique_LU>::iterator i = temp_sentence.begin(); i != temp_sentence.end(); ++i)
     	{
-    		wcout << (*i).wordform;
+    		wcerr << (*i).wordform;
     	}
 
-    	cout << "\n";
+    	cerr << "\n";
     } 
-    cout << '\n'; 
+    cerr << '\n'; 
 } 
 
 void clearq(queue < vector<unique_LU> > q)
@@ -52,7 +53,44 @@ int contains_any(vector<wstring> tags, vector<wstring> candidates)
 	return 0; //if no matches
 }
 
-int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wstring > input_pos_tags, wstring input_tl_wordform)
+int check_acceptable_tags(vector<wstring> input_tags, acceptable_tags check_tags)
+{
+	for (acceptable_tags::iterator i = check_tags.begin(); i != check_tags.end(); ++i)
+	{
+		
+		int flag_contains_all = 1;
+
+		vector<wstring> temp_tags = *i;
+
+		for(std::vector<wstring>::iterator j = temp_tags.begin(); j != temp_tags.end(); ++j)
+		{
+
+			if(*j == L"*") //ignore * in the tags list
+				continue;
+
+			if(!contains(input_tags, *j)) //if the required tag is NOT in the input LU tags
+			{
+				flag_contains_all = 0;
+				break;
+			}
+			/*
+			else
+			{
+				cerr << "FoundTag:";
+				wcerr << *j;
+				cerr <<"\n";
+			}
+			*/
+		}
+
+		if(flag_contains_all == 1) //if any tag list fully matched
+			return 1; //else continue to next tag list
+	}
+
+	return 0; //if it didn't return 1 then no tag list was fully matched
+}
+
+int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wstring > input_pos_tags, wstring input_tl_wordform, unordered_map<wstring, acceptable_tags> ref_parameters)
 {
 	unique_LU input_LU = {input_id, input_wordform, input_tl_wordform, input_pos_tags}; //initialise in context with score 0
 
@@ -63,7 +101,7 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 
 		context.push_back(sentence);
 
-		if(contains(input_LU.pos_tags, L"sent")) //if sentence end (somehow the first LU is a sentence end)
+		if(check_acceptable_tags(input_LU.pos_tags, ref_parameters[L"delimiter"]) ) //if sentence end (somehow the first LU is a sentence end)
 		{
 			vector<unique_LU> new_sentence;
 
@@ -74,7 +112,7 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 	{
 		context.back().push_back(input_LU); //add word to the latest added sentence in the queue
 
-		if(contains(input_LU.pos_tags, L"sent"))
+		if(check_acceptable_tags(input_LU.pos_tags, ref_parameters[L"delimiter"]) )
 		{
 			vector<unique_LU> new_sentence;
 
@@ -83,9 +121,9 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 			if(context.size() > 4)
 				context.pop_front(); //remove the earliest added sentence (We only want current and three previous sentences in context)
 		}
-		else if( contains(input_LU.pos_tags, L"det") && contains(input_LU.pos_tags, L"pos")	)
+		else if( check_acceptable_tags(input_LU.pos_tags, ref_parameters[L"anaphor"]) ) //check if tags of current word match with anaphor tags in ref file
 		{
-			apply_indicators(input_LU);
+			apply_indicators(input_LU, ref_parameters);
 			return 1; //To show that something will be added in side ref
 		}
 	}
@@ -93,7 +131,7 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 	return 0; //To show that nothing will be added in side ref
 }
 
-void Scoring::apply_indicators(unique_LU anaphor)
+void Scoring::apply_indicators(unique_LU anaphor, unordered_map<wstring, acceptable_tags> ref_parameters)
 {
 	int distance_marker = 2; //starts from 2 for current sentence and reduces till -1 as we go to previous sentences
 	int temp_score;
@@ -108,7 +146,7 @@ void Scoring::apply_indicators(unique_LU anaphor)
 
 		for (vector<unique_LU>::iterator j = (*i).begin(); j!=(*i).end(); ++j) //read through sentence
 		{
-			if(contains((*j).pos_tags, L"n"))
+			if(check_acceptable_tags((*j).pos_tags, ref_parameters[L"antecedent"]) ) // if it is antecedent (based on external xml file)
 			{
 				temp_score = 0;
 
@@ -135,9 +173,9 @@ void Scoring::apply_indicators(unique_LU anaphor)
 				}
 				else
 				{
-					cout << "\nAgreement Failed for:";
-					wcout << antecedent_LU.wordform;
-					cout << "\n";
+					cerr << "\nAgreement Failed for:";
+					wcerr << antecedent_LU.wordform;
+					cerr << "\n";
 				}
 			}
 		}
@@ -166,9 +204,9 @@ wstring Scoring::get_antecedent()
 
 	for(vector<antecedent>::reverse_iterator it=antecedent_list.rbegin();it!=antecedent_list.rend();++it) //read it in reverse so that we read from furthest to nearest
 	{
-		//cout << "\n" << (*it).LU.id << ": ";
-		//wcout << (*it).LU.wordform;
-		//cout << " : " << (*it).score << "\n";
+		//cerr << "\n" << (*it).LU.id << ": ";
+		//wcerr << (*it).LU.wordform;
+		//cerr << " : " << (*it).score << "\n";
 
 		if((*it).score >= final_antecedent.score) //picking the highest scored and latest added (most recent) antecedent
 			final_antecedent = (*it);

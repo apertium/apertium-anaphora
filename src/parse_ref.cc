@@ -16,8 +16,8 @@ void print_tags(vector< wstring > input)
 {
 	for (int i = 0; i < input.size(); i++) 
 	{
-		wcout << input[i];
-		cout << " ";
+		wcerr << input[i];
+		cerr << " ";
 	}
 }
 
@@ -50,9 +50,9 @@ vector<wstring> ParseRef::parseTags (wstring tags)
 	if(!temptag.empty()) //if any tag remaining
 		temp_tags_list.push_back(temptag);
 
-	print_tags(temp_tags_list);
+	//print_tags(temp_tags_list);
 
-	cout << "\n";
+	//cerr << "\n";
 
 	return temp_tags_list;
 }
@@ -70,7 +70,7 @@ void ParseRef::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parame
 	    {
 	    	Attr = xmlGetProp(cur, (const xmlChar *)"tags");
 
-	    	printf("ParameterItem: ");
+	    	//fprintf(stderr, "ParameterItem: ");
 
 	    	temp_tags_list = parseTags(XMLParseUtil::towstring(Attr));
 	    	parameters[parameter_name].push_back(temp_tags_list);
@@ -99,9 +99,9 @@ void ParseRef::parseParameters (xmlDocPtr doc, xmlNodePtr cur)
 		{
 			parameter_name = XMLParseUtil::towstring(cur->name);
 
-			cout << "\n";
-	    	wcout << parameter_name;
-	    	cout << "\n";
+			//cerr << "\n";
+	    	//wcerr << parameter_name;
+	    	//cerr << "\n";
 	    	
 	    	parseParameterItem(doc,cur,parameter_name);
 	    }
@@ -123,7 +123,7 @@ void ParseRef::parseCatItem (xmlDocPtr doc, xmlNodePtr cur, wstring cat_name)
 	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"cat-item"))) 
 	    {
 	    	Attr = xmlGetProp(cur, (const xmlChar *)"tags");
-	    	printf("catItem: ");
+	    	//fprintf(stderr, "catItem: ");
 
 	    	temp_tags_list = parseTags(XMLParseUtil::towstring(Attr));
 		    cats[cat_name].push_back(temp_tags_list);
@@ -150,7 +150,7 @@ void ParseRef::parseCats (xmlDocPtr doc, xmlNodePtr cur)
 	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"def-cat")))
 	    {
 	    	Attr = xmlGetProp(cur, (const xmlChar *)"n");
-	    	printf("catName: %s\n", Attr);  
+	    	//fprintf(stderr, "catName: %s\n", Attr);  
 	    	
 	    	parseCatItem(doc,cur, XMLParseUtil::towstring(Attr));
 	    	xmlFree(Attr);	
@@ -177,8 +177,8 @@ vector<markable_pattern> ParseRef::parsePatternItem (xmlDocPtr doc, xmlNodePtr c
 	    	Attr = xmlGetProp(cur, (const xmlChar *)"n");
 	    	temp.name = XMLParseUtil::towstring(Attr);
 
-	    	wcout << temp.name;
-	    	cout << " ";
+	    	//wcerr << temp.name;
+	    	//cerr << " ";
 
 		    xmlFree(Attr);
 
@@ -187,7 +187,7 @@ vector<markable_pattern> ParseRef::parsePatternItem (xmlDocPtr doc, xmlNodePtr c
 		    if(Attr != NULL)
 		    {
 		    	temp.head = 1;
-		    	printf("[HEAD!]");
+		    	//fprintf(stderr, "[HEAD!]");
 		    }
 		    else
 		    	temp.head = 0;
@@ -209,8 +209,8 @@ void ParseRef::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_na
 
 	vector<markable_pattern> temp_pattern_list;
 
-	wcout << markable_name;
-	cout << "\n";
+	//wcerr << markable_name;
+	//cerr << "\n";
 
 	while (cur != NULL) 
 	{
@@ -222,7 +222,7 @@ void ParseRef::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_na
 
 		cur = cur->next;
 
-		cout << "\n";
+		//cerr << "\n";
 	}
     return;
 }
@@ -237,7 +237,7 @@ void ParseRef::parseMarkables (xmlDocPtr doc, xmlNodePtr cur)
 	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"markable")))
 	    {
 	    	Attr = xmlGetProp(cur, (const xmlChar *)"n");
-	    	printf("MarkableName: ");	
+	    	//fprintf(stderr, "MarkableName: ");	
 	    	
 	    	parsePatterns(doc,cur, XMLParseUtil::towstring(Attr));
 
@@ -303,6 +303,21 @@ void ParseRef::parseDoc(char *docname)
 	return;
 }
 
+unordered_map<wstring, acceptable_tags> ParseRef::get_parameters()
+{
+	return parameters;
+}
+	
+unordered_map<wstring, acceptable_tags> ParseRef::get_cats()
+{
+	return cats;
+}
+
+unordered_map<wstring, acceptable_patterns> ParseRef::get_markables()
+{
+	return markables;
+}
+
 /* //Code for Testing
 int main(int argc, char **argv) 
 {
@@ -310,7 +325,7 @@ int main(int argc, char **argv)
 		
 	if (argc <= 1) 
 	{
-		printf("Usage: %s docname\n", argv[0]);
+		fprintf(stderr, "Usage: %s docname\n", argv[0]);
 		return(0);
 	}
 
