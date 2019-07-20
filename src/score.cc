@@ -1,5 +1,6 @@
 #include "score.h"
 #include "parse_ref.h"
+#include "pattern_ref.h"
 
 #include<string>
 #include<vector>
@@ -34,65 +35,12 @@ void clearq(queue < vector<unique_LU> > q)
 	}
 }
 
-int contains(vector<wstring> tags, wstring tag)
+int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wstring > input_pos_tags, wstring input_tl_wordform, ParseRef ref_file)
 {
-	if(std::find(tags.begin(), tags.end(), tag) != tags.end())
-		return 1;
-	else
-		return 0;
-}
+	vector<wstring> temp_prop;
+	unordered_map<wstring, acceptable_tags> ref_parameters = ref_file.get_parameters();
 
-int contains_any(vector<wstring> tags, vector<wstring> candidates)
-{
-	for(vector<wstring>::iterator it=candidates.begin();it!=candidates.end();++it)
-	{
-		if(std::find(tags.begin(), tags.end(), *it) != tags.end())
-			return 1; //if any of the tags in candidates matches the tags list
-	}
-
-	return 0; //if no matches
-}
-
-int check_acceptable_tags(vector<wstring> input_tags, acceptable_tags check_tags)
-{
-	for (acceptable_tags::iterator i = check_tags.begin(); i != check_tags.end(); ++i)
-	{
-		
-		int flag_contains_all = 1;
-
-		vector<wstring> temp_tags = *i;
-
-		for(std::vector<wstring>::iterator j = temp_tags.begin(); j != temp_tags.end(); ++j)
-		{
-
-			if(*j == L"*") //ignore * in the tags list
-				continue;
-
-			if(!contains(input_tags, *j)) //if the required tag is NOT in the input LU tags
-			{
-				flag_contains_all = 0;
-				break;
-			}
-			/*
-			else
-			{
-				cerr << "FoundTag:";
-				wcerr << *j;
-				cerr <<"\n";
-			}
-			*/
-		}
-
-		if(flag_contains_all == 1) //if any tag list fully matched
-			return 1; //else continue to next tag list
-	}
-
-	return 0; //if it didn't return 1 then no tag list was fully matched
-}
-
-int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wstring > input_pos_tags, wstring input_tl_wordform, unordered_map<wstring, acceptable_tags> ref_parameters)
-{
-	unique_LU input_LU = {input_id, input_wordform, input_tl_wordform, input_pos_tags}; //initialise in context with score 0
+	unique_LU input_LU = {input_id, input_wordform, input_tl_wordform, input_pos_tags, temp_prop}; //initialise LU
 
 	if(context.empty()) //if queue is empty 
 	{
@@ -123,7 +71,7 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 		}
 		else if( check_acceptable_tags(input_LU.pos_tags, ref_parameters[L"anaphor"]) ) //check if tags of current word match with anaphor tags in ref file
 		{
-			apply_indicators(input_LU, ref_parameters);
+			apply_indicators(input_LU, ref_file);
 			return 1; //To show that something will be added in side ref
 		}
 	}
@@ -131,13 +79,17 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 	return 0; //To show that nothing will be added in side ref
 }
 
-void Scoring::apply_indicators(unique_LU anaphor, unordered_map<wstring, acceptable_tags> ref_parameters)
+void Scoring::apply_indicators(unique_LU anaphor, ParseRef ref_file)
 {
 	int distance_marker = 2; //starts from 2 for current sentence and reduces till -1 as we go to previous sentences
 	int temp_score;
 	int firstNP; //first NP flag
 
 	antecedent_list.clear(); //clear it from the last anaphor
+
+	//Go through the context and add properties based on external file
+	//add_properties(context, ref_parameters)
+
 
 	//Start going through sentences(current to earliest) and apply all indicators to modify scores of the NPs 
 	for(deque< vector<unique_LU> >::reverse_iterator i = context.rbegin(); i!=context.rend(); ++i) //read through the queue in reverse
@@ -146,7 +98,7 @@ void Scoring::apply_indicators(unique_LU anaphor, unordered_map<wstring, accepta
 
 		for (vector<unique_LU>::iterator j = (*i).begin(); j!=(*i).end(); ++j) //read through sentence
 		{
-			if(check_acceptable_tags((*j).pos_tags, ref_parameters[L"antecedent"]) ) // if it is antecedent (based on external xml file)
+			if(check_acceptable_tags((*j).pos_tags, ref_file.get_parameters()[L"antecedent"]) ) // if it is antecedent (based on external xml file)
 			{
 				temp_score = 0;
 

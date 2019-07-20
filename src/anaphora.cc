@@ -134,7 +134,7 @@ int main(int argc, char **argv)
 					{
 						int retval;
 
-						retval = score_module.add_word(gen_id, sl_form, sl_tags, tl_form, ref_file.get_parameters()); //Give word to Scoring Module
+						retval = score_module.add_word(gen_id, sl_form, sl_tags, tl_form, ref_file); //Give word to Scoring Module
 						//If retval is 0, nothing will be added in side ref
 
 						//If retval is 1, we call get_antecedent() and add it to ref

@@ -16,6 +16,7 @@ struct unique_LU
 	wstring wordform;
 	wstring tl_wordform;
 	vector<wstring> pos_tags;
+	vector<wstring> properties;
 };
 
 struct antecedent
@@ -26,11 +27,6 @@ struct antecedent
 
 void showq(deque < vector<unique_LU> > gq);
 
-int contains(vector<wstring> tags, wstring tag);
-int contains_any(vector<wstring> tags, vector<wstring> candidates);
-
-int check_acceptable_tags(vector<wstring> input_tags, acceptable_tags check_tags);
-
 class Scoring
 {
 private:
@@ -38,8 +34,8 @@ private:
 	vector<antecedent> antecedent_list; //A list of antecedents
 
 public:
-	int add_word(unsigned int input_id, wstring input_wordform, vector< wstring > pos_tags, wstring input_tl_wordform, unordered_map<wstring, acceptable_tags> ref_parameters);
-	void apply_indicators(unique_LU anaphor, unordered_map<wstring, acceptable_tags> ref_parameters);
+	int add_word(unsigned int input_id, wstring input_wordform, vector< wstring > pos_tags, wstring input_tl_wordform, ParseRef ref_file);
+	void apply_indicators(unique_LU anaphor, ParseRef ref_file);
 	int check_agreement(vector<wstring> antecedent_tags, vector<wstring> anaphor_tags);
 	wstring get_antecedent();
 	void clear();
