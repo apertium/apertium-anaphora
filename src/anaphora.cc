@@ -1,6 +1,7 @@
 #include "parse_ref.h"
 #include "parse_biltrans.h"
 #include "score.h"
+#include "pattern_ref.h"
 
 #include<cstdio>
 #include<fstream>

@@ -2,6 +2,7 @@
 #define _MITKOVSCORE_
 
 #include "parse_ref.h"
+#include "pattern_ref.h"
 
 #include<string>
 #include<vector>
@@ -9,21 +10,6 @@
 #include<deque>
 
 using namespace std;
-
-struct unique_LU 
-{
-	unsigned int id;
-	wstring wordform;
-	wstring tl_wordform;
-	vector<wstring> pos_tags;
-	vector<wstring> properties;
-};
-
-struct antecedent
-{
-	unique_LU LU;
-	int score;
-};
 
 void showq(deque < vector<unique_LU> > gq);
 

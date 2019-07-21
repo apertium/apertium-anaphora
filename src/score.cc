@@ -27,14 +27,6 @@ void showq(deque < vector<unique_LU> > gq)
     cerr << '\n'; 
 } 
 
-void clearq(queue < vector<unique_LU> > q)
-{
-	while(!q.empty())
-	{
-		q.pop();
-	}
-}
-
 int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wstring > input_pos_tags, wstring input_tl_wordform, ParseRef ref_file)
 {
 	vector<wstring> temp_prop;

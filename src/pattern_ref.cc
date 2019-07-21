@@ -3,6 +3,8 @@
 
 #include<string>
 #include<vector>
+#include<deque>
+#include<iostream>
 
 using namespace std;
 
@@ -62,7 +64,7 @@ int check_acceptable_tags(vector<wstring> input_tags, acceptable_tags check_tags
 	return 0; //if it didn't return 1 then no tag list was fully matched
 }
 
-check_acceptable_patterns(vector)
+//check_acceptable_patterns(vector)
 
 
 deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, ParseRef ref_file)
@@ -76,29 +78,33 @@ deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, Pa
 		wstring markable_name = it->first;
 		acceptable_patterns patterns_list = it->second;
 
+		cout << "Markable: ";
+		wcout << markable_name;
+		cout << "\n";
+
 		for(acceptable_patterns::iterator i = patterns_list.begin(); i!=patterns_list.end(); ++i) //go through patterns in the markable
 		{
 			//for each pattern
 			vector<markable_pattern> current_pattern = *i;
+			int len_pattern = current_pattern.size();
 
-			for(deque< vector<unique_LU> >::iterator j = context.begin(); j!=context.end(); ++j) //go through queue of context to get sentences
+			cout << "New Pattern!!!\n";
+
+			for(deque< vector<unique_LU> >::iterator m = context.begin(); m!=context.end(); ++m) //go through queue of context to get sentences
 			{
-				for (vector<unique_LU>::iterator j = (*i).begin(); j!=(*i).end(); ++j) //go through sentence to look for the pattern with a sliding window of size = pattern length
+				for (vector<unique_LU>::iterator n = (*m).begin(); n!=(*m).end()-len+1; ++n) //go through sentence to look for the pattern with a sliding window of size = pattern length
 				{
-					
+					//i have a current_pattern to compare with a window of pattern size in this sentence
+
+					for(int x = 0; x <= len_pattern; ++x)
+					{
+						wcout << (*n+x).wordform;
+						cout << "\n";
+					}
 				}
 			}
-
 		}
-	
 	}
-	
-	/*
-	for(deque< vector<unique_LU> >::iterator i = context.begin(); i!=context.end(); ++i)
-	{
-		
-	}
-	*/
 
 	return context;
 }
