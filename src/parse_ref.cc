@@ -1,3 +1,5 @@
+#include "parse_ref.h"
+
 #include <cstdio>
 #include <string>
 #include <cstdlib>
@@ -9,8 +11,6 @@
 #include <iostream>
 
 #include <lttoolbox/xml_parse_util.h>
-
-#include "parse_ref.h"
 
 void print_tags(vector< wstring > input)
 {
@@ -207,19 +207,18 @@ void ParseRef::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_na
 {
 	cur = cur->xmlChildrenNode;
 
-	vector<markable_pattern> temp_pattern_list;
-
 	//wcerr << markable_name;
 	//cerr << "\n";
 
 	while (cur != NULL) 
 	{
 	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"pattern")))
-	    	temp_pattern_list = parsePatternItem(doc,cur);
-	    	
-	    markables[markable_name].push_back(temp_pattern_list);
-	    temp_pattern_list.clear();
+	    {
+	    	vector<markable_pattern> temp_pattern = parsePatternItem(doc,cur);
 
+	    	markables[markable_name].push_back(temp_pattern);
+	    }
+	    	
 		cur = cur->next;
 
 		//cerr << "\n";

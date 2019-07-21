@@ -8,6 +8,20 @@
 
 using namespace std;
 
+void print_markable(acceptable_patterns inp)
+{
+	for(acceptable_patterns::iterator i = inp.begin(); i != inp.end(); i++)
+	{
+		cerr <<"Pattern:\n";
+
+		for(vector<markable_pattern>::iterator j = (*i).begin(); j != (*i).end(); j++)
+		{
+			wcerr << (*j).name;
+			cerr << "\n";
+		}
+	}
+}
+
 int contains(vector<wstring> tags, wstring tag)
 {
 	if(std::find(tags.begin(), tags.end(), tag) != tags.end())
@@ -69,18 +83,16 @@ int check_acceptable_tags(vector<wstring> input_tags, acceptable_tags check_tags
 
 deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, ParseRef ref_file)
 {
-	unordered_map<wstring, acceptable_patterns> ref_markables = ref_file.markables;
-	unordered_map<wstring, acceptable_tags> ref_cats = ref_file.cats;
+	unordered_map<wstring, acceptable_patterns> ref_markables = ref_file.get_markables();
+	unordered_map<wstring, acceptable_tags> ref_cats = ref_file.get_cats();
 
-	for (unordered_map<wstring, acceptable_patterns>::iterator::it = ref_markables.begin(); it != ref_markables.end(); it++ ) //go through markables defined in xml file
+	for (unordered_map<wstring, acceptable_patterns>::iterator it = ref_markables.begin(); it != ref_markables.end(); it++ ) //go through markables defined in xml file
 	{
 		//for each markable
 		wstring markable_name = it->first;
 		acceptable_patterns patterns_list = it->second;
 
-		cout << "Markable: ";
-		wcout << markable_name;
-		cout << "\n";
+		//print_markable(patterns_list);
 
 		for(acceptable_patterns::iterator i = patterns_list.begin(); i!=patterns_list.end(); ++i) //go through patterns in the markable
 		{
@@ -88,18 +100,43 @@ deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, Pa
 			vector<markable_pattern> current_pattern = *i;
 			int len_pattern = current_pattern.size();
 
-			cout << "New Pattern!!!\n";
-
-			for(deque< vector<unique_LU> >::iterator m = context.begin(); m!=context.end(); ++m) //go through queue of context to get sentences
+			for(deque< vector<unique_LU> >::iterator m = context.begin(); m!=context.end(); ++m) //go through sentences in the queue of context
 			{
-				for (vector<unique_LU>::iterator n = (*m).begin(); n!=(*m).end()-len+1; ++n) //go through sentence to look for the pattern with a sliding window of size = pattern length
-				{
-					//i have a current_pattern to compare with a window of pattern size in this sentence
+				if(len_pattern > (*m).size()) //if pattern is longer then sentence length then skip
+					continue;
 
-					for(int x = 0; x <= len_pattern; ++x)
+				for (vector<unique_LU>::iterator n = (*m).begin(); n+len_pattern-1 !=(*m).end(); ++n) //go through LUs in sentence to look for the pattern with a sliding window of size = pattern length
+				{
+					int match_flag = 0;
+
+					for(int x = 0; x < len_pattern; ++x)
 					{
-						wcout << (*n+x).wordform;
-						cout << "\n";
+						//this is the window -- check if pattern matches
+
+						acceptable_tags pattern_item_tags = ref_cats[current_pattern[x].name]; //get pattern item tags from def-cats
+
+						if(check_acceptable_tags((*(n+x)).pos_tags, pattern_item_tags)) //comparing current LU tags to pattern tags
+						{
+							match_flag = 1;
+
+						}
+						else
+						{
+							match_flag = 0;
+							break;
+						}
+
+						//wcerr << (*(n+x)).wordform;
+					}
+
+					if(match_flag == 1)
+					{
+						//Add Property to the LUs
+						cerr << "\n";
+						wcerr << markable_name;
+						cerr << " Pattern Matched at: ";
+						wcerr << (*n).wordform;
+						cerr << "\n";
 					}
 				}
 			}

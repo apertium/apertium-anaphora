@@ -80,7 +80,7 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseRef ref_file)
 	antecedent_list.clear(); //clear it from the last anaphor
 
 	//Go through the context and add properties based on external file
-	//add_properties(context, ref_parameters)
+	context = add_properties(context, ref_file);
 
 
 	//Start going through sentences(current to earliest) and apply all indicators to modify scores of the NPs 
