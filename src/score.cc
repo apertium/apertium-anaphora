@@ -90,11 +90,11 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseRef ref_file)
 
 		for (vector<unique_LU>::iterator j = (*i).begin(); j!=(*i).end(); ++j) //read through sentence
 		{
-			cout << "\n";
+			cerr << "\n";
 			wcerr << (*j).wordform;
-			cout << ": ";
+			cerr << ": ";
 			print_tags((*j).properties);
-			cout << "\n";
+			cerr << "\n";
 
 			if(check_acceptable_tags((*j).pos_tags, ref_file.get_parameters()[L"antecedent"]) ) // if it is antecedent (based on external xml file)
 			{
