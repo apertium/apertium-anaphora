@@ -80,11 +80,11 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseRef ref_file)
 	antecedent_list.clear(); //clear it from the last anaphor
 
 	//Go through the context and add properties based on external file
-	context = add_properties(context, ref_file);
+	deque< vector<unique_LU> > context_with_prop = add_properties(context, ref_file); //dont add properties in the actual context (might wanna change)
 
 
 	//Start going through sentences(current to earliest) and apply all indicators to modify scores of the NPs 
-	for(deque< vector<unique_LU> >::reverse_iterator i = context.rbegin(); i!=context.rend(); ++i) //read through the queue in reverse
+	for(deque< vector<unique_LU> >::reverse_iterator i = context_with_prop.rbegin(); i!=context_with_prop.rend(); ++i) //read through the queue in reverse
 	{
 		firstNP = 1; //firstNP flag true
 
@@ -116,6 +116,10 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseRef ref_file)
 					}
 
 					//Impeding Indicators
+					if(contains(antecedent_LU.properties, L"PP"))
+					{
+						temp_score -= 1; //Prepositional NP
+					}
 
 					//Add to Antecedent List with Score
 					antecedent antecedent_with_score = {antecedent_LU, temp_score};
