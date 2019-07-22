@@ -129,14 +129,27 @@ deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, Pa
 						//wcerr << (*(n+x)).wordform;
 					}
 
-					if(match_flag == 1)
+					if(match_flag == 1) //if the entire pattern matched
 					{
 						//Add Property to the LUs
+						/*
 						cerr << "\n";
 						wcerr << markable_name;
 						cerr << " Pattern Matched at: ";
 						wcerr << (*n).wordform;
 						cerr << "\n";
+						*/
+
+						for(int x = 0; x < len_pattern; ++x)
+						{
+							((*(n+x)).properties).push_back(markable_name); //add markable name to properties
+
+							if(current_pattern[x].head == 1)
+							{
+								((*(n+x)).properties).push_back(L"head"); // add "head" to properties
+							}
+						}
+
 					}
 				}
 			}
