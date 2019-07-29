@@ -21,7 +21,6 @@ void print_tags(vector< wstring > input)
 	}
 }
 
-//  g++ parse_ref.cc -I /opt/local/include/libxml2/ -L /usr/lib -lxml2 -lz -lpthread -lm
 vector<wstring> ParseRef::parseTags (wstring tags)
 {
 	vector<wstring> temp_tags_list;
@@ -217,6 +216,16 @@ void ParseRef::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_na
 	    	vector<markable_pattern> temp_pattern = parsePatternItem(doc,cur);
 
 	    	markables[markable_name].push_back(temp_pattern);
+	    }
+
+	    else if ((!xmlStrcmp(cur->name, (const xmlChar *)"score")))
+	    {
+	    	Attr = xmlGetProp(cur, (const xmlChar *)"n");
+	    	wstring score_ws = XMLParseUtil::towstring(Attr);
+
+	    	int score_int = std::stoi(score_ws);
+
+	    	markable_score[markable_name] = score_int;
 	    }
 	    	
 		cur = cur->next;
