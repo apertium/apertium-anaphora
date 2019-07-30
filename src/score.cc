@@ -82,6 +82,8 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseRef ref_file)
 	//Go through the context and add properties based on external file
 	deque< vector<unique_LU> > context_with_prop = add_properties(context, ref_file); //dont add properties in the actual context (might wanna change)
 
+	//Get scores for markables in a variable
+	unordered_map<wstring, int> markables_score = ref_file.get_markables_score();
 
 	//Start going through sentences(current to earliest) and apply all indicators to modify scores of the NPs 
 	for(deque< vector<unique_LU> >::reverse_iterator i = context_with_prop.rbegin(); i!=context_with_prop.rend(); ++i) //read through the queue in reverse
@@ -116,11 +118,12 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseRef ref_file)
 					}
 
 					//Impeding Indicators
+					
 					if(contains(antecedent_LU.properties, L"PP"))
 					{
-						temp_score -= 1; //Prepositional NP
+						temp_score += markables_score[L"PP"]; //Prepositional NP
 					}
-
+					
 					//Add to Antecedent List with Score
 					antecedent antecedent_with_score = {antecedent_LU, temp_score};
 					antecedent_list.push_back(antecedent_with_score);

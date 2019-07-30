@@ -204,6 +204,8 @@ vector<markable_pattern> ParseRef::parsePatternItem (xmlDocPtr doc, xmlNodePtr c
 
 void ParseRef::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_name) 
 {
+	xmlChar *Attr;
+	
 	cur = cur->xmlChildrenNode;
 
 	//wcerr << markable_name;
@@ -225,7 +227,7 @@ void ParseRef::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_na
 
 	    	int score_int = std::stoi(score_ws);
 
-	    	markable_score[markable_name] = score_int;
+	    	markables_score[markable_name] = score_int;
 	    }
 	    	
 		cur = cur->next;
@@ -324,6 +326,11 @@ unordered_map<wstring, acceptable_tags> ParseRef::get_cats()
 unordered_map<wstring, acceptable_patterns> ParseRef::get_markables()
 {
 	return markables;
+}
+
+unordered_map<wstring, int> ParseRef::get_markables_score()
+{
+	return markables_score;
 }
 
 /* //Code for Testing

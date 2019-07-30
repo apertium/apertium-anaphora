@@ -31,7 +31,7 @@ private:
 	unordered_map<wstring, acceptable_tags> cats; //cat name mapped to acceptable tag lists
 
 	unordered_map<wstring, acceptable_patterns> markables; //markable name mapped to acceptable pattern lists. Also each pattern has a head == 1
-	unordered_map<wstring, int> markable_score; //markable name mapped to score of markable
+	unordered_map<wstring, int> markables_score; //markable name mapped to score of markable
 
 public:
 	void parseDoc(char *docname);
@@ -51,6 +51,8 @@ public:
 	unordered_map<wstring, acceptable_tags> get_cats();
 
 	unordered_map<wstring, acceptable_patterns> get_markables();
+
+	unordered_map<wstring, int> get_markables_score();
 };
 
 #endif
