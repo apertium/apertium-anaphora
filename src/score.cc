@@ -119,9 +119,18 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseRef ref_file)
 
 					//Impeding Indicators
 					
-					if(contains(antecedent_LU.properties, L"PP"))
+					//Indicators from XML file (iterate through all markables that provided a score)
+
+					for(unordered_map<wstring, int>::iterator x = markables_score.begin(); x != markables_score.end(); ++x)
 					{
-						temp_score += markables_score[L"PP"]; //Prepositional NP
+						//cout << "Checking for: ";
+						//wcout << x->first;
+						//cout << "\n";
+
+						if(contains(antecedent_LU.properties, x->first)) //if markable name present in current antecedent
+						{
+							temp_score += x->second; //Add score to the temp score (could be negative also)
+						}
 					}
 					
 					//Add to Antecedent List with Score
