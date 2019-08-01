@@ -153,13 +153,15 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseRef ref_file)
 
 int Scoring::check_agreement(vector<wstring> antecedent_tags, vector<wstring> anaphor_tags)
 {
+	/*
 	if(contains(anaphor_tags, L"f") && contains(antecedent_tags, L"m"))
 		return 0;
 
 	if(contains(anaphor_tags, L"m") && contains(antecedent_tags, L"f"))
 		return 0;
+		*/
 
-	return 1;
+	return 1; //for now, return 1 always
 }
 
 
