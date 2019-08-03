@@ -35,7 +35,7 @@ vector<wstring> ParseRef::parseTags (wstring tags)
 			++i;
 			temptag.push_back(*i);
 		}
-		else if(*i == '.')
+		else if(*i == ' ') //space separated tags
 		{
 			temp_tags_list.push_back(temptag);
 			temptag.clear();
@@ -67,7 +67,7 @@ void ParseRef::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parame
 	{
 	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"parameter-item"))) 
 	    {
-	    	Attr = xmlGetProp(cur, (const xmlChar *)"tags");
+	    	Attr = xmlGetProp(cur, (const xmlChar *)"has-tags");
 
 	    	//fprintf(stderr, "ParameterItem: ");
 
@@ -121,7 +121,7 @@ void ParseRef::parseCatItem (xmlDocPtr doc, xmlNodePtr cur, wstring cat_name)
 	{
 	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"cat-item"))) 
 	    {
-	    	Attr = xmlGetProp(cur, (const xmlChar *)"tags");
+	    	Attr = xmlGetProp(cur, (const xmlChar *)"has-tags");
 	    	//fprintf(stderr, "catItem: ");
 
 	    	temp_tags_list = parseTags(XMLParseUtil::towstring(Attr));
@@ -205,7 +205,7 @@ vector<markable_pattern> ParseRef::parsePatternItem (xmlDocPtr doc, xmlNodePtr c
 void ParseRef::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_name) 
 {
 	xmlChar *Attr;
-	
+
 	cur = cur->xmlChildrenNode;
 
 	//wcerr << markable_name;
