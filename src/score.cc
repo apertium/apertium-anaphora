@@ -82,11 +82,13 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseRef ref_file)
 	//Go through the context and add properties based on external file
 	deque< vector<unique_LU> > context_with_prop = add_properties(context, ref_file); //dont add properties in the actual context (might wanna change)
 
+	distance_marker = distance_marker - context_with_prop.size() + 1; //set distance to earliest sentence based on number of sentences in context
+
 	//Get scores for markables in a variable
 	unordered_map<wstring, int> markables_score = ref_file.get_markables_score();
 
-	//Start going through sentences(current to earliest) and apply all indicators to modify scores of the NPs 
-	for(deque< vector<unique_LU> >::reverse_iterator i = context_with_prop.rbegin(); i!=context_with_prop.rend(); ++i) //read through the queue in reverse
+	//Start going through sentences(earliest to current) and apply all indicators to modify scores of the NPs 
+	for(deque< vector<unique_LU> >::iterator i = context_with_prop.begin(); i!=context_with_prop.end(); ++i) //read through the queue in reverse
 	{
 		firstNP = 1; //firstNP flag true
 
@@ -146,8 +148,8 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseRef ref_file)
 			}
 		}
 
-		if(distance_marker > -1)
-			distance_marker--;
+		if(distance_marker < 2)
+			distance_marker++;
 	}
 }
 
@@ -170,7 +172,7 @@ wstring Scoring::get_antecedent()
 	unique_LU final_antecedent_LU;
 	antecedent final_antecedent = {final_antecedent_LU, -5};
 
-	for(vector<antecedent>::reverse_iterator it=antecedent_list.rbegin();it!=antecedent_list.rend();++it) //read it in reverse so that we read from furthest to nearest
+	for(vector<antecedent>::iterator it=antecedent_list.begin();it!=antecedent_list.end();++it) //read from furthest to nearest
 	{
 		cerr << "\n" << (*it).LU.id << ": ";
 		wcerr << (*it).LU.wordform;
