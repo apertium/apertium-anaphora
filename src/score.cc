@@ -94,11 +94,11 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseRef ref_file)
 
 		for (vector<unique_LU>::iterator j = (*i).begin(); j!=(*i).end(); ++j) //read through sentence
 		{
-			cerr << "\n";
-			wcerr << (*j).wordform;
-			cerr << ": ";
-			print_tags((*j).properties);
-			cerr << "\n";
+			//cerr << "\n";
+			//wcerr << (*j).wordform;
+			//cerr << ": ";
+			//print_tags((*j).properties);
+			//cerr << "\n";
 
 			if(check_acceptable_tags((*j).pos_tags, ref_file.get_parameters()[L"antecedent"]) ) // if it is antecedent (based on external xml file)
 			{
@@ -141,9 +141,9 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseRef ref_file)
 				}
 				else
 				{
-					cerr << "\nAgreement Failed for:";
-					wcerr << antecedent_LU.wordform;
-					cerr << "\n";
+					//cerr << "\nAgreement Failed for:";
+					//wcerr << antecedent_LU.wordform;
+					//cerr << "\n";
 				}
 			}
 		}
@@ -174,9 +174,9 @@ wstring Scoring::get_antecedent()
 
 	for(vector<antecedent>::iterator it=antecedent_list.begin();it!=antecedent_list.end();++it) //read from furthest to nearest
 	{
-		cerr << "\n" << (*it).LU.id << ": ";
-		wcerr << (*it).LU.wordform;
-		cerr << " : " << (*it).score << "\n";
+		//cerr << "\n" << (*it).LU.id << ": ";
+		//wcerr << (*it).LU.wordform;
+		//cerr << " : " << (*it).score << "\n";
 
 		if((*it).score >= final_antecedent.score) //picking the highest scored and latest added (most recent) antecedent
 			final_antecedent = (*it);
