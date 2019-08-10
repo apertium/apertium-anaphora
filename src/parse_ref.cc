@@ -7,17 +7,15 @@
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 #include <unordered_map>
-
 #include <iostream>
-
 #include <lttoolbox/xml_parse_util.h>
 
-void print_tags(vector< wstring > input)
+void print_tags(const vector<wstring>& input)
 {
-	for (int i = 0; i < input.size(); i++) 
+	for (size_t i = 0; i < input.size(); ++i)
 	{
 		wcerr << input[i];
-		cerr << " ";
+		wcerr << " ";
 	}
 }
 
@@ -56,16 +54,16 @@ vector<wstring> ParseRef::parseTags (wstring tags)
 	return temp_tags_list;
 }
 
-void ParseRef::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parameter_name) 
+void ParseRef::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parameter_name)
 {
 	xmlChar *Attr;
 	cur = cur->xmlChildrenNode;
 
 	vector <wstring> temp_tags_list;
 
-	while (cur != NULL) 
+	while (cur != NULL)
 	{
-	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"parameter-item"))) 
+	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"parameter-item")))
 	    {
 	    	Attr = xmlGetProp(cur, (const xmlChar *)"has-tags");
 
@@ -77,7 +75,7 @@ void ParseRef::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parame
 	    	temp_tags_list.clear();
 
 		    xmlFree(Attr);
-		    
+
 		    //key = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
  	    }
 
@@ -86,13 +84,13 @@ void ParseRef::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parame
     return;
 }
 
-void ParseRef::parseParameters (xmlDocPtr doc, xmlNodePtr cur) 
+void ParseRef::parseParameters (xmlDocPtr doc, xmlNodePtr cur)
 {
 	wstring parameter_name;
 
 	cur = cur->xmlChildrenNode;
 
-	while (cur != NULL) 
+	while (cur != NULL)
 	{
 		if(cur->type == XML_ELEMENT_NODE)
 		{
@@ -101,25 +99,25 @@ void ParseRef::parseParameters (xmlDocPtr doc, xmlNodePtr cur)
 			//cerr << "\n";
 	    	//wcerr << parameter_name;
 	    	//cerr << "\n";
-	    	
+
 	    	parseParameterItem(doc,cur,parameter_name);
 	    }
-	    	
+
 		cur = cur->next;
 	}
     return;
 }
 
-void ParseRef::parseCatItem (xmlDocPtr doc, xmlNodePtr cur, wstring cat_name) 
+void ParseRef::parseCatItem (xmlDocPtr doc, xmlNodePtr cur, wstring cat_name)
 {
 	xmlChar *Attr;
 	cur = cur->xmlChildrenNode;
 
 	vector <wstring> temp_tags_list;
 
-	while (cur != NULL) 
+	while (cur != NULL)
 	{
-	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"cat-item"))) 
+	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"cat-item")))
 	    {
 	    	Attr = xmlGetProp(cur, (const xmlChar *)"has-tags");
 	    	//fprintf(stderr, "catItem: ");
@@ -130,7 +128,7 @@ void ParseRef::parseCatItem (xmlDocPtr doc, xmlNodePtr cur, wstring cat_name)
 		    temp_tags_list.clear();
 
 		    xmlFree(Attr);
-		    
+
 		    //key = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
  	    }
 
@@ -139,37 +137,37 @@ void ParseRef::parseCatItem (xmlDocPtr doc, xmlNodePtr cur, wstring cat_name)
     return;
 }
 
-void ParseRef::parseCats (xmlDocPtr doc, xmlNodePtr cur) 
+void ParseRef::parseCats (xmlDocPtr doc, xmlNodePtr cur)
 {
 	xmlChar *Attr;
 	cur = cur->xmlChildrenNode;
 
-	while (cur != NULL) 
+	while (cur != NULL)
 	{
 	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"def-cat")))
 	    {
 	    	Attr = xmlGetProp(cur, (const xmlChar *)"n");
-	    	//fprintf(stderr, "catName: %s\n", Attr);  
-	    	
+	    	//fprintf(stderr, "catName: %s\n", Attr);
+
 	    	parseCatItem(doc,cur, XMLParseUtil::towstring(Attr));
-	    	xmlFree(Attr);	
-	    } 
-	    	
+	    	xmlFree(Attr);
+	    }
+
 		cur = cur->next;
 	}
     return;
 }
 
-vector<markable_pattern> ParseRef::parsePatternItem (xmlDocPtr doc, xmlNodePtr cur) 
+vector<markable_pattern> ParseRef::parsePatternItem (xmlDocPtr doc, xmlNodePtr cur)
 {
 	xmlChar *Attr;
 	cur = cur->xmlChildrenNode;
 
 	vector<markable_pattern> temp_pattern;
 
-	while (cur != NULL) 
+	while (cur != NULL)
 	{
-	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"pattern-item"))) 
+	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"pattern-item")))
 	    {
 	    	markable_pattern temp;
 
@@ -202,7 +200,7 @@ vector<markable_pattern> ParseRef::parsePatternItem (xmlDocPtr doc, xmlNodePtr c
     return temp_pattern;
 }
 
-void ParseRef::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_name) 
+void ParseRef::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_name)
 {
 	xmlChar *Attr;
 
@@ -211,7 +209,7 @@ void ParseRef::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_na
 	//wcerr << markable_name;
 	//cerr << "\n";
 
-	while (cur != NULL) 
+	while (cur != NULL)
 	{
 	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"pattern")))
 	    {
@@ -229,7 +227,7 @@ void ParseRef::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_na
 
 	    	markables_score[markable_name] = score_int;
 	    }
-	    	
+
 		cur = cur->next;
 
 		//cerr << "\n";
@@ -237,59 +235,59 @@ void ParseRef::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_na
     return;
 }
 
-void ParseRef::parseMarkables (xmlDocPtr doc, xmlNodePtr cur) 
+void ParseRef::parseMarkables (xmlDocPtr doc, xmlNodePtr cur)
 {
 	xmlChar *Attr;
 	cur = cur->xmlChildrenNode;
 
-	while (cur != NULL) 
+	while (cur != NULL)
 	{
 	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"markable")))
 	    {
 	    	Attr = xmlGetProp(cur, (const xmlChar *)"n");
-	    	//fprintf(stderr, "MarkableName: ");	
-	    	
+	    	//fprintf(stderr, "MarkableName: ");
+
 	    	parsePatterns(doc,cur, XMLParseUtil::towstring(Attr));
 
 	    	xmlFree(Attr);
-	    } 
-	    	
+	    }
+
 		cur = cur->next;
 	}
     return;
 }
 
-void ParseRef::parseDoc(char *docname) 
+void ParseRef::parseDoc(char *docname)
 {
 	xmlDocPtr doc;
 	xmlNodePtr cur;
 
 	doc = xmlParseFile(docname);
-	
-	if (doc == NULL ) 
+
+	if (doc == NULL )
 	{
 		fprintf(stderr,"Document not parsed successfully. \n");
 		return;
 	}
-	
+
 	cur = xmlDocGetRootElement(doc);
-	
-	if (cur == NULL) 
+
+	if (cur == NULL)
 	{
 		fprintf(stderr,"Empty Document!\n");
 		xmlFreeDoc(doc);
 		return;
 	}
-	
-	if (xmlStrcmp(cur->name, (const xmlChar *) "ref")) 
+
+	if (xmlStrcmp(cur->name, (const xmlChar *) "ref"))
 	{
 		fprintf(stderr,"Document of the wrong type! Root node should be ref.\n");
 		xmlFreeDoc(doc);
 		return;
 	}
-	
+
 	cur = cur->xmlChildrenNode;
-	while (cur != NULL) 
+	while (cur != NULL)
 	{
 		if ((!xmlStrcmp(cur->name, (const xmlChar *)"section-parameters")))
 		{
@@ -305,10 +303,10 @@ void ParseRef::parseDoc(char *docname)
 		{
 			parseMarkables (doc, cur);
 		}
-		 
+
 		cur = cur->next;
 	}
-	
+
 	xmlFreeDoc(doc);
 	return;
 }
@@ -317,7 +315,7 @@ unordered_map<wstring, acceptable_tags> ParseRef::get_parameters()
 {
 	return parameters;
 }
-	
+
 unordered_map<wstring, acceptable_tags> ParseRef::get_cats()
 {
 	return cats;
@@ -334,11 +332,11 @@ unordered_map<wstring, int> ParseRef::get_markables_score()
 }
 
 /* //Code for Testing
-int main(int argc, char **argv) 
+int main(int argc, char **argv)
 {
 	char *docname;
-		
-	if (argc <= 1) 
+
+	if (argc <= 1)
 	{
 		fprintf(stderr, "Usage: %s docname\n", argv[0]);
 		return(0);

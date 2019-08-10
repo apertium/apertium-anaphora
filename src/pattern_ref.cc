@@ -1,10 +1,11 @@
 #include "pattern_ref.h"
 #include "parse_ref.h"
 
-#include<string>
-#include<vector>
-#include<deque>
-#include<iostream>
+#include <string>
+#include <vector>
+#include <deque>
+#include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -45,7 +46,7 @@ int check_acceptable_tags(vector<wstring> input_tags, acceptable_tags check_tags
 {
 	for (acceptable_tags::iterator i = check_tags.begin(); i != check_tags.end(); ++i)
 	{
-		
+
 		int flag_contains_all = 1;
 
 		vector<wstring> temp_tags = *i;
@@ -98,7 +99,7 @@ deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, Pa
 		{
 			//for each pattern
 			vector<markable_pattern> current_pattern = *i;
-			int len_pattern = current_pattern.size();
+			auto len_pattern = current_pattern.size();
 
 			for(deque< vector<unique_LU> >::iterator m = context.begin(); m!=context.end(); ++m) //go through sentences in the queue of context
 			{
@@ -109,7 +110,7 @@ deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, Pa
 				{
 					int match_flag = 0;
 
-					for(int x = 0; x < len_pattern; ++x)
+					for(size_t x = 0; x < len_pattern; ++x)
 					{
 						//this is the window -- check if pattern matches
 
@@ -140,7 +141,7 @@ deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, Pa
 						cerr << "\n";
 						*/
 
-						for(int x = 0; x < len_pattern; ++x)
+						for(size_t x = 0; x < len_pattern; ++x)
 						{
 							((*(n+x)).properties).push_back(markable_name); //add markable name to properties
 

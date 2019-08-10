@@ -3,17 +3,18 @@
 #include "score.h"
 #include "pattern_ref.h"
 
-#include<cstdio>
-#include<fstream>
-#include<string>
-#include<iostream>
-#include<vector>
+#include <cstdio>
+#include <cstring>
+#include <fstream>
+#include <string>
+#include <iostream>
+#include <vector>
 
 using namespace std;
 
 int main(int argc, char **argv)
 {
-	char *refFileName;
+	char *refFileName = nullptr;
 
 	int nullFlush = 0;
 
@@ -22,7 +23,7 @@ int main(int argc, char **argv)
 		fprintf(stderr,"Usage: %s -[Flags] RefFile \n", argv[0]);
 		return 0;
 	}
-	
+
 	else if(argc == 2) // No flag given
 	{
 		refFileName = argv[1];
@@ -37,7 +38,7 @@ int main(int argc, char **argv)
 			else
 			{
 				refFileName = argv[i];
-			} 
+			}
 		}
 	}
 	else
@@ -89,9 +90,9 @@ int main(int argc, char **argv)
 			if(flag_LU == 0) // not inside LU
 			{
 				fwprintf(stdout, L"%C", input_char);
-				
+
 				input_char = fgetc(stdin);
-				
+
 				fwprintf(stdout, L"%C", input_char);
 			}
 			else //inside LU
@@ -100,7 +101,7 @@ int main(int argc, char **argv)
 				fwprintf(stdout, L"%C", input_char);
 
 				input_char = fgetc(stdin);
-				
+
 				fwprintf(stdout, L"%C", input_char);
 				input_stream.push_back(input_char);
 			}
@@ -126,7 +127,7 @@ int main(int argc, char **argv)
 					flag_LU = 0;
 					ParseLexicalUnit LU(input_stream); //Parse Lexical Unit using parse_biltrans
 
-					tl_form = LU.get_tl_form();  
+					tl_form = LU.get_tl_form();
 					tl_tags = LU.get_tl_tags();
 					sl_form = LU.get_sl_form();
 					sl_tags = LU.get_sl_tags();
@@ -154,7 +155,7 @@ int main(int argc, char **argv)
 				}
 
 				fwprintf(stdout, L"%C", input_char);
-				
+
 			}
 		}
 
