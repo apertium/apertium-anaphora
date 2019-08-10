@@ -1,8 +1,26 @@
+/*
+* Copyright (C) 2019 Apertium Project Management Committee <apertium-pmc@dlsi.ua.es>,
+*               2019 Tanmai Khanna <khanna.tanmai@gmail.com>
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 #include "parse_biltrans.h"
 
-#include<vector>
-#include<iostream>
-#include<string>
+#include <vector>
+#include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -16,9 +34,9 @@ ParseLexicalUnit::ParseLexicalUnit(wstring input_LU)
 	for (std::wstring::iterator i = input_LU.begin(); i != input_LU.end(); ++i)
 	{
 		if(*i == '\\') //dealing with escaped characters
-		{	
+		{
 			if(seenSlash == 0) //sl
-			{	
+			{
 				if(seenTag == 1) //in a tag
 				{
 					temptag.push_back(*i);
@@ -132,12 +150,12 @@ vector< wstring > ParseLexicalUnit::get_tl_tags()
 {
 	return tl_tags;
 }
-	
+
 /* //Uncomment to test this code
 
 void print_tags(vector< wstring > input)
 {
-	for (int i = 0; i < input.size(); i++) 
+	for (int i = 0; i < input.size(); i++)
 	{
 		wcout << input[i];
 		cout << " ";
@@ -148,7 +166,7 @@ int main()
 {
 	wstring inputlu;
 	char input_char;
-	
+
 	input_char = fgetc(stdin);
 
 	while(input_char != '\n')

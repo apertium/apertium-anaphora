@@ -1,0 +1,22 @@
+# Apertium Anaphora Resolution
+## Google Summer of Code 2019
+
+### How to Run
+- `./cmake.sh`
+- `make -j4`
+- `sudo make install`
+- Usage: `apertium-anaphora [-z] ref_file.xml`
+
+- Usage in Pipeline:
+`apertium-deshtml < input.txt | lt-proc spa-eng.automorf.bin | apertium-tagger -g $2 spa-eng.prob | apertium-pretransfer | lt-proc -b spa-eng.autobil.bin | lrx-proc -m spa-eng.autolex.bin | apertium-anaphora ref_file.xml | apertium-transfer -b apertium-eng-spa.spa-eng.t1x spa-eng.t1x.bin | apertium-interchunk apertium-eng-spa.spa-eng.t2x spa-eng.t2x.bin | apertium-postchunk apertium-eng-spa.spa-eng.t3x spa-eng.t3x.bin | lt-proc -g spa-eng.autogen.bin | lt-proc -p spa-eng.autopgen.bin | apertium-retxt`
+
+### Flags
+- -z : Null Flush
+
+### Files
+- `src/`: 		C++ Code for Anaphora Module
+
+### Licensing
+This package is licensed under the [GNU General Public License](https://www.gnu.org/licenses/licenses.html#GPL) as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+If it becomes necessary, we are open to dual-licensing the package under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).

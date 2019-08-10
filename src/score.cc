@@ -1,21 +1,39 @@
+/*
+* Copyright (C) 2019 Apertium Project Management Committee <apertium-pmc@dlsi.ua.es>,
+*               2019 Tanmai Khanna <khanna.tanmai@gmail.com>
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 #include "score.h"
 #include "parse_ref.h"
 #include "pattern_ref.h"
 
-#include<string>
-#include<vector>
-#include<iostream>
-#include<queue>
-#include<deque>
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <deque>
 
 using namespace std;
 
-void showq(deque < vector<unique_LU> > gq) 
-{   
+void showq(deque < vector<unique_LU> > gq)
+{
     for(std::deque < vector<unique_LU> >::iterator j = gq.begin(); j != gq.end(); ++j)
     {
     	vector<unique_LU> temp_sentence = *j;
-    	
+
     	cerr << "\n";
     	for (std::vector<unique_LU>::iterator i = temp_sentence.begin(); i != temp_sentence.end(); ++i)
     	{
@@ -23,9 +41,9 @@ void showq(deque < vector<unique_LU> > gq)
     	}
 
     	cerr << "\n";
-    } 
-    cerr << '\n'; 
-} 
+    }
+    cerr << '\n';
+}
 
 int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wstring > input_pos_tags, wstring input_tl_wordform, ParseRef ref_file)
 {
@@ -34,7 +52,7 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 
 	unique_LU input_LU = {input_id, input_wordform, input_tl_wordform, input_pos_tags, temp_prop}; //initialise LU
 
-	if(context.empty()) //if queue is empty 
+	if(context.empty()) //if queue is empty
 	{
 		vector<unique_LU> sentence; //initialise a sentence
 		sentence.push_back(input_LU); //add the first word to the sentence
@@ -87,7 +105,7 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseRef ref_file)
 	//Get scores for markables in a variable
 	unordered_map<wstring, int> markables_score = ref_file.get_markables_score();
 
-	//Start going through sentences(earliest to current) and apply all indicators to modify scores of the NPs 
+	//Start going through sentences(earliest to current) and apply all indicators to modify scores of the NPs
 	for(deque< vector<unique_LU> >::iterator i = context_with_prop.begin(); i!=context_with_prop.end(); ++i) //read through the queue in reverse
 	{
 		firstNP = 1; //firstNP flag true
@@ -120,7 +138,7 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseRef ref_file)
 					}
 
 					//Impeding Indicators
-					
+
 					//Indicators from XML file (iterate through all markables that provided a score)
 
 					for(unordered_map<wstring, int>::iterator x = markables_score.begin(); x != markables_score.end(); ++x)
@@ -134,7 +152,7 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseRef ref_file)
 							temp_score += x->second; //Add score to the temp score (could be negative also)
 						}
 					}
-					
+
 					//Add to Antecedent List with Score
 					antecedent antecedent_with_score = {antecedent_LU, temp_score};
 					antecedent_list.push_back(antecedent_with_score);
