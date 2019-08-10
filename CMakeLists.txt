@@ -1,7 +1,9 @@
 set(CMAKE_LEGACY_CYGWIN_WIN32 0)
-cmake_minimum_required(VERSION 2.8.9 FATAL_ERROR)
-project(apertium-anaphora CXX)
-set(VERSION 0.0.1)
+cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
+project(apertium-anaphora
+	VERSION 0.0.1
+	LANGUAGES CXX
+	)
 
 # Release or Debug
 if(NOT CMAKE_BUILD_TYPE)
