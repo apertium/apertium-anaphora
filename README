@@ -1,6 +1,9 @@
 # Apertium Anaphora Resolution
 ## Google Summer of Code 2019
 
+### Documentation
+http://wiki.apertium.org/wiki/Anaphora_Resolution_Module
+
 ### How to Run
 - `./cmake.sh`
 - `make -j4`
