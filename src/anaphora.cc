@@ -38,7 +38,7 @@ int main(int argc, char **argv)
 
 	if (argc < 2) //Need Name of Ref File
 	{
-		fprintf(stderr,"Usage: %s -[Flags] RefFile \n", argv[0]);
+		fprintf(stderr,"Usage: %s -[Flags] arx_file \n", argv[0]);
 		return 0;
 	}
 
@@ -62,7 +62,7 @@ int main(int argc, char **argv)
 	else
 	{
 		fprintf(stderr, "Too many arguments provided.\n");
-		fprintf(stderr, "Usage: %s -[Flags] RefFile \n", argv[0]);
+		fprintf(stderr, "Usage: %s -[Flags] arx_file \n", argv[0]);
 		return 0;
 	}
 
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
 
 	int flag_LU = 0;
 
-	input_char = fgetwc(stdin); //change to fgetwc ?
+	input_char = fgetwc(stdin);
 
 	while(input_char!=EOF) // should I made feof(input_char) ?
 	{
@@ -109,7 +109,7 @@ int main(int argc, char **argv)
 			{
 				fwprintf(stdout, L"%C", input_char);
 
-				input_char = fgetc(stdin);
+				input_char = fgetwc(stdin);
 
 				fwprintf(stdout, L"%C", input_char);
 			}
@@ -118,7 +118,7 @@ int main(int argc, char **argv)
 				input_stream.push_back(input_char);
 				fwprintf(stdout, L"%C", input_char);
 
-				input_char = fgetc(stdin);
+				input_char = fgetwc(stdin);
 
 				fwprintf(stdout, L"%C", input_char);
 				input_stream.push_back(input_char);
