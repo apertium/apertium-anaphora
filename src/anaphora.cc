@@ -16,10 +16,14 @@
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+
 #include "parse_ref.h"
 #include "parse_biltrans.h"
 #include "score.h"
 #include "pattern_ref.h"
+
+#include <lttoolbox/lt_locale.h>
+
 
 #include <cstdio>
 #include <cstring>
@@ -35,6 +39,8 @@ int main(int argc, char **argv)
 	char *refFileName = nullptr;
 
 	int nullFlush = 0;
+
+	LtLocale::tryToSetLocale();       
 
 	if (argc < 2) //Need Name of Ref File
 	{
