@@ -17,10 +17,10 @@
 */
 
 
-#include "parse_ref.h"
+#include "parse_arx.h"
 #include "parse_biltrans.h"
 #include "score.h"
-#include "pattern_ref.h"
+#include "pattern_arx.h"
 
 #include <lttoolbox/lt_locale.h>
 
@@ -55,7 +55,7 @@ static int debug_flag; //flag set by --debug
 
 int main(int argc, char **argv)
 {
-	char *refFileName = nullptr;
+	char *arxFileName = nullptr;
 
 	int nullFlush = 0;
 
@@ -115,7 +115,7 @@ int main(int argc, char **argv)
 	if(argc - optind != 1) 
 		help_message(argv[0]);
 
-	refFileName = argv[optind]; //Name of Ref File is the remaining argument
+	arxFileName = argv[optind]; //Name of Arx File is the remaining argument
 
 	wchar_t input_char;
 
@@ -130,8 +130,8 @@ int main(int argc, char **argv)
 	vector<wstring> sl_tags;
 	vector<wstring> tl_tags;
 
-	ParseRef ref_file;
-	ref_file.parseDoc(refFileName);
+	ParseArx arx_file;
+	arx_file.parseDoc(arxFileName);
 
 	int flag_LU = 0;
 
@@ -205,7 +205,7 @@ int main(int argc, char **argv)
 					{
 						int retval;
 
-						retval = score_module.add_word(gen_id, sl_form, sl_tags, tl_form, ref_file); //Give word to Scoring Module
+						retval = score_module.add_word(gen_id, sl_form, sl_tags, tl_form, arx_file); //Give word to Scoring Module
 						//If retval is 0, nothing will be added in side ref
 
 						//If retval is 1, we call get_antecedent() and add it to ref

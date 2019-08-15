@@ -16,10 +16,10 @@
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _PATTERNREF_
-#define _PATTERNREF_
+#ifndef _PATTERNARX_
+#define _PATTERNARX_
 
-#include "parse_ref.h"
+#include "parse_arx.h"
 
 #include <string>
 #include <vector>
@@ -47,6 +47,6 @@ int contains_any(vector<wstring> tags, vector<wstring> candidates);
 
 int check_acceptable_tags(vector<wstring> input_tags, acceptable_tags check_tags);
 
-deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, ParseRef ref_file);
+deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, ParseArx arx_file);
 
 #endif

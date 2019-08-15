@@ -16,8 +16,8 @@
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _PARSEREF_
-#define _PARSEREF_
+#ifndef _PARSEARX_
+#define _PARSEARX_
 
 #include <cstdio>
 #include <string>
@@ -42,7 +42,7 @@ typedef vector< vector<markable_pattern> > acceptable_patterns;
 
 void print_tags(vector< wstring > input);
 
-class ParseRef
+class ParseArx
 {
 private:
 	unordered_map<wstring, acceptable_tags> parameters; //parameter name mapped to the acceptable tag lists

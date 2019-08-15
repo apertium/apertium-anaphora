@@ -17,8 +17,8 @@
 */
 
 #include "score.h"
-#include "parse_ref.h"
-#include "pattern_ref.h"
+#include "parse_arx.h"
+#include "pattern_arx.h"
 
 #include <string>
 #include <vector>
@@ -45,10 +45,10 @@ void showq(deque < vector<unique_LU> > gq)
     cerr << '\n';
 }
 
-int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wstring > input_pos_tags, wstring input_tl_wordform, ParseRef ref_file)
+int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wstring > input_pos_tags, wstring input_tl_wordform, ParseArx arx_file)
 {
 	vector<wstring> temp_prop;
-	unordered_map<wstring, acceptable_tags> ref_parameters = ref_file.get_parameters();
+	unordered_map<wstring, acceptable_tags> arx_parameters = arx_file.get_parameters();
 
 	unique_LU input_LU = {input_id, input_wordform, input_tl_wordform, input_pos_tags, temp_prop}; //initialise LU
 
@@ -59,7 +59,7 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 
 		context.push_back(sentence);
 
-		if(check_acceptable_tags(input_LU.pos_tags, ref_parameters[L"delimiter"]) ) //if sentence end (somehow the first LU is a sentence end)
+		if(check_acceptable_tags(input_LU.pos_tags, arx_parameters[L"delimiter"]) ) //if sentence end (somehow the first LU is a sentence end)
 		{
 			vector<unique_LU> new_sentence;
 
@@ -70,7 +70,7 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 	{
 		context.back().push_back(input_LU); //add word to the latest added sentence in the queue
 
-		if(check_acceptable_tags(input_LU.pos_tags, ref_parameters[L"delimiter"]) )
+		if(check_acceptable_tags(input_LU.pos_tags, arx_parameters[L"delimiter"]) )
 		{
 			vector<unique_LU> new_sentence;
 
@@ -79,9 +79,9 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 			if(context.size() > 4)
 				context.pop_front(); //remove the earliest added sentence (We only want current and three previous sentences in context)
 		}
-		else if( check_acceptable_tags(input_LU.pos_tags, ref_parameters[L"anaphor"]) ) //check if tags of current word match with anaphor tags in ref file
+		else if( check_acceptable_tags(input_LU.pos_tags, arx_parameters[L"anaphor"]) ) //check if tags of current word match with anaphor tags in arx file
 		{
-			apply_indicators(input_LU, ref_file);
+			apply_indicators(input_LU, arx_file);
 			return 1; //To show that something will be added in side ref
 		}
 	}
@@ -89,7 +89,7 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 	return 0; //To show that nothing will be added in side ref
 }
 
-void Scoring::apply_indicators(unique_LU anaphor, ParseRef ref_file)
+void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file)
 {
 	int distance_marker = 2; //starts from 2 for current sentence and reduces till -1 as we go to previous sentences
 	int temp_score;
@@ -98,12 +98,12 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseRef ref_file)
 	antecedent_list.clear(); //clear it from the last anaphor
 
 	//Go through the context and add properties based on external file
-	deque< vector<unique_LU> > context_with_prop = add_properties(context, ref_file); //dont add properties in the actual context (might wanna change)
+	deque< vector<unique_LU> > context_with_prop = add_properties(context, arx_file); //dont add properties in the actual context (might wanna change)
 
 	distance_marker = distance_marker - context_with_prop.size() + 1; //set distance to earliest sentence based on number of sentences in context
 
 	//Get scores for markables in a variable
-	unordered_map<wstring, int> markables_score = ref_file.get_markables_score();
+	unordered_map<wstring, int> markables_score = arx_file.get_markables_score();
 
 	//Start going through sentences(earliest to current) and apply all indicators to modify scores of the NPs
 	for(deque< vector<unique_LU> >::iterator i = context_with_prop.begin(); i!=context_with_prop.end(); ++i) //read through the queue in reverse
@@ -118,7 +118,7 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseRef ref_file)
 			//print_tags((*j).properties);
 			//cerr << "\n";
 
-			if(check_acceptable_tags((*j).pos_tags, ref_file.get_parameters()[L"antecedent"]) ) // if it is antecedent (based on external xml file)
+			if(check_acceptable_tags((*j).pos_tags, arx_file.get_parameters()[L"antecedent"]) ) // if it is antecedent (based on external xml file)
 			{
 				temp_score = 0;
 

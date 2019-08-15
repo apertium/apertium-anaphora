@@ -19,8 +19,8 @@
 #ifndef _MITKOVSCORE_
 #define _MITKOVSCORE_
 
-#include "parse_ref.h"
-#include "pattern_ref.h"
+#include "parse_arx.h"
+#include "pattern_arx.h"
 
 #include <string>
 #include <vector>
@@ -38,8 +38,8 @@ private:
 	vector<antecedent> antecedent_list; //A list of antecedents
 
 public:
-	int add_word(unsigned int input_id, wstring input_wordform, vector< wstring > pos_tags, wstring input_tl_wordform, ParseRef ref_file);
-	void apply_indicators(unique_LU anaphor, ParseRef ref_file);
+	int add_word(unsigned int input_id, wstring input_wordform, vector< wstring > pos_tags, wstring input_tl_wordform, ParseArx arx_file);
+	void apply_indicators(unique_LU anaphor, ParseArx arx_file);
 	int check_agreement(vector<wstring> antecedent_tags, vector<wstring> anaphor_tags);
 	wstring get_antecedent();
 	void clear();

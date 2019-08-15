@@ -1,6 +1,6 @@
 add_executable(apertium-anaphora
-	pattern_ref.cc
-	parse_ref.cc
+	pattern_arx.cc
+	parse_arx.cc
 	parse_biltrans.cc
 	score.cc
 	anaphora.cc

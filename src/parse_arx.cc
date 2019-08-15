@@ -16,7 +16,7 @@
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "parse_ref.h"
+#include "parse_arx.h"
 
 #include <cstdio>
 #include <string>
@@ -37,7 +37,7 @@ void print_tags(const vector<wstring>& input)
 	}
 }
 
-vector<wstring> ParseRef::parseTags (wstring tags)
+vector<wstring> ParseArx::parseTags (wstring tags)
 {
 	vector<wstring> temp_tags_list;
 
@@ -72,7 +72,7 @@ vector<wstring> ParseRef::parseTags (wstring tags)
 	return temp_tags_list;
 }
 
-void ParseRef::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parameter_name)
+void ParseArx::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parameter_name)
 {
 	xmlChar *Attr;
 	cur = cur->xmlChildrenNode;
@@ -102,7 +102,7 @@ void ParseRef::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parame
     return;
 }
 
-void ParseRef::parseParameters (xmlDocPtr doc, xmlNodePtr cur)
+void ParseArx::parseParameters (xmlDocPtr doc, xmlNodePtr cur)
 {
 	wstring parameter_name;
 
@@ -126,7 +126,7 @@ void ParseRef::parseParameters (xmlDocPtr doc, xmlNodePtr cur)
     return;
 }
 
-void ParseRef::parseCatItem (xmlDocPtr doc, xmlNodePtr cur, wstring cat_name)
+void ParseArx::parseCatItem (xmlDocPtr doc, xmlNodePtr cur, wstring cat_name)
 {
 	xmlChar *Attr;
 	cur = cur->xmlChildrenNode;
@@ -155,7 +155,7 @@ void ParseRef::parseCatItem (xmlDocPtr doc, xmlNodePtr cur, wstring cat_name)
     return;
 }
 
-void ParseRef::parseCats (xmlDocPtr doc, xmlNodePtr cur)
+void ParseArx::parseCats (xmlDocPtr doc, xmlNodePtr cur)
 {
 	xmlChar *Attr;
 	cur = cur->xmlChildrenNode;
@@ -176,7 +176,7 @@ void ParseRef::parseCats (xmlDocPtr doc, xmlNodePtr cur)
     return;
 }
 
-vector<markable_pattern> ParseRef::parsePatternItem (xmlDocPtr doc, xmlNodePtr cur)
+vector<markable_pattern> ParseArx::parsePatternItem (xmlDocPtr doc, xmlNodePtr cur)
 {
 	xmlChar *Attr;
 	cur = cur->xmlChildrenNode;
@@ -218,7 +218,7 @@ vector<markable_pattern> ParseRef::parsePatternItem (xmlDocPtr doc, xmlNodePtr c
     return temp_pattern;
 }
 
-void ParseRef::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_name)
+void ParseArx::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_name)
 {
 	xmlChar *Attr;
 
@@ -253,7 +253,7 @@ void ParseRef::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_na
     return;
 }
 
-void ParseRef::parseMarkables (xmlDocPtr doc, xmlNodePtr cur)
+void ParseArx::parseMarkables (xmlDocPtr doc, xmlNodePtr cur)
 {
 	xmlChar *Attr;
 	cur = cur->xmlChildrenNode;
@@ -275,7 +275,7 @@ void ParseRef::parseMarkables (xmlDocPtr doc, xmlNodePtr cur)
     return;
 }
 
-void ParseRef::parseDoc(char *docname)
+void ParseArx::parseDoc(char *docname)
 {
 	xmlDocPtr doc;
 	xmlNodePtr cur;
@@ -329,22 +329,22 @@ void ParseRef::parseDoc(char *docname)
 	return;
 }
 
-unordered_map<wstring, acceptable_tags> ParseRef::get_parameters()
+unordered_map<wstring, acceptable_tags> ParseArx::get_parameters()
 {
 	return parameters;
 }
 
-unordered_map<wstring, acceptable_tags> ParseRef::get_cats()
+unordered_map<wstring, acceptable_tags> ParseArx::get_cats()
 {
 	return cats;
 }
 
-unordered_map<wstring, acceptable_patterns> ParseRef::get_markables()
+unordered_map<wstring, acceptable_patterns> ParseArx::get_markables()
 {
 	return markables;
 }
 
-unordered_map<wstring, int> ParseRef::get_markables_score()
+unordered_map<wstring, int> ParseArx::get_markables_score()
 {
 	return markables_score;
 }
@@ -362,7 +362,7 @@ int main(int argc, char **argv)
 
 	docname = argv[1];
 
-	ParseRef ref;
+	ParseArx ref;
 
 	ref.parseDoc(docname);
 

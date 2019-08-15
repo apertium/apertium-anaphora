@@ -16,8 +16,8 @@
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "pattern_ref.h"
-#include "parse_ref.h"
+#include "pattern_arx.h"
+#include "parse_arx.h"
 
 #include <string>
 #include <vector>
@@ -100,12 +100,12 @@ int check_acceptable_tags(vector<wstring> input_tags, acceptable_tags check_tags
 //check_acceptable_patterns(vector)
 
 
-deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, ParseRef ref_file)
+deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, ParseArx arx_file)
 {
-	unordered_map<wstring, acceptable_patterns> ref_markables = ref_file.get_markables();
-	unordered_map<wstring, acceptable_tags> ref_cats = ref_file.get_cats();
+	unordered_map<wstring, acceptable_patterns> arx_markables = arx_file.get_markables();
+	unordered_map<wstring, acceptable_tags> arx_cats = arx_file.get_cats();
 
-	for (unordered_map<wstring, acceptable_patterns>::iterator it = ref_markables.begin(); it != ref_markables.end(); it++ ) //go through markables defined in xml file
+	for (unordered_map<wstring, acceptable_patterns>::iterator it = arx_markables.begin(); it != arx_markables.end(); it++ ) //go through markables defined in xml file
 	{
 		//for each markable
 		wstring markable_name = it->first;
@@ -132,7 +132,7 @@ deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, Pa
 					{
 						//this is the window -- check if pattern matches
 
-						acceptable_tags pattern_item_tags = ref_cats[current_pattern[x].name]; //get pattern item tags from def-cats
+						acceptable_tags pattern_item_tags = arx_cats[current_pattern[x].name]; //get pattern item tags from def-cats
 
 						if(check_acceptable_tags((*(n+x)).pos_tags, pattern_item_tags)) //comparing current LU tags to pattern tags
 						{
