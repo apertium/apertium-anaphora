@@ -117,45 +117,6 @@ int main(int argc, char **argv)
 
 	refFileName = argv[optind]; //Name of Ref File is the remaining argument
 
-
-	/*
-	if (argc < 2) //Need Name of Ref File
-	{
-		fprintf(stderr,"Usage: %s -[Flags] arx_file \n", argv[0]);
-		return 0;
-	}
-
-	else if(argc == 2) // No flag given
-	{
-		refFileName = argv[1];
-	}
-
-	else if(argc == 3) //flag given
-	{
-		for(int i=1; i < argc; i++) //at i=0 we have the program name
-		{
-			if(strcmp(argv[i], "-z") == 0)
-				nullFlush = 1;
-
-			else if ( (strcmp(argv[i], "-h") == 0) || (strcmp(argv[i], "--help") == 0) )
-			{
-				help_message(argv[0]);
-			}
-
-			else
-			{
-				refFileName = argv[i];
-			}
-		}
-	}
-	else
-	{
-		fprintf(stderr, "Too many arguments provided.\n");
-		fprintf(stderr, "Usage: %s -[Flags] arx_file \n", argv[0]);
-		return 0;
-	}
-	*/
-
 	wchar_t input_char;
 
 	wstring input_stream;
