@@ -31,8 +31,27 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <libgen.h>
+#include <getopt.h>
 
 using namespace std;
+
+void help_message(char *progname)
+{
+	wcerr << "USAGE: " << basename(progname) << " arx_file" << endl;
+	wcerr << "       " << basename(progname) << " -z arx_file" << endl;
+	wcerr << "  arx_file   Anaphora Resolution rules file (apertium-xxx-yyy.xxx-yyy.arx)" << endl;
+
+	//wcerr << "  input      input file, standard input by default" << endl;
+	//wcerr << "  output     output file, standard output by default" << endl;
+
+	wcerr << "  -z         null-flushing output on \\0" << endl;
+	wcerr << "  -h         shows this message" << endl;
+
+	exit(EXIT_FAILURE);
+}
+
+static int debug_flag; //flag set by --debug
 
 int main(int argc, char **argv)
 {
@@ -40,8 +59,66 @@ int main(int argc, char **argv)
 
 	int nullFlush = 0;
 
-	LtLocale::tryToSetLocale();       
+	LtLocale::tryToSetLocale();
 
+	int c;
+
+	while (1)
+	{
+		static struct option long_options[] =
+		{
+			{"debug", no_argument,       &debug_flag, 1},
+			{"null-flush",     no_argument,       0, 'z'},
+			{"help",  no_argument,       0, 'h'},
+			{0, 0, 0, 0}
+		};
+
+		/* getopt_long stores the option index here. */
+		int option_index = 0;
+
+		c = getopt_long (argc, argv, "zh", long_options, &option_index);
+
+		/* Detect the end of the options. */
+		if (c == -1)
+		break;
+
+		switch (c)
+		{
+		case 0:
+			/* If this option set a flag, do nothing else now. */
+			if (long_options[option_index].flag != 0)
+			break;
+			fprintf (stderr, "option %s", long_options[option_index].name);
+			if (optarg)
+			fprintf (stderr, " with arg %s", optarg);
+			fprintf (stderr, "\n");
+			break;
+
+		case 'z':
+			nullFlush = 1;
+			break;
+
+		case '?':
+			/* getopt_long already printed an error message. */
+			break;
+
+		case 'h':
+		default:
+			help_message(argv[0]);
+			break;
+		}
+	}
+
+	if(debug_flag)
+		fprintf(stderr, "Debug Flag is set.\n");
+
+	if(argc - optind != 1) 
+		help_message(argv[0]);
+
+	refFileName = argv[optind]; //Name of Ref File is the remaining argument
+
+
+	/*
 	if (argc < 2) //Need Name of Ref File
 	{
 		fprintf(stderr,"Usage: %s -[Flags] arx_file \n", argv[0]);
@@ -59,6 +136,12 @@ int main(int argc, char **argv)
 		{
 			if(strcmp(argv[i], "-z") == 0)
 				nullFlush = 1;
+
+			else if ( (strcmp(argv[i], "-h") == 0) || (strcmp(argv[i], "--help") == 0) )
+			{
+				help_message(argv[0]);
+			}
+
 			else
 			{
 				refFileName = argv[i];
@@ -71,6 +154,7 @@ int main(int argc, char **argv)
 		fprintf(stderr, "Usage: %s -[Flags] arx_file \n", argv[0]);
 		return 0;
 	}
+	*/
 
 	wchar_t input_char;
 
