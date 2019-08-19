@@ -33,7 +33,7 @@ ParseLexicalUnit::ParseLexicalUnit(wstring input_LU)
 
 	for (std::wstring::iterator i = input_LU.begin(); i != input_LU.end(); ++i)
 	{
-		if(*i == '\\') //dealing with escaped characters
+		if(*i == L'\\') //dealing with escaped characters
 		{
 			if(seenSlash == 0) //sl
 			{
@@ -75,19 +75,19 @@ ParseLexicalUnit::ParseLexicalUnit(wstring input_LU)
 			}
 		}
 
-		else if(*i == '/')
+		else if(*i == L'/')
 			seenSlash++;
 
 		else if(seenSlash == 0) //sl
 		{
 			sl_form.push_back(*i); //add to the sl form
 
-			if(*i == '<') //start reading tag
+			if(*i == L'<') //start reading tag
 				seenTag++;
 
 			else if(seenTag == 1) //inside a tag
 			{
-				if(*i == '>') //if tag ends
+				if(*i == L'>') //if tag ends
 				{
 					seenTag--;
 					sl_tags.push_back(temptag); //add tag to list of sl tags
@@ -104,13 +104,13 @@ ParseLexicalUnit::ParseLexicalUnit(wstring input_LU)
 		else if(seenSlash == 1) //tl (only first entry in tl)
 		{
 			tl_form.push_back(*i); //add to the tl form
-
-			if(*i == '<') //start reading tag
+			
+			if(*i == L'<') //start reading tag
 				seenTag++;
 
 			else if(seenTag == 1) //inside a tag
 			{
-				if(*i == '>') //if tag ends
+				if(*i == L'>') //if tag ends
 				{
 					seenTag--;
 					tl_tags.push_back(temptag); //add tag to list of tl tags

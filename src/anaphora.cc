@@ -158,20 +158,20 @@ int main(int argc, char **argv)
 		{
 			if(flag_LU == 0) // not inside LU
 			{
-				fwprintf(stdout, L"%C", input_char);
+				fputwc(input_char, stdout);
 
 				input_char = fgetwc(stdin);
 
-				fwprintf(stdout, L"%C", input_char);
+				fputwc(input_char, stdout);
 			}
 			else //inside LU
 			{
 				input_stream.push_back(input_char);
-				fwprintf(stdout, L"%C", input_char);
+				fputwc(input_char, stdout);
 
 				input_char = fgetwc(stdin);
 
-				fwprintf(stdout, L"%C", input_char);
+				fputwc(input_char, stdout);
 				input_stream.push_back(input_char);
 			}
 		}
@@ -179,7 +179,7 @@ int main(int argc, char **argv)
 		{
 			if(flag_LU == 0) //Not Part of an LU
 			{
-				fwprintf(stdout, L"%C", input_char);
+				fputwc(input_char, stdout);
 
 				if(input_char == L'^')
 					flag_LU = 1;
@@ -191,9 +191,10 @@ int main(int argc, char **argv)
 				{
 					gen_id++; //generate ids for LUs
 
-					fwprintf(stdout, L"/"); //for adding ref
+					fputwc(L'/', stdout); //for adding ref
 
 					flag_LU = 0;
+
 					ParseLexicalUnit LU(input_stream); //Parse Lexical Unit using parse_biltrans
 
 					tl_form = LU.get_tl_form();
@@ -212,7 +213,8 @@ int main(int argc, char **argv)
 						if(retval == 1)
 						{
 							final_ref = score_module.get_antecedent();
-							wcout << final_ref; //add antecedent to side ref of LU //CHANGE
+
+							fputws(final_ref.c_str(), stdout); //add antecedent to side ref of LU
 						}
 					}
 
@@ -223,7 +225,7 @@ int main(int argc, char **argv)
 					input_stream.push_back(input_char);
 				}
 
-				fwprintf(stdout, L"%C", input_char);
+				fputwc(input_char, stdout);
 
 			}
 		}

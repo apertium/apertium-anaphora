@@ -192,8 +192,8 @@ wstring Scoring::get_antecedent()
 
 	for(vector<antecedent>::iterator it=antecedent_list.begin();it!=antecedent_list.end();++it) //read from furthest to nearest
 	{
-		//cerr << "\n" << (*it).LU.id << ": ";
-		//wcerr << (*it).LU.wordform;
+		//cerr << "\n" << (*it).LU.id << ": "; //for debugging
+		//fputws((*it).LU.wordform.c_str(), stderr);
 		//cerr << " : " << (*it).score << "\n";
 
 		if((*it).score >= final_antecedent.score) //picking the highest scored and latest added (most recent) antecedent
