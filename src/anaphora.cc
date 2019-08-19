@@ -48,7 +48,7 @@ void help_message(char *progname)
 	wcerr << "  -z         null-flushing output on \\0" << endl;
 	wcerr << "  -h         shows this message" << endl;
 
-	exit(EXIT_FAILURE);
+	return 1; //return 1 if error
 }
 
 static int debug_flag; //flag set by --debug
@@ -67,9 +67,9 @@ int main(int argc, char **argv)
 	{
 		static struct option long_options[] =
 		{
-			{"debug", no_argument,       &debug_flag, 1},
-			{"null-flush",     no_argument,       0, 'z'},
-			{"help",  no_argument,       0, 'h'},
+			{"debug", 		no_argument,	&debug_flag,	1},
+			{"null-flush",	no_argument,	0,				'z'},
+			{"help",		no_argument,	0,				'h'},
 			{0, 0, 0, 0}
 		};
 
@@ -235,6 +235,6 @@ int main(int argc, char **argv)
 
 	//fclose(fin);
 
-	return 1;
+	return 0;
 }
 
