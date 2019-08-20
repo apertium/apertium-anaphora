@@ -76,10 +76,12 @@ void help_message(char *progname)
 	exit(EXIT_FAILURE);
 }
 
-static int debug_flag; //flag set by --debug
+
 
 int main(int argc, char **argv)
 {
+	int debug_flag = 0; //flag set by --debug
+
 	char *arxFileName = nullptr;
 
 	int nullFlush = 0;
@@ -92,16 +94,16 @@ int main(int argc, char **argv)
 	{
 		static struct option long_options[] =
 		{
-			{"debug", 		no_argument,	&debug_flag,	1},
-			{"null-flush",	no_argument,	0,				'z'},
-			{"help",		no_argument,	0,				'h'},
+			{"debug", 		no_argument,	0,	'd'},
+			{"null-flush",	no_argument,	0,	'z'},
+			{"help",		no_argument,	0,	'h'},
 			{0, 0, 0, 0}
 		};
 
 		/* getopt_long stores the option index here. */
 		int option_index = 0;
 
-		c = getopt_long (argc, argv, "zh", long_options, &option_index);
+		c = getopt_long (argc, argv, "dzh", long_options, &option_index);
 
 		/* Detect the end of the options. */
 		if (c == -1)
@@ -110,13 +112,14 @@ int main(int argc, char **argv)
 		switch (c)
 		{
 		case 0:
-			/* If this option set a flag, do nothing else now. */
-			if (long_options[option_index].flag != 0)
-			break;
 			fprintf (stderr, "option %s", long_options[option_index].name);
 			if (optarg)
 			fprintf (stderr, " with arg %s", optarg);
 			fprintf (stderr, "\n");
+			break;
+
+		case 'd':
+			debug_flag = 1;
 			break;
 
 		case 'z':
@@ -133,9 +136,6 @@ int main(int argc, char **argv)
 			break;
 		}
 	}
-
-	if(debug_flag)
-		fprintf(stderr, "Debug Flag is set.\n");
 
 	FILE *input = stdin, *output = stdout;
 
@@ -256,7 +256,7 @@ int main(int argc, char **argv)
 						//If retval is 1, we call get_antecedent() and add it to ref
 						if(retval == 1)
 						{
-							final_ref = score_module.get_antecedent();
+							final_ref = score_module.get_antecedent(debug_flag);
 
 							fputws(final_ref.c_str(), output); //add antecedent to side ref of LU
 						}

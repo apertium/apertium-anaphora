@@ -185,22 +185,34 @@ int Scoring::check_agreement(vector<wstring> antecedent_tags, vector<wstring> an
 }
 
 
-wstring Scoring::get_antecedent()
+wstring Scoring::get_antecedent(int debug_flag)
 {
 	unique_LU final_antecedent_LU;
 	antecedent final_antecedent = {final_antecedent_LU, -5};
 
 	for(vector<antecedent>::iterator it=antecedent_list.begin();it!=antecedent_list.end();++it) //read from furthest to nearest
 	{
-		//cerr << "\n" << (*it).LU.id << ": "; //for debugging
-		//fputws((*it).LU.wordform.c_str(), stderr);
-		//cerr << " : " << (*it).score << "\n";
-
+		if(debug_flag)
+		{
+			cerr << "\n" << (*it).LU.id << ": ";
+			fputws((*it).LU.wordform.c_str(), stderr);
+			cerr << " : " << (*it).score << "\n";
+		}
+		
 		if((*it).score >= final_antecedent.score) //picking the highest scored and latest added (most recent) antecedent
 			final_antecedent = (*it);
 	}
 
 	antecedent_list.clear();
+
+	if(debug_flag)
+	{
+		cerr << "\n" << "Final Antecedent: ";
+		fputws(final_antecedent.LU.wordform.c_str(), stderr);
+		cerr << "/";
+		fputws(final_antecedent.LU.tl_wordform.c_str(), stderr);
+		cerr << "\n";
+	}
 
 	return final_antecedent.LU.tl_wordform;
 }
