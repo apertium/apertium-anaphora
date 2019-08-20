@@ -14,8 +14,9 @@ http://wiki.apertium.org/wiki/Anaphora_Resolution_Module
 `apertium-deshtml < input.txt | lt-proc spa-eng.automorf.bin | apertium-tagger -g $2 spa-eng.prob | apertium-pretransfer | lt-proc -b spa-eng.autobil.bin | lrx-proc -m spa-eng.autolex.bin | apertium-anaphora apertium-eng-spa.spa-eng.arx | apertium-transfer -b apertium-eng-spa.spa-eng.t1x spa-eng.t1x.bin | apertium-interchunk apertium-eng-spa.spa-eng.t2x spa-eng.t2x.bin | apertium-postchunk apertium-eng-spa.spa-eng.t3x spa-eng.t3x.bin | lt-proc -g spa-eng.autogen.bin | lt-proc -p spa-eng.autopgen.bin | apertium-retxt`
 
 ### Flags
-- -z / --null-flush: 	Null Flush
-- -h / --help: 			Help
+- -z / --null-flush:  Null Flush
+- -h / --help:  Help
+- -d / --debug:  Debug Mode
 
 ### Files
 - `src/`: 		C++ Code for Anaphora Module
