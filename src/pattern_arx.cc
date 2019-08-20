@@ -27,7 +27,7 @@
 
 using namespace std;
 
-void print_markable(acceptable_patterns inp)
+void print_markable(acceptable_patterns inp) //testing function
 {
 	for(acceptable_patterns::iterator i = inp.begin(); i != inp.end(); i++)
 	{

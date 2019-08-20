@@ -28,7 +28,7 @@
 #include <iostream>
 #include <lttoolbox/xml_parse_util.h>
 
-void print_tags(const vector<wstring>& input)
+void print_tags(const vector<wstring>& input) //testing function
 {
 	for (size_t i = 0; i < input.size(); ++i)
 	{

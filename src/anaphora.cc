@@ -36,10 +36,35 @@
 
 using namespace std;
 
+FILE * open_input(string const &filename)
+{
+  FILE *input = fopen(filename.c_str(), "r");
+  if(!input)
+  {
+    wcerr << "Error: can't open input file '";
+    wcerr << filename.c_str() << "'." << endl;
+    exit(EXIT_FAILURE);
+  }
+
+  return input;
+}
+
+FILE * open_output(string const &filename)
+{
+  FILE *output = fopen(filename.c_str(), "w");
+  if(!output)
+  {
+    wcerr << "Error: can't open output file '";
+    wcerr << filename.c_str() << "'." << endl;
+    exit(EXIT_FAILURE);
+  }
+  return output;
+}
+
 void help_message(char *progname)
 {
-	wcerr << "USAGE: " << basename(progname) << " arx_file" << endl;
-	wcerr << "       " << basename(progname) << " -z arx_file" << endl;
+	wcerr << "USAGE: " << basename(progname) << " arx_file [input [output]]" << endl;
+	wcerr << "       " << basename(progname) << " -z arx_file [input [output]]" << endl;
 	wcerr << "  arx_file   Anaphora Resolution rules file (apertium-xxx-yyy.xxx-yyy.arx)" << endl;
 
 	//wcerr << "  input      input file, standard input by default" << endl;
@@ -48,7 +73,7 @@ void help_message(char *progname)
 	wcerr << "  -z         null-flushing output on \\0" << endl;
 	wcerr << "  -h         shows this message" << endl;
 
-	return 1; //return 1 if error
+	exit(EXIT_FAILURE);
 }
 
 static int debug_flag; //flag set by --debug
@@ -112,10 +137,29 @@ int main(int argc, char **argv)
 	if(debug_flag)
 		fprintf(stderr, "Debug Flag is set.\n");
 
-	if(argc - optind != 1) 
-		help_message(argv[0]);
+	FILE *input = stdin, *output = stdout;
 
-	arxFileName = argv[optind]; //Name of Arx File is the remaining argument
+	switch(argc - optind)
+	{
+		case 1: // if only one argument left, it has to be the arx_file
+			arxFileName = argv[argc - 1]; 
+			break;
+
+		case 2: // if two arguments, it has to be arx_file and input_file
+			arxFileName = argv[argc - 2];
+			input = open_input(argv[argc - 1]); 
+			break;
+
+		case 3: // if three arguments, it has to be arx_file, input file and output file
+			arxFileName = argv[argc - 3];
+			input = open_input(argv[argc - 2]); 
+			output = open_output(argv[argc - 1]);
+			break;
+
+		default:
+			help_message(argv[0]);
+			break;
+	}
 
 	wchar_t input_char;
 
@@ -135,9 +179,9 @@ int main(int argc, char **argv)
 
 	int flag_LU = 0;
 
-	input_char = fgetwc(stdin);
+	input_char = fgetwc(input);
 
-	while(input_char!=EOF) // should I made feof(input_char) ?
+	while(input_char!=EOF)
 	{
 		if(nullFlush && input_char == L'\0') //nullFlush
 		{
@@ -158,20 +202,20 @@ int main(int argc, char **argv)
 		{
 			if(flag_LU == 0) // not inside LU
 			{
-				fputwc(input_char, stdout);
+				fputwc(input_char, output);
 
-				input_char = fgetwc(stdin);
+				input_char = fgetwc(input);
 
-				fputwc(input_char, stdout);
+				fputwc(input_char, output);
 			}
 			else //inside LU
 			{
 				input_stream.push_back(input_char);
-				fputwc(input_char, stdout);
+				fputwc(input_char, output);
 
-				input_char = fgetwc(stdin);
+				input_char = fgetwc(input);
 
-				fputwc(input_char, stdout);
+				fputwc(input_char, output);
 				input_stream.push_back(input_char);
 			}
 		}
@@ -179,7 +223,7 @@ int main(int argc, char **argv)
 		{
 			if(flag_LU == 0) //Not Part of an LU
 			{
-				fputwc(input_char, stdout);
+				fputwc(input_char, output);
 
 				if(input_char == L'^')
 					flag_LU = 1;
@@ -191,7 +235,7 @@ int main(int argc, char **argv)
 				{
 					gen_id++; //generate ids for LUs
 
-					fputwc(L'/', stdout); //for adding ref
+					fputwc(L'/', output); //for adding ref
 
 					flag_LU = 0;
 
@@ -214,7 +258,7 @@ int main(int argc, char **argv)
 						{
 							final_ref = score_module.get_antecedent();
 
-							fputws(final_ref.c_str(), stdout); //add antecedent to side ref of LU
+							fputws(final_ref.c_str(), output); //add antecedent to side ref of LU
 						}
 					}
 
@@ -225,12 +269,12 @@ int main(int argc, char **argv)
 					input_stream.push_back(input_char);
 				}
 
-				fputwc(input_char, stdout);
+				fputwc(input_char, output);
 
 			}
 		}
 
-		input_char = fgetwc(stdin);
+		input_char = fgetwc(input);
 	}
 
 	//fclose(fin);
