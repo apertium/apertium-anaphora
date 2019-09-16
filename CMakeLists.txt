@@ -1,7 +1,7 @@
 set(CMAKE_LEGACY_CYGWIN_WIN32 0)
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(apertium-anaphora
-	VERSION 0.0.1
+	VERSION 0.0.2
 	LANGUAGES CXX
 	)
 
@@ -15,6 +15,8 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_MACOSX_RPATH ON)
 
 option(BUILD_SHARED_LIBS "Set to OFF to use static library" ON)
+
+include(GNUInstallDirs)
 
 if(MSVC)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /utf-8 /permissive- /W4 /MP")
@@ -51,9 +53,13 @@ else()
 	if(NOT _ENABLED_CXX)
 		message(FATAL_ERROR "Could not enable at least C++1y (C++14) - upgrade your compiler")
 	endif()
+
+	# Generate pkg-config file
+	set(prefix ${CMAKE_INSTALL_PREFIX})
+	configure_file(apertium-anaphora.pc.in apertium-anaphora.pc @ONLY)
+	install(FILES "${CMAKE_CURRENT_BINARY_DIR}/apertium-anaphora.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig/")
 endif()
 
-include(GNUInstallDirs)
 find_package(PkgConfig REQUIRED)
 
 pkg_search_module(LIBXML2 REQUIRED libxml-2.0)
@@ -68,4 +74,4 @@ if(WIN32)
 	add_definitions(-D_SECURE_SCL=0 -D_ITERATOR_DEBUG_LEVEL=0 -D_CRT_SECURE_NO_DEPRECATE -DWIN32_LEAN_AND_MEAN -DVC_EXTRALEAN -DNOMINMAX)
 endif()
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src)
+add_subdirectory(src)

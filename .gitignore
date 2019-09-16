@@ -3,7 +3,5 @@ CMakeFiles
 Makefile
 cmake_install.cmake
 install_manifest.txt
-src/CMakeFiles
-src/Makefile
-src/apertium-anaphora
-src/cmake_install.cmake
+apertium-anaphora
+*.pc
