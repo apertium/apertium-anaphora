@@ -97,8 +97,6 @@ int check_acceptable_tags(vector<wstring> input_tags, acceptable_tags check_tags
 	return 0; //if it didn't return 1 then no tag list was fully matched
 }
 
-//check_acceptable_patterns(vector)
-
 
 deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, ParseArx arx_file)
 {
