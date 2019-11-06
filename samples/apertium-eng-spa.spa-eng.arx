@@ -56,6 +56,14 @@
     		<cat-item has-tags="cm"/>
     	</def-cat>
 
+    	<def-cat n="anaphor">
+    		<cat-item has-tags="anaphor"/>
+    	</def-cat>
+
+    	<def-cat n="cop">
+    		<cat-item has-tags="cop"/>
+    	</def-cat>
+
 	</section-def-cats>
 
 	<section-markables>
@@ -174,6 +182,19 @@
 
 			<score n="-2"/>
 		</markable>
+
+		
+		<markable n="Cop"> 
+			<pattern>
+				<pattern-item n="nom"/>
+				<pattern-item n="cop"/>
+				<pattern-item n="anaphor"/>
+			</pattern>
+
+			<score n="-2"/>
+		</markable>
+		
+		<!-- Noun, CopulaVerb, Anaphor - in this order, would mean that the noun can't be its antecedent -->
 
 	</section-markables>
 	

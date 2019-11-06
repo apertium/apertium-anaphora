@@ -28,7 +28,7 @@
 
 using namespace std;
 
-void showq(deque < vector<unique_LU> > gq)
+void showq(deque < vector<unique_LU> > gq) //to display context if needed (testing function) -can be added to debug
 {
     for(std::deque < vector<unique_LU> >::iterator j = gq.begin(); j != gq.end(); ++j)
     {
@@ -37,7 +37,24 @@ void showq(deque < vector<unique_LU> > gq)
     	cerr << "\n";
     	for (std::vector<unique_LU>::iterator i = temp_sentence.begin(); i != temp_sentence.end(); ++i)
     	{
-    		wcerr << (*i).wordform;
+    		wcerr << (*i).tl_wordform;
+
+    		for (std::vector<wstring>::iterator k = (*i).pos_tags.begin(); k != (*i).pos_tags.end(); ++k)
+    		{
+    			cerr << "<";
+    			wcerr << (*k);
+    			cerr << ">";
+    		}
+
+    		cerr << ":";
+
+    		for (std::vector<wstring>::iterator l = (*i).properties.begin(); l != (*i).properties.end(); ++l)
+    		{
+    			cerr << " ";
+    			wcerr << (*l);	
+    		}
+
+    		cerr << "\t";
     	}
 
     	cerr << "\n";
@@ -81,7 +98,17 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 		}
 		else if( check_acceptable_tags(input_LU.pos_tags, arx_parameters[L"anaphor"]) ) //check if tags of current word match with anaphor tags in arx file
 		{
-			apply_indicators(input_LU, arx_file);
+			unique_LU anaphor_LU = input_LU;
+
+			vector <wstring> temp_pos_tags = anaphor_LU.pos_tags;
+			temp_pos_tags.push_back(L"anaphor"); //add the <anaphor> tag to the anaphor pos tags
+			anaphor_LU.pos_tags = temp_pos_tags; //add the modified pos tags to the LU
+
+			
+			context.back().push_back(anaphor_LU); //add modified anaphor LU to the context
+
+			apply_indicators(anaphor_LU, arx_file);
+			
 			return 1; //To show that something will be added in side ref
 		}
 		else
