@@ -68,10 +68,10 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 	}
 	else //if queue is not empty
 	{
-		context.back().push_back(input_LU); //add word to the latest added sentence in the queue
-
 		if(check_acceptable_tags(input_LU.pos_tags, arx_parameters[L"delimiter"]) )
 		{
+			context.back().push_back(input_LU); //add <sent> to context so that it can also be matched in a pattern
+
 			vector<unique_LU> new_sentence;
 
 			context.push_back(new_sentence); //add an empty sentence
@@ -83,6 +83,10 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 		{
 			apply_indicators(input_LU, arx_file);
 			return 1; //To show that something will be added in side ref
+		}
+		else
+		{
+			context.back().push_back(input_LU); //add word to the latest added sentence in the queue
 		}
 	}
 
