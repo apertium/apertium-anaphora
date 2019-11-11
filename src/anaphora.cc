@@ -185,6 +185,8 @@ int main(int argc, char **argv)
 	{
 		if(nullFlush && input_char == L'\0') //nullFlush
 		{
+			fputwc(input_char, output);
+			
 			input_stream.clear();
 			sl_form.clear();
 			tl_form.clear();
