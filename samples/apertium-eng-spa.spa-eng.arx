@@ -191,7 +191,7 @@
 				<pattern-item n="anaphor"/>
 			</pattern>
 
-			<score n="-2"/>
+			<score n="-5"/>
 		</markable>
 		
 		<!-- Noun, CopulaVerb, Anaphor - in this order, would mean that the noun can't be its antecedent -->

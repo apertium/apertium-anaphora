@@ -6,4 +6,4 @@
 ^.<sent>/.<sent>$ ^Tanmai<n><m><sg>/Tanmai<n><m><sg>$ ^es<cop>/is<cop>$ 
 ^el seu<det><pos><m><sg>/his<det><pos><m><sg>$ ^suport<n><m><sg>/support<n><sg>$ 
 ^a<pr>/at<pr>/in<pr>/to<pr>$ ^el<det><def><m><sg>/the<det><def><m><sg>$ 
-^*batle/*batle$ ^de<pr>/of<pr>/from<pr>$ ^*Alaró/*Alaró$^.<sent>/.<sent>$
+^*batle/*batle$ ^de<pr>/of<pr>/from<pr>$ ^el seu<det><pos><m><sg>/his<det><pos><m><sg>$ ^*Alaró/*Alaró$^.<sent>/.<sent>$

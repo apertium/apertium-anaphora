@@ -62,7 +62,7 @@ void showq(deque < vector<unique_LU> > gq) //to display context if needed (testi
     cerr << '\n';
 }
 
-int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wstring > input_pos_tags, wstring input_tl_wordform, ParseArx arx_file)
+int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wstring > input_pos_tags, wstring input_tl_wordform, ParseArx arx_file, int debug_flag)
 {
 	vector<wstring> temp_prop;
 	unordered_map<wstring, acceptable_tags> arx_parameters = arx_file.get_parameters();
@@ -107,7 +107,11 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 			
 			context.back().push_back(anaphor_LU); //add modified anaphor LU to the context
 
-			apply_indicators(anaphor_LU, arx_file);
+			apply_indicators(anaphor_LU, arx_file, debug_flag);
+
+			context.back().pop_back(); //remove modified anaphor LU now that scoring is done
+			context.back().push_back(input_LU); //add normal LU to the context (so that anaphor tag doesn't remain in context)
+			//NOTE: <anaphor> tag is only for CURRENT anaphor
 			
 			return 1; //To show that something will be added in side ref
 		}
@@ -120,7 +124,7 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 	return 0; //To show that nothing will be added in side ref
 }
 
-void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file)
+void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file, int debug_flag)
 {
 	int distance_marker = 2; //starts from 2 for current sentence and reduces till -1 as we go to previous sentences
 	int temp_score;
@@ -136,6 +140,15 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file)
 	//Get scores for markables in a variable
 	unordered_map<wstring, int> markables_score = arx_file.get_markables_score();
 
+	if(debug_flag)
+	{
+		cerr << "\n** For anaphor: ";
+		fputws(anaphor.wordform.c_str(), stderr);
+		cerr << "/";
+		fputws(anaphor.tl_wordform.c_str(), stderr);
+		cerr << ", Context - with markables **\n";
+	}
+
 	//Start going through sentences(earliest to current) and apply all indicators to modify scores of the NPs
 	for(deque< vector<unique_LU> >::iterator i = context_with_prop.begin(); i!=context_with_prop.end(); ++i) //read through the queue in reverse
 	{
@@ -143,11 +156,14 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file)
 
 		for (vector<unique_LU>::iterator j = (*i).begin(); j!=(*i).end(); ++j) //read through sentence
 		{
-			//cerr << "\n";
-			//wcerr << (*j).wordform;
-			//cerr << ": ";
-			//print_tags((*j).properties);
-			//cerr << "\n";
+			if(debug_flag)
+			{
+				cerr << "\n";
+				wcerr << (*j).wordform;
+				cerr << ": ";
+				print_tags((*j).properties);
+				cerr << "\n";
+			}
 
 			if(check_acceptable_tags((*j).pos_tags, arx_file.get_parameters()[L"antecedent"]) ) // if it is antecedent (based on external xml file)
 			{
@@ -221,6 +237,11 @@ wstring Scoring::get_antecedent(int debug_flag)
 	unique_LU final_antecedent_LU;
 	antecedent final_antecedent = {final_antecedent_LU, -5};
 
+	if(debug_flag)
+	{
+		cerr << "\n** Final Scores **\n";
+	}
+
 	for(vector<antecedent>::iterator it=antecedent_list.begin();it!=antecedent_list.end();++it) //read from furthest to nearest
 	{
 		if(debug_flag)
@@ -238,11 +259,11 @@ wstring Scoring::get_antecedent(int debug_flag)
 
 	if(debug_flag)
 	{
-		cerr << "\n" << "Final Antecedent: ";
+		cerr << "\n" << "** Final Antecedent: ";
 		fputws(final_antecedent.LU.wordform.c_str(), stderr);
 		cerr << "/";
 		fputws(final_antecedent.LU.tl_wordform.c_str(), stderr);
-		cerr << "\n";
+		cerr << " **\n";
 	}
 
 	return final_antecedent.LU.tl_wordform;
