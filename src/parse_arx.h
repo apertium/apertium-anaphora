@@ -52,7 +52,7 @@ private:
 	unordered_map<wstring, int> markables_score; //markable name mapped to score of markable
 
 public:
-	void parseDoc(char *docname);
+	int parseDoc(char *docname);
 	void parseParameters (xmlDocPtr doc, xmlNodePtr cur);
 	void parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parameter_name);
 

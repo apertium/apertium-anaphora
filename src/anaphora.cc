@@ -175,7 +175,10 @@ int main(int argc, char **argv)
 	vector<wstring> tl_tags;
 
 	ParseArx arx_file;
-	arx_file.parseDoc(arxFileName);
+	int parse_arx_retval = arx_file.parseDoc(arxFileName);
+
+	if(parse_arx_retval != 0)
+		exit(EXIT_FAILURE);
 
 	int flag_LU = 0;
 

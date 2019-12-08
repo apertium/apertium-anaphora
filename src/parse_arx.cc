@@ -275,7 +275,7 @@ void ParseArx::parseMarkables (xmlDocPtr doc, xmlNodePtr cur)
     return;
 }
 
-void ParseArx::parseDoc(char *docname)
+int ParseArx::parseDoc(char *docname)
 {
 	xmlDocPtr doc;
 	xmlNodePtr cur;
@@ -285,7 +285,7 @@ void ParseArx::parseDoc(char *docname)
 	if (doc == NULL )
 	{
 		fprintf(stderr,"Document not parsed successfully. \n");
-		return;
+		return -1; //return error
 	}
 
 	cur = xmlDocGetRootElement(doc);
@@ -294,14 +294,14 @@ void ParseArx::parseDoc(char *docname)
 	{
 		fprintf(stderr,"Empty Document!\n");
 		xmlFreeDoc(doc);
-		return;
+		return 1; //return error
 	}
 
 	if (xmlStrcmp(cur->name, (const xmlChar *) "ref"))
 	{
 		fprintf(stderr,"Document of the wrong type! Root node should be ref.\n");
 		xmlFreeDoc(doc);
-		return;
+		return 2; //return error
 	}
 
 	cur = cur->xmlChildrenNode;
@@ -326,7 +326,7 @@ void ParseArx::parseDoc(char *docname)
 	}
 
 	xmlFreeDoc(doc);
-	return;
+	return 0;
 }
 
 unordered_map<wstring, acceptable_tags> ParseArx::get_parameters()
