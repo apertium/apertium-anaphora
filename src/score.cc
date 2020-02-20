@@ -145,7 +145,8 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file, wstring par
 	distance_marker = distance_marker - context_with_prop.size() + 1; //set distance to earliest sentence based on number of sentences in context
 
 	//Get scores for markables in a variable
-	unordered_map<wstring, int> markables_score = arx_file.get_markables_score();
+	unordered_map<wstring, int> all_markables_score = arx_file.get_all_markables_score();
+	unordered_map<wstring, int> parameter_markables_score = arx_file.get_parameter_markables_score(parameter_name);
 
 	if(debug_flag)
 	{
@@ -193,9 +194,21 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file, wstring par
 
 					//Impeding Indicators
 
-					//Indicators from XML file (iterate through all markables that provided a score)
+					//Indicators from XML file (iterate through all markables that provided a score without mentioning parameter_name)
+					for(unordered_map<wstring, int>::iterator x = all_markables_score.begin(); x != all_markables_score.end(); ++x)
+					{
+						//cout << "Checking for: ";
+						//wcout << x->first;
+						//cout << "\n";
 
-					for(unordered_map<wstring, int>::iterator x = markables_score.begin(); x != markables_score.end(); ++x)
+						if(contains(antecedent_LU.properties, x->first)) //if markable name present in current antecedent
+						{
+							temp_score += x->second; //Add score to the temp score (could be negative also)
+						}
+					}
+
+					//Now get the scores from the markables that mentioned this specific parameter name
+					for(unordered_map<wstring, int>::iterator x = parameter_markables_score.begin(); x != parameter_markables_score.end(); ++x)
 					{
 						//cout << "Checking for: ";
 						//wcout << x->first;

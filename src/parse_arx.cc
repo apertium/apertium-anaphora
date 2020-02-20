@@ -270,16 +270,26 @@ void ParseArx::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_na
 	    else if ((!xmlStrcmp(cur->name, (const xmlChar *)"score")))
 	    {
 	    	Attr = xmlGetProp(cur, (const xmlChar *)"n");
+
 	    	wstring score_ws = XMLParseUtil::towstring(Attr);
+			int score_int = std::stoi(score_ws);
 
-	    	int score_int = std::stoi(score_ws);
+	    	xmlChar *parameter_name = xmlGetProp(cur, (const xmlChar *)"parameter");
 
-	    	markables_score[markable_name] = score_int;
+	    	if (parameter_name)
+	    	{
+	    		//cerr << "HELLO!";
+	    		wstring parameter_name_ws = XMLParseUtil::towstring(parameter_name);
+	    		parameter_markables_score[parameter_name_ws][markable_name] = score_int;
+	    	}
+	    	else
+	    	{
+	    		//cerr << "FUCK!";
+	    		all_markables_score[markable_name] = score_int;
+	    	}
 	    }
 
 		cur = cur->next;
-
-		//cerr << "\n";
 	}
     return;
 }
@@ -375,9 +385,14 @@ unordered_map<wstring, acceptable_patterns> ParseArx::get_markables()
 	return markables;
 }
 
-unordered_map<wstring, int> ParseArx::get_markables_score()
+unordered_map<wstring, int> ParseArx::get_all_markables_score()
 {
-	return markables_score;
+	return all_markables_score;
+}
+
+unordered_map<wstring, int> ParseArx::get_parameter_markables_score(wstring parameter_name)
+{
+	return parameter_markables_score[parameter_name];
 }
 
 /* //Code for Testing
