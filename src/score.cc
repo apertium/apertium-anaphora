@@ -112,7 +112,7 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 				
 				context.back().push_back(anaphor_LU); //add modified anaphor LU to the context
 
-				apply_indicators(anaphor_LU, arx_file, debug_flag);
+				apply_indicators(anaphor_LU, arx_file, retval.parameter_name, debug_flag);
 
 				context.back().pop_back(); //remove modified anaphor LU now that scoring is done
 				context.back().push_back(input_LU); //add normal LU to the context (so that anaphor tag doesn't remain in context)
@@ -172,7 +172,7 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file, wstring par
 				cerr << "\n";
 			}
 
-			if(check_acceptable_tags((*j).pos_tags, arx_file.get_parameters()[L"antecedent"]) ) // if it is antecedent (based on external xml file)
+			if(check_acceptable_tags((*j).pos_tags, arx_file.get_parameters()[L"antecedent"][parameter_name]) ) // if it is antecedent (based on external xml file)
 			{
 				temp_score = 0;
 
