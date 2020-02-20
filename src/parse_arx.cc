@@ -72,7 +72,8 @@ vector<wstring> ParseArx::parseTags (wstring tags)
 	return temp_tags_list;
 }
 
-void ParseArx::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parameter_name)
+void ParseArx::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parameter_type, wstring parameter_name)
+//parameter_name: detpos, verbal, etc., parameter_type: anaphor, antecedent, etc. 
 {
 	xmlChar *Attr;
 	cur = cur->xmlChildrenNode;
@@ -87,8 +88,8 @@ void ParseArx::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parame
 
 	    	//fprintf(stderr, "ParameterItem: ");
 
-	    	temp_tags_list = parseTags(XMLParseUtil::towstring(Attr));
-	    	parameters[parameter_name].push_back(temp_tags_list);
+    		temp_tags_list = parseTags(XMLParseUtil::towstring(Attr));
+    		parameters[parameter_type][parameter_name].push_back(temp_tags_list);
 
 	    	temp_tags_list.clear();
 
@@ -102,9 +103,9 @@ void ParseArx::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parame
     return;
 }
 
-void ParseArx::parseParameters (xmlDocPtr doc, xmlNodePtr cur)
+void ParseArx::parseParameterTypes (xmlDocPtr doc, xmlNodePtr cur, wstring parameter_name)
 {
-	wstring parameter_name;
+	wstring parameter_type;
 
 	cur = cur->xmlChildrenNode;
 
@@ -112,13 +113,43 @@ void ParseArx::parseParameters (xmlDocPtr doc, xmlNodePtr cur)
 	{
 		if(cur->type == XML_ELEMENT_NODE)
 		{
-			parameter_name = XMLParseUtil::towstring(cur->name);
+			parameter_type = XMLParseUtil::towstring(cur->name);
 
-			//cerr << "\n";
-	    	//wcerr << parameter_name;
-	    	//cerr << "\n";
+			cerr << "\nname: ";
+	    	wcerr << parameter_name;
+	    	cerr << "\ntype: ";
+	    	wcerr << parameter_type;
+	    	cerr << "\n";
 
-	    	parseParameterItem(doc,cur,parameter_name);
+	    	parseParameterItem(doc, cur, parameter_type, parameter_name);
+	    }
+
+		cur = cur->next;
+	}
+    return;
+}
+
+void ParseArx::parseParameters (xmlDocPtr doc, xmlNodePtr cur)
+{
+	xmlChar *parameter_name;
+	wstring parameter_type;
+	cur = cur->xmlChildrenNode;
+
+	while (cur != NULL)
+	{
+	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"def-parameter")))
+	    {
+	    	parameter_name = xmlGetProp(cur, (const xmlChar *)"n");
+	    	//fprintf(stderr, "catName: %s\n", Attr);
+
+	    	parseParameterTypes(doc,cur, XMLParseUtil::towstring(parameter_name));
+	    	xmlFree(parameter_name);
+	    }
+	    else if ((!xmlStrcmp(cur->name, (const xmlChar *)"delimiter")))
+	    {
+	    	parameter_type = XMLParseUtil::towstring(cur->name);
+
+	    	parseParameterItem(doc, cur, parameter_type, L"default"); 
 	    }
 
 		cur = cur->next;
@@ -329,7 +360,7 @@ int ParseArx::parseDoc(char *docname)
 	return 0;
 }
 
-unordered_map<wstring, acceptable_tags> ParseArx::get_parameters()
+parameters_datatype ParseArx::get_parameters()
 {
 	return parameters;
 }

@@ -65,7 +65,7 @@ void showq(deque < vector<unique_LU> > gq) //to display context if needed (testi
 int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wstring > input_pos_tags, wstring input_tl_wordform, ParseArx arx_file, int debug_flag)
 {
 	vector<wstring> temp_prop;
-	unordered_map<wstring, acceptable_tags> arx_parameters = arx_file.get_parameters();
+	parameters_datatype arx_parameters = arx_file.get_parameters();
 
 	unique_LU input_LU = {input_id, input_wordform, input_tl_wordform, input_pos_tags, temp_prop}; //initialise LU
 
@@ -76,7 +76,7 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 
 		context.push_back(sentence);
 
-		if(check_acceptable_tags(input_LU.pos_tags, arx_parameters[L"delimiter"]) ) //if sentence end (somehow the first LU is a sentence end)
+		if(check_acceptable_tags(input_LU.pos_tags, arx_parameters[L"delimiter"][L"default"]) ) //if sentence end (somehow the first LU is a sentence end)
 		{
 			vector<unique_LU> new_sentence;
 
@@ -85,7 +85,7 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 	}
 	else //if queue is not empty
 	{
-		if(check_acceptable_tags(input_LU.pos_tags, arx_parameters[L"delimiter"]) )
+		if(check_acceptable_tags(input_LU.pos_tags, arx_parameters[L"delimiter"][L"default"]))
 		{
 			context.back().push_back(input_LU); //add <sent> to context so that it can also be matched in a pattern
 
@@ -96,35 +96,42 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 			if(context.size() > 4)
 				context.pop_front(); //remove the earliest added sentence (We only want current and three previous sentences in context)
 		}
-		else if( check_acceptable_tags(input_LU.pos_tags, arx_parameters[L"anaphor"]) ) //check if tags of current word match with anaphor tags in arx file
+
+		else 
 		{
-			unique_LU anaphor_LU = input_LU;
+			parameter_return retval = check_pattern_name(input_LU.pos_tags, arx_parameters[L"anaphor"]);
 
-			vector <wstring> temp_pos_tags = anaphor_LU.pos_tags;
-			temp_pos_tags.push_back(L"anaphor"); //add the <anaphor> tag to the anaphor pos tags
-			anaphor_LU.pos_tags = temp_pos_tags; //add the modified pos tags to the LU
+			if(retval.found == 1) //check if tags of current word match with anaphor tags in arx file
+			{
+				unique_LU anaphor_LU = input_LU;
 
-			
-			context.back().push_back(anaphor_LU); //add modified anaphor LU to the context
+				vector <wstring> temp_pos_tags = anaphor_LU.pos_tags;
+				temp_pos_tags.push_back(L"anaphor"); //add the <anaphor> tag to the anaphor pos tags
+				anaphor_LU.pos_tags = temp_pos_tags; //add the modified pos tags to the LU
 
-			apply_indicators(anaphor_LU, arx_file, debug_flag);
+				
+				context.back().push_back(anaphor_LU); //add modified anaphor LU to the context
 
-			context.back().pop_back(); //remove modified anaphor LU now that scoring is done
-			context.back().push_back(input_LU); //add normal LU to the context (so that anaphor tag doesn't remain in context)
-			//NOTE: <anaphor> tag is only for CURRENT anaphor
-			
-			return 1; //To show that something will be added in side ref
+				apply_indicators(anaphor_LU, arx_file, debug_flag);
+
+				context.back().pop_back(); //remove modified anaphor LU now that scoring is done
+				context.back().push_back(input_LU); //add normal LU to the context (so that anaphor tag doesn't remain in context)
+				//NOTE: <anaphor> tag is only for CURRENT anaphor
+				
+				return 1; //To show that something will be added in side ref
+			}
+			else
+			{
+				context.back().push_back(input_LU); //add word to the latest added sentence in the queue
+			}
 		}
-		else
-		{
-			context.back().push_back(input_LU); //add word to the latest added sentence in the queue
-		}
+		
 	}
 
 	return 0; //To show that nothing will be added in side ref
 }
 
-void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file, int debug_flag)
+void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file, wstring parameter_name, int debug_flag)
 {
 	int distance_marker = 2; //starts from 2 for current sentence and reduces till -1 as we go to previous sentences
 	int temp_score;

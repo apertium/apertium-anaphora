@@ -97,6 +97,29 @@ int check_acceptable_tags(vector<wstring> input_tags, acceptable_tags check_tags
 	return 0; //if it didn't return 1 then no tag list was fully matched
 }
 
+parameter_return check_pattern_name(vector<wstring> input_tags, unordered_map<wstring, acceptable_tags> parameter_names)
+//find out if any of the anaphors match wrt tags, and if yes, return the unique name
+{
+	parameter_return retval;
+	retval.found = 0;
+
+	for (unordered_map<wstring, acceptable_tags>::iterator it = parameter_names.begin(); it != parameter_names.end(); it++)
+	{
+		wstring parameter_name = it->first;
+		acceptable_tags parameter_tags= it->second;
+
+		if(check_acceptable_tags(input_tags, parameter_tags))
+		{
+			retval.found = 1;
+			retval.parameter_name = parameter_name;
+
+			return retval;
+		}
+	}
+	
+	return retval;
+}
+
 
 deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, ParseArx arx_file)
 {

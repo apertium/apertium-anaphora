@@ -2,26 +2,33 @@
 <ref>
 	
 	<section-parameters>
-		<anaphor>
-			<parameter-item has-tags="det pos"/>
-		</anaphor>
 
-		<!-- TO IMPLEMENT
-		<anaphor n="detpos">
-			<parameter-item has-tags="det pos"/>
-		</anaphor>
-		<anaphor n="verbal">
-			<parameter-item has-tags="v"/>
-		</anaphor>
-		-->
-		
-		<antecedent>
-			<parameter-item has-tags="n"/>
-			<parameter-item has-tags="np"/>
-		</antecedent>
 		<delimiter>
-			<parameter-item has-tags="sent"/>
+				<parameter-item has-tags="sent"/>
 		</delimiter>
+
+		<def-parameter n="detpos">
+			<anaphor>
+				<parameter-item has-tags="det pos"/>
+			</anaphor>
+
+			<antecedent>
+				<parameter-item has-tags="n"/>
+				<parameter-item has-tags="np"/>
+			</antecedent>
+		</def-parameter>
+
+		<def-parameter n="verbal">
+			<anaphor>
+				<parameter-item has-tags="v"/>
+			</anaphor>
+
+			<antecedent>
+				<parameter-item has-tags="n"/>
+				<parameter-item has-tags="np"/>
+			</antecedent>
+		</def-parameter>
+
 	</section-parameters>
 
 	<section-def-cats>
@@ -191,7 +198,7 @@
 				<pattern-item n="anaphor"/>
 			</pattern>
 
-			<score n="-5"/>
+			<score n="-5" parameter="detpos"/>
 		</markable>
 		
 		<!-- Noun, CopulaVerb, Anaphor - in this order, would mean that the noun can't be its antecedent -->

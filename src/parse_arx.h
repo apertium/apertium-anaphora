@@ -40,12 +40,14 @@ struct markable_pattern
 
 typedef vector< vector<markable_pattern> > acceptable_patterns;
 
+typedef unordered_map< wstring, unordered_map<wstring, acceptable_tags> > parameters_datatype;
+
 void print_tags(vector< wstring > input);
 
 class ParseArx
 {
 private:
-	unordered_map<wstring, acceptable_tags> parameters; //parameter name mapped to the acceptable tag lists
+	parameters_datatype parameters; //parameter type mapped to its parameter types, i.e. anaphor/antecedent mapped to a map which contains n="detpos" and n="verbal", etc.
 	unordered_map<wstring, acceptable_tags> cats; //cat name mapped to acceptable tag lists
 
 	unordered_map<wstring, acceptable_patterns> markables; //markable name mapped to acceptable pattern lists. Also each pattern has a head == 1
@@ -53,8 +55,9 @@ private:
 
 public:
 	int parseDoc(char *docname);
+	void parseParameterTypes (xmlDocPtr doc, xmlNodePtr cur, wstring parameter_name);
+	void parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parameter_name, wstring parameter_type);
 	void parseParameters (xmlDocPtr doc, xmlNodePtr cur);
-	void parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parameter_name);
 
 	void parseCats (xmlDocPtr doc, xmlNodePtr cur);
 	void parseCatItem (xmlDocPtr doc, xmlNodePtr cur, wstring cat_name);
@@ -65,7 +68,7 @@ public:
 
 	vector<wstring> parseTags (wstring tags);
 
-	unordered_map<wstring, acceptable_tags> get_parameters();
+	parameters_datatype get_parameters();
 	unordered_map<wstring, acceptable_tags> get_cats();
 
 	unordered_map<wstring, acceptable_patterns> get_markables();
