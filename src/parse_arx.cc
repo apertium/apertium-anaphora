@@ -114,12 +114,13 @@ void ParseArx::parseParameterTypes (xmlDocPtr doc, xmlNodePtr cur, wstring param
 		if(cur->type == XML_ELEMENT_NODE)
 		{
 			parameter_type = XMLParseUtil::towstring(cur->name);
-
+      /*
 			cerr << "\nname: ";
 	    	wcerr << parameter_name;
 	    	cerr << "\ntype: ";
 	    	wcerr << parameter_type;
 	    	cerr << "\n";
+       */
 
 	    	parseParameterItem(doc, cur, parameter_type, parameter_name);
 	    }
