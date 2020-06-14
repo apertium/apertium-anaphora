@@ -85,7 +85,8 @@
 -->
 
 <!ELEMENT pattern-item EMPTY>
-<!ATTLIST pattern-item n IDREF #REQUIRED>
+<!ATTLIST pattern-item n IDREF #REQUIRED
+                       head CDATA #IMPLIED>
 <!--
     Each attribute to be activated is referred to by its name in the def-cats section
 -->
