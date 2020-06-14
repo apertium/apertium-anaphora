@@ -67,31 +67,33 @@ int check_acceptable_tags(vector<wstring> input_tags, acceptable_tags check_tags
 
 		int flag_contains_all = 1;
 
-		vector<wstring> temp_tags = *i;
-
-		for(std::vector<wstring>::iterator j = temp_tags.begin(); j != temp_tags.end(); ++j)
+    vector<wstring> temp_tags = i->first;
+    vector<wstring> temp_exclude_tags = i->second;
+    
+		for(std::vector<wstring>::iterator j = temp_tags.begin(); j != temp_tags.end(); ++j) //check for the tags in has-tags
 		{
-
 			if(*j == L"*") //ignore * in the tags list
 				continue;
 
-			if(!contains(input_tags, *j)) //if the required tag is NOT in the input LU tags
+			if(!contains(input_tags, *j)) //if the has-tag is NOT in the input LU tags
 			{
 				flag_contains_all = 0;
 				break;
 			}
-			/*
-			else
-			{
-				cerr << "FoundTag:";
-				wcerr << *j;
-				cerr <<"\n";
-			}
-			*/
 		}
+    
+    for(std::vector<wstring>::iterator j = temp_exclude_tags.begin(); j != temp_exclude_tags.end(); ++j) //check for the tags in exclude-tags
+    {
+      if(contains(input_tags, *j)) //if the exclude-tag IS in the input LU tags
+      {
+        flag_contains_all = 0;
+        break;
+      }
+    }
 
-		if(flag_contains_all == 1) //if any tag list fully matched
-			return 1; //else continue to next tag list
+		if(flag_contains_all == 1) //if any tag list fully matched (i.e. has-tags present, exclude-tags absent)
+			return 1;
+    //else continue to next tag list
 	}
 
 	return 0; //if it didn't return 1 then no tag list was fully matched

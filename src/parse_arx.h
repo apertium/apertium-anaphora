@@ -30,7 +30,7 @@
 
 using namespace std;
 
-typedef vector< vector<wstring> > acceptable_tags;
+typedef vector< pair < vector<wstring>, vector<wstring> > > acceptable_tags; //a vector of pairs of tags to match and exclude
 
 struct markable_pattern
 {

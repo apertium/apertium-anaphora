@@ -13,7 +13,7 @@
 			</anaphor>
 
 			<antecedent>
-				<parameter-item has-tags="n"/>
+				<parameter-item has-tags="n" exclude-tags="test"/>
 				<parameter-item has-tags="np"/>
 			</antecedent>
 		</def-parameter>

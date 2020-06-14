@@ -78,24 +78,27 @@ void ParseArx::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parame
 	xmlChar *Attr;
 	cur = cur->xmlChildrenNode;
 
-	vector <wstring> temp_tags_list;
+	pair< vector <wstring>, vector <wstring> > temp_tags_list;
 
 	while (cur != NULL)
 	{
 	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"parameter-item")))
 	    {
 	    	Attr = xmlGetProp(cur, (const xmlChar *)"has-tags");
-
-	    	//fprintf(stderr, "ParameterItem: ");
-
-    		temp_tags_list = parseTags(XMLParseUtil::towstring(Attr));
+        temp_tags_list.first = parseTags(XMLParseUtil::towstring(Attr));
+        
+        Attr = xmlGetProp(cur, (const xmlChar *)"exclude-tags");
+        if (Attr)
+        {
+          temp_tags_list.second = parseTags(XMLParseUtil::towstring(Attr));
+        }
+        
     		parameters[parameter_type][parameter_name].push_back(temp_tags_list);
 
-	    	temp_tags_list.clear();
+        temp_tags_list.first.clear();
+        temp_tags_list.second.clear();
 
 		    xmlFree(Attr);
-
-		    //key = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
  	    }
 
 		cur = cur->next;
@@ -163,23 +166,27 @@ void ParseArx::parseCatItem (xmlDocPtr doc, xmlNodePtr cur, wstring cat_name)
 	xmlChar *Attr;
 	cur = cur->xmlChildrenNode;
 
-	vector <wstring> temp_tags_list;
+	pair< vector <wstring>, vector <wstring> > temp_tags_list;
 
 	while (cur != NULL)
 	{
 	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"cat-item")))
 	    {
-	    	Attr = xmlGetProp(cur, (const xmlChar *)"has-tags");
-	    	//fprintf(stderr, "catItem: ");
-
-	    	temp_tags_list = parseTags(XMLParseUtil::towstring(Attr));
+        Attr = xmlGetProp(cur, (const xmlChar *)"has-tags");
+        temp_tags_list.first = parseTags(XMLParseUtil::towstring(Attr));
+        
+        Attr = xmlGetProp(cur, (const xmlChar *)"exclude-tags");
+        if (Attr)
+        {
+          temp_tags_list.second = parseTags(XMLParseUtil::towstring(Attr));
+        }
 		    cats[cat_name].push_back(temp_tags_list);
 
-		    temp_tags_list.clear();
+        temp_tags_list.first.clear();
+        temp_tags_list.second.clear();
 
 		    xmlFree(Attr);
 
-		    //key = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
  	    }
 
 		cur = cur->next;
@@ -279,13 +286,11 @@ void ParseArx::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_na
 
 	    	if (parameter_name)
 	    	{
-	    		//cerr << "HELLO!";
 	    		wstring parameter_name_ws = XMLParseUtil::towstring(parameter_name);
 	    		parameter_markables_score[parameter_name_ws][markable_name] = score_int;
 	    	}
 	    	else
 	    	{
-	    		//cerr << "FUCK!";
 	    		all_markables_score[markable_name] = score_int;
 	    	}
 	    }
