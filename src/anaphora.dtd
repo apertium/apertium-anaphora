@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT ref (section-parameters, section-def-cats, section-markables)>
+<!--
+     'ref' is the root element containing the whole anaphora resolution rule file.
+-->
+
+<!ELEMENT section-parameters (delimiter, def-parameter+)>
+<!--
+    The 'section-parameters' section defines the delimiters and each def-parameter defines a pair of anaphors and antecedents.
+ -->
+ 
+<!ELEMENT delimiter (parameter-item+)>
+<!--
+    The delimiter defines what the Anaphora Resolution module will consider delimiters when processing the context.
+ -->
+ 
+<!ELEMENT parameter-item EMPTY>
+<!ATTLIST parameter-item has-tags CDATA
+                         exclude-tags CDATA> <!-- ###TODO implied required -->
+<!--
+    Each 'parameter-item' represents a set of tags, using the attribute "has-tags".
+    This will match only Lexical Units which have the tags inside this attribute (space-separated list).
+    Another optional attribute is "exclude-tags", which defines a set of tags that should not be in the
+    Lexical Unit for it to match.
+-->
+ 
+<!ELEMENT def-parameter (anaphor, antecedent)>
+<!ATTLIST def-parameter n ID #REQUIRED>
+<!--
+    Each def-parameter defines an anaphor-antecedent pair using a unique id that can be referred to later.
+-->
+
+<!ELEMENT anaphor (parameter-item+)>
+<!--
+    The 'anaphor' defines what the Anaphora Resolution module will consider as anaphors. When an anaphor is reached,
+    the context is processed and using saliency rules and scores, an antecedent is chosen and attached to it.
+ -->
+ 
+ <!ELEMENT antecedent (parameter-item+)>
+ <!--
+     The 'antecedent' defines what the Anaphora Resolution module will consider as candidate antecedents when it
+     is processing the context.
+  -->
+
+
+<!ELEMENT section-def-cats (def-cat+)>
+<!--
+    The 'def-cats' section defines the categories used to build the
+    patterns used in markables.
+ -->
+
+<!ELEMENT def-cat (cat-item+)>
+<!ATTLIST def-cat  n ID #REQUIRED
+                   c CDATA #IMPLIED> <!-- ###TODO what is the use of this c CDATA -->
+<!--
+     Each 'def-cat' defines one category in terms of a list of
+     category items and has a unique name 'n', which is mandatory
+-->
+
+<!ELEMENT cat-item EMPTY>
+<!ATTLIST cat-item has-tags CDATA
+                         exclude-tags CDATA> <!-- ###TODO implied required -->
+<!--
+    Each 'cat-item' represents a set of tags, using the attribute "has-tags".
+    This will match only Lexical Units which have the tags inside this attribute (space-separated list).
+    Another optional attribute is "exclude-tags", which defines a set of tags that should not be in the
+    Lexical Unit for it to match.
+-->
+
+<!ELEMENT section-markables (markable+)>
+<!--
+     The markables section contains one or more markables.
+-->
+
+<!ELEMENT markable (pattern+, score)>
+<!ATTLIST markable n CDATA #IMPLIED> <!-- ###TODO n ID or CDATA -->
+<!--
+    Each markable has one or more patterns and a score.
+-->
+
+<!ELEMENT pattern (pattern-item+)>
+<!--
+    The pattern is specified in terms of pattern items, each one
+    representing a lexical form in the matched pattern
+-->
+
+<!ELEMENT pattern-item EMPTY>
+<!ATTLIST pattern-item n IDREF #REQUIRED>
+<!--
+    Each attribute to be activated is referred to by its name in the def-cats section
+-->
+
+<!ELEMENT score EMPTY>
+<!ATTLIST score n CDATA #REQUIRED
+                parameter CDATA> <!-- ###TODO parameter is optional -->
+<!--
+    Defines the score that will be given to an antecedent if it is matched as part of this markable.
+    It can optionally take a parameter id, in which case the score will only be assigned if the
+    anaphor being processed is of that parameter id. (defined in def-parameter).
+-->
