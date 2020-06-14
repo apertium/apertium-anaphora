@@ -16,8 +16,8 @@
  -->
  
 <!ELEMENT parameter-item EMPTY>
-<!ATTLIST parameter-item has-tags CDATA
-                         exclude-tags CDATA> <!-- ###TODO implied required -->
+<!ATTLIST parameter-item has-tags CDATA #REQUIRED
+                         exclude-tags CDATA #IMPLIED>
 <!--
     Each 'parameter-item' represents a set of tags, using the attribute "has-tags".
     This will match only Lexical Units which have the tags inside this attribute (space-separated list).
@@ -51,16 +51,15 @@
  -->
 
 <!ELEMENT def-cat (cat-item+)>
-<!ATTLIST def-cat  n ID #REQUIRED
-                   c CDATA #IMPLIED> <!-- ###TODO what is the use of this c CDATA -->
+<!ATTLIST def-cat n ID #REQUIRED>
 <!--
      Each 'def-cat' defines one category in terms of a list of
      category items and has a unique name 'n', which is mandatory
 -->
 
 <!ELEMENT cat-item EMPTY>
-<!ATTLIST cat-item has-tags CDATA
-                         exclude-tags CDATA> <!-- ###TODO implied required -->
+<!ATTLIST cat-item has-tags CDATA #REQUIRED
+                   exclude-tags CDATA #IMPLIED>
 <!--
     Each 'cat-item' represents a set of tags, using the attribute "has-tags".
     This will match only Lexical Units which have the tags inside this attribute (space-separated list).
@@ -74,7 +73,7 @@
 -->
 
 <!ELEMENT markable (pattern+, score)>
-<!ATTLIST markable n CDATA #IMPLIED> <!-- ###TODO n ID or CDATA -->
+<!ATTLIST markable n ID #REQUIRED>
 <!--
     Each markable has one or more patterns and a score.
 -->
@@ -93,7 +92,7 @@
 
 <!ELEMENT score EMPTY>
 <!ATTLIST score n CDATA #REQUIRED
-                parameter CDATA> <!-- ###TODO parameter is optional -->
+                parameter IDREF #IMPLIED>
 <!--
     Defines the score that will be given to an antecedent if it is matched as part of this markable.
     It can optionally take a parameter id, in which case the score will only be assigned if the
