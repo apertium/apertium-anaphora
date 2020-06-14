@@ -10,8 +10,8 @@ target_link_libraries(apertium-anaphora PRIVATE
 	lttoolbox3
 	)
 
-install(TARGETS apertium-anaphora
-	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-	)
+install(TARGETS apertium-anaphora DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+configure_file(apertium-validate-anaphora.in apertium-validate-anaphora @ONLY)
+install(FILES anaphora.dtd DESTINATION "${CMAKE_INSTALL_DATADIR}/apertium/anaphora/")
+install(PROGRAMS "${CMAKE_CURRENT_BINARY_DIR}/apertium-validate-anaphora" DESTINATION ${CMAKE_INSTALL_BINDIR})
