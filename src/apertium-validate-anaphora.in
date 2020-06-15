@@ -11,4 +11,4 @@ if [[ ! -e "$FILE1" ]]; then
     exit 1
 fi
 
-xmllint --dtdvalid @CMAKE_INSTALL_FULL_DATADIR@/apertium/anaphora/anaphora.dtd --noout "$FILE1"
+xmllint --dtdvalid @CMAKE_INSTALL_FULL_DATADIR@/apertium-anaphora/anaphora.dtd --noout "$FILE1"
