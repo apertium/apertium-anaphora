@@ -76,3 +76,8 @@ if(WIN32)
 endif()
 
 add_subdirectory(src)
+
+enable_testing()
+add_test(NAME tests
+	COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/tests/test.sh" $<TARGET_FILE:apertium-anaphora>
+	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests)
