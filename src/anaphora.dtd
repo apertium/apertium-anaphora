@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!ELEMENT ref (section-parameters, section-def-cats, section-markables)>
+<!ELEMENT ref (section-parameters, section-def-cats?, section-markables?)>
 <!--
      'ref' is the root element containing the whole anaphora resolution rule file.
 -->
