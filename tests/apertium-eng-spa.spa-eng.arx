@@ -9,7 +9,7 @@
 
 		<def-parameter n="detpos">
 			<anaphor>
-				<parameter-item has-tags="det pos"/>
+				<parameter-item has-tags="det pos" lemma="el seu"/>
 			</anaphor>
 
 			<antecedent>
@@ -28,6 +28,16 @@
 				<parameter-item has-tags="np"/>
 			</antecedent>
 		</def-parameter>
+    
+    <def-parameter n="lemtest">
+      <anaphor>
+        <parameter-item has-tags="lemtesta" lemma="test"/>
+      </anaphor>
+
+      <antecedent>
+        <parameter-item has-tags="lemtestant" lemma="paRlaMenT"/>
+      </antecedent>
+    </def-parameter>
 
 	</section-parameters>
 
@@ -70,6 +80,10 @@
     	<def-cat n="cop">
     		<cat-item has-tags="cop"/>
     	</def-cat>
+      
+      <def-cat n="cop2">
+        <cat-item has-tags="cop2" lemma="es"/>
+      </def-cat>
       
       <def-cat n="adv">
         <cat-item has-tags="adv"/>
@@ -212,6 +226,16 @@
 
 			<score n="-5" parameter="detpos"/>
 		</markable>
+    
+    <markable n="Cop2">
+      <pattern>
+        <pattern-item n="nom"/>
+        <pattern-item n="cop2"/>
+        <pattern-item n="anaphor"/>
+      </pattern>
+
+      <score n="-5" parameter="lemtest"/>
+    </markable>
 		
 		<!-- Noun, CopulaVerb, Anaphor - in this order, would mean that the noun can't be its antecedent -->
 

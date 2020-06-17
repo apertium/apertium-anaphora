@@ -24,6 +24,7 @@
 #include <deque>
 #include <iostream>
 #include <algorithm>
+#include <cwctype>
 
 using namespace std;
 
@@ -60,15 +61,23 @@ int contains_any(vector<wstring> tags, vector<wstring> candidates)
 	return 0; //if no matches
 }
 
-int check_acceptable_tags(vector<wstring> input_tags, acceptable_tags check_tags) //all tags in any tag list in check_tags must exist in input_tags
+void toLower(basic_string<wchar_t>& s)
+{
+   for (basic_string<wchar_t>::iterator p = s.begin(); p != s.end(); ++p)
+   {
+      *p = towlower(*p);
+   }
+}
+
+int check_acceptable_tags(vector<wstring> input_tags, wstring input_sl_lemma, acceptable_tags check_tags) //check has-tags, exclude-tags, lemma
 {
 	for (acceptable_tags::iterator i = check_tags.begin(); i != check_tags.end(); ++i)
 	{
 
 		int flag_contains_all = 1;
 
-    vector<wstring> temp_tags = i->first;
-    vector<wstring> temp_exclude_tags = i->second;
+    vector<wstring> temp_tags = i->has_tags;
+    vector<wstring> temp_exclude_tags = i->exclude_tags;
     
 		for(std::vector<wstring>::iterator j = temp_tags.begin(); j != temp_tags.end(); ++j) //check for the tags in has-tags
 		{
@@ -82,6 +91,11 @@ int check_acceptable_tags(vector<wstring> input_tags, acceptable_tags check_tags
 			}
 		}
     
+    if(flag_contains_all == 0)
+    {
+      continue;
+    }
+    
     for(std::vector<wstring>::iterator j = temp_exclude_tags.begin(); j != temp_exclude_tags.end(); ++j) //check for the tags in exclude-tags
     {
       if(contains(input_tags, *j)) //if the exclude-tag IS in the input LU tags
@@ -90,16 +104,49 @@ int check_acceptable_tags(vector<wstring> input_tags, acceptable_tags check_tags
         break;
       }
     }
-
-		if(flag_contains_all == 1) //if any tag list fully matched (i.e. has-tags present, exclude-tags absent)
-			return 1;
-    //else continue to next tag list
+    
+    if(flag_contains_all == 0)
+    {
+      continue;
+    }
+    
+    if(!(i->lemma).empty())
+    {
+      wstring temp_lemma = i->lemma;
+      
+      if(input_sl_lemma.length() == temp_lemma.length())
+      {
+        if(input_sl_lemma.compare(temp_lemma) != 0)
+        {
+          toLower(input_sl_lemma);
+          toLower(temp_lemma);
+          
+          if(input_sl_lemma.compare(temp_lemma) != 0)
+          {
+            flag_contains_all = 0;
+          }
+        }
+      }
+      else
+      {
+        flag_contains_all = 0;
+      }
+    }
+    
+    if(flag_contains_all == 0)
+    {
+      continue;
+    }
+    else //if any tag list fully matched (i.e. has-tags present, exclude-tags absent)
+    {
+      return 1;
+    }
 	}
 
 	return 0; //if it didn't return 1 then no tag list was fully matched
 }
 
-parameter_return check_pattern_name(vector<wstring> input_tags, unordered_map<wstring, acceptable_tags> parameter_names)
+parameter_return check_pattern_name(vector<wstring> input_tags, wstring input_sl_lemma, unordered_map<wstring, acceptable_tags> parameter_names)
 //find out if any of the anaphors match wrt tags, and if yes, return the unique name
 {
 	parameter_return retval;
@@ -110,7 +157,7 @@ parameter_return check_pattern_name(vector<wstring> input_tags, unordered_map<ws
 		wstring parameter_name = it->first;
 		acceptable_tags parameter_tags= it->second;
 
-		if(check_acceptable_tags(input_tags, parameter_tags))
+		if(check_acceptable_tags(input_tags, input_sl_lemma, parameter_tags))
 		{
 			retval.found = 1;
 			retval.parameter_name = parameter_name;
@@ -157,7 +204,7 @@ deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, Pa
 
 						acceptable_tags pattern_item_tags = arx_cats[current_pattern[x].name]; //get pattern item tags from def-cats
 
-						if(check_acceptable_tags((*(n+x)).pos_tags, pattern_item_tags)) //comparing current LU tags to pattern tags
+						if(check_acceptable_tags((*(n+x)).pos_tags, (*(n+x)).sl_lemma, pattern_item_tags)) //comparing current LU tags to pattern tags and lemma
 						{
 							match_flag = 1;
 

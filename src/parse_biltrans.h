@@ -50,6 +50,16 @@ private:
    	 * Target language tags
      */
 	vector< wstring > tl_tags;
+  
+  /**
+      * Source language lemma
+     */
+  wstring sl_lemma;
+  
+  /**
+      * Target language lemma
+     */
+  wstring tl_lemma;
 
 public:
 	/**
@@ -77,6 +87,16 @@ public:
    	 * Return the Target Language Form
      */
 	vector< wstring > get_tl_tags();
+  
+  /**
+      * Return the Source Language Lemma
+     */
+  wstring get_sl_lemma();
+  
+  /**
+      * Return the Target Language Lemma
+     */
+  wstring get_tl_lemma();
 
 };
 

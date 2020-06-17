@@ -62,12 +62,12 @@ void showq(deque < vector<unique_LU> > gq) //to display context if needed (testi
     cerr << '\n';
 }
 
-int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wstring > input_pos_tags, wstring input_tl_wordform, ParseArx arx_file, int debug_flag)
+int Scoring::add_word(int input_id, wstring input_wordform, vector< wstring > input_pos_tags, wstring input_tl_wordform, wstring input_sl_lemma, wstring input_tl_lemma, ParseArx arx_file, int debug_flag)
 {
 	vector<wstring> temp_prop;
 	parameters_datatype arx_parameters = arx_file.get_parameters();
 
-	unique_LU input_LU = {input_id, input_wordform, input_tl_wordform, input_pos_tags, temp_prop}; //initialise LU
+	unique_LU input_LU = {input_id, input_wordform, input_tl_wordform, input_sl_lemma, input_tl_lemma, input_pos_tags, temp_prop}; //initialise LU
 
 	if(context.empty()) //if queue is empty
 	{
@@ -76,7 +76,7 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 
 		context.push_back(sentence);
 
-		if(check_acceptable_tags(input_LU.pos_tags, arx_parameters[L"delimiter"][L"default"]) ) //if sentence end (somehow the first LU is a sentence end)
+    if(check_acceptable_tags(input_LU.pos_tags, input_LU.sl_lemma, arx_parameters[L"delimiter"][L"default"]) ) //if sentence end (somehow the first LU is a sentence end)
 		{
 			vector<unique_LU> new_sentence;
 
@@ -85,7 +85,7 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 	}
 	else //if queue is not empty
 	{
-		if(check_acceptable_tags(input_LU.pos_tags, arx_parameters[L"delimiter"][L"default"]))
+    if(check_acceptable_tags(input_LU.pos_tags, input_LU.sl_lemma, arx_parameters[L"delimiter"][L"default"]))
 		{
 			context.back().push_back(input_LU); //add <sent> to context so that it can also be matched in a pattern
 
@@ -99,9 +99,9 @@ int Scoring::add_word(unsigned int input_id, wstring input_wordform, vector< wst
 
 		else 
 		{
-			parameter_return retval = check_pattern_name(input_LU.pos_tags, arx_parameters[L"anaphor"]);
+      parameter_return retval = check_pattern_name(input_LU.pos_tags, input_LU.sl_lemma, arx_parameters[L"anaphor"]);
 
-			if(retval.found == 1) //check if tags of current word match with anaphor tags in arx file
+			if(retval.found == 1) //check if tags,lemma of current word match with anaphor tags in arx file
 			{
 				unique_LU anaphor_LU = input_LU;
 
@@ -173,7 +173,7 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file, wstring par
 				cerr << "\n";
 			}
 
-			if(check_acceptable_tags((*j).pos_tags, arx_file.get_parameters()[L"antecedent"][parameter_name]) ) // if it is antecedent (based on external xml file)
+			if(check_acceptable_tags((*j).pos_tags, (*j).sl_lemma, arx_file.get_parameters()[L"antecedent"][parameter_name]) ) // if it is antecedent (based on external xml file)
 			{
 				temp_score = 0;
 

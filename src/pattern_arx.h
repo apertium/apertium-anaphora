@@ -29,9 +29,11 @@ using namespace std;
 
 struct unique_LU
 {
-	unsigned int id;
+	int id;
 	wstring wordform;
 	wstring tl_wordform;
+  wstring sl_lemma;
+  wstring tl_lemma;
 	vector<wstring> pos_tags;
 	vector<wstring> properties;
 };
@@ -50,9 +52,10 @@ struct parameter_return
 
 int contains(vector<wstring> tags, wstring tag);
 int contains_any(vector<wstring> tags, vector<wstring> candidates);
+void toLower(basic_string<wchar_t>& s);
 
-int check_acceptable_tags(vector<wstring> input_tags, acceptable_tags check_tags);
-parameter_return check_pattern_name(vector<wstring> input_tags, unordered_map<wstring, acceptable_tags> parameter_names);
+int check_acceptable_tags(vector<wstring> input_tags, wstring input_sl_lemma, acceptable_tags check_tags);
+parameter_return check_pattern_name(vector<wstring> input_tags, wstring input_sl_lemma, unordered_map<wstring, acceptable_tags> parameter_names);
 
 deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, ParseArx arx_file);
 

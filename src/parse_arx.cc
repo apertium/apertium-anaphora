@@ -65,10 +65,6 @@ vector<wstring> ParseArx::parseTags (wstring tags)
 	if(!temptag.empty()) //if any tag remaining
 		temp_tags_list.push_back(temptag);
 
-	//print_tags(temp_tags_list);
-
-	//cerr << "\n";
-
 	return temp_tags_list;
 }
 
@@ -77,29 +73,39 @@ void ParseArx::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parame
 {
 	xmlChar *Attr;
 	cur = cur->xmlChildrenNode;
+  
+	item temp_item;
 
-	pair< vector <wstring>, vector <wstring> > temp_tags_list;
-
-	while (cur != NULL)
-	{
-	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"parameter-item")))
-	    {
-	    	Attr = xmlGetProp(cur, (const xmlChar *)"has-tags");
-        temp_tags_list.first = parseTags(XMLParseUtil::towstring(Attr));
+  while (cur != NULL)
+  {
+      temp_item.has_tags.clear();
+      temp_item.exclude_tags.clear();
+      temp_item.lemma.clear();
+    
+      if ((!xmlStrcmp(cur->name, (const xmlChar *)"parameter-item")))
+      {
+        Attr = xmlGetProp(cur, (const xmlChar *)"has-tags");
+        if (Attr)
+        {
+          temp_item.has_tags = parseTags(XMLParseUtil::towstring(Attr));
+        }
         
         Attr = xmlGetProp(cur, (const xmlChar *)"exclude-tags");
         if (Attr)
         {
-          temp_tags_list.second = parseTags(XMLParseUtil::towstring(Attr));
+          temp_item.exclude_tags = parseTags(XMLParseUtil::towstring(Attr));
         }
         
-    		parameters[parameter_type][parameter_name].push_back(temp_tags_list);
+        Attr = xmlGetProp(cur, (const xmlChar *)"lemma");
+        if (Attr)
+        {
+          temp_item.lemma = XMLParseUtil::towstring(Attr);
+        }
+        
+        parameters[parameter_type][parameter_name].push_back(temp_item);
 
-        temp_tags_list.first.clear();
-        temp_tags_list.second.clear();
-
-		    xmlFree(Attr);
- 	    }
+        xmlFree(Attr);
+       }
 
 		cur = cur->next;
 	}
@@ -117,16 +123,9 @@ void ParseArx::parseParameterTypes (xmlDocPtr doc, xmlNodePtr cur, wstring param
 		if(cur->type == XML_ELEMENT_NODE)
 		{
 			parameter_type = XMLParseUtil::towstring(cur->name);
-      /*
-			cerr << "\nname: ";
-	    	wcerr << parameter_name;
-	    	cerr << "\ntype: ";
-	    	wcerr << parameter_type;
-	    	cerr << "\n";
-       */
 
-	    	parseParameterItem(doc, cur, parameter_type, parameter_name);
-	    }
+      parseParameterItem(doc, cur, parameter_type, parameter_name);
+    }
 
 		cur = cur->next;
 	}
@@ -166,28 +165,38 @@ void ParseArx::parseCatItem (xmlDocPtr doc, xmlNodePtr cur, wstring cat_name)
 	xmlChar *Attr;
 	cur = cur->xmlChildrenNode;
 
-	pair< vector <wstring>, vector <wstring> > temp_tags_list;
+	item temp_item;
 
-	while (cur != NULL)
-	{
-	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"cat-item")))
-	    {
+  while (cur != NULL)
+  {
+      temp_item.has_tags.clear();
+      temp_item.exclude_tags.clear();
+      temp_item.lemma.clear();
+    
+      if ((!xmlStrcmp(cur->name, (const xmlChar *)"cat-item")))
+      {
         Attr = xmlGetProp(cur, (const xmlChar *)"has-tags");
-        temp_tags_list.first = parseTags(XMLParseUtil::towstring(Attr));
+        if (Attr)
+        {
+          temp_item.has_tags = parseTags(XMLParseUtil::towstring(Attr));
+        }
         
         Attr = xmlGetProp(cur, (const xmlChar *)"exclude-tags");
         if (Attr)
         {
-          temp_tags_list.second = parseTags(XMLParseUtil::towstring(Attr));
+          temp_item.exclude_tags = parseTags(XMLParseUtil::towstring(Attr));
         }
-		    cats[cat_name].push_back(temp_tags_list);
+        
+        Attr = xmlGetProp(cur, (const xmlChar *)"lemma");
+        if (Attr)
+        {
+          temp_item.lemma = XMLParseUtil::towstring(Attr);
+        }
+        
+        cats[cat_name].push_back(temp_item);
 
-        temp_tags_list.first.clear();
-        temp_tags_list.second.clear();
-
-		    xmlFree(Attr);
-
- 	    }
+        xmlFree(Attr);
+       }
 
 		cur = cur->next;
 	}

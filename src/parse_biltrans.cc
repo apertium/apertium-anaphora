@@ -48,8 +48,10 @@ ParseLexicalUnit::ParseLexicalUnit(wstring input_LU)
 				else //not in a tag
 				{
 					sl_form.push_back(*i);
+          sl_lemma.push_back(*i);
 					++i;
 					sl_form.push_back(*i);
+          sl_lemma.push_back(*i);
 				}
 			}
 			else if(seenSlash == 1) //tl (only first entry)
@@ -65,8 +67,10 @@ ParseLexicalUnit::ParseLexicalUnit(wstring input_LU)
 				else //not in a tag
 				{
 					tl_form.push_back(*i);
+          tl_lemma.push_back(*i);
 					++i;
 					tl_form.push_back(*i);
+          tl_lemma.push_back(*i);
 				}
 			}
 			else
@@ -99,6 +103,11 @@ ParseLexicalUnit::ParseLexicalUnit(wstring input_LU)
 					temptag.push_back(*i); //add char to current tag
 				}
 			}
+      
+      else
+      {
+        sl_lemma.push_back(*i);
+      }
 		}
 
 		else if(seenSlash == 1) //tl (only first entry in tl)
@@ -122,6 +131,11 @@ ParseLexicalUnit::ParseLexicalUnit(wstring input_LU)
 					temptag.push_back(*i); //add char to current tag
 				}
 			}
+      
+      else
+      {
+        tl_lemma.push_back(*i);
+      }
 		}
 
 		else //if tl has more than one entry
@@ -149,6 +163,16 @@ vector< wstring > ParseLexicalUnit::get_sl_tags()
 vector< wstring > ParseLexicalUnit::get_tl_tags()
 {
 	return tl_tags;
+}
+
+wstring ParseLexicalUnit::get_sl_lemma()
+{
+  return sl_lemma;
+}
+
+wstring ParseLexicalUnit::get_tl_lemma()
+{
+  return tl_lemma;
 }
 
 /* //Uncomment to test this code
@@ -191,5 +215,3 @@ int main()
 	return 0;
 }
 */
-
-

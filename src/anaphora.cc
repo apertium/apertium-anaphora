@@ -173,6 +173,8 @@ int main(int argc, char **argv)
 	wstring tl_form;
 	vector<wstring> sl_tags;
 	vector<wstring> tl_tags;
+  wstring sl_lemma;
+  wstring tl_lemma;
 
 	ParseArx arx_file;
 	int parse_arx_retval = arx_file.parseDoc(arxFileName);
@@ -196,6 +198,8 @@ int main(int argc, char **argv)
 			tl_form.clear();
 			sl_tags.clear();
 			tl_tags.clear();
+      sl_lemma.clear();
+      tl_lemma.clear();
 			gen_id = 0;
 			score_module.clear();
 
@@ -251,12 +255,14 @@ int main(int argc, char **argv)
 					tl_tags = LU.get_tl_tags();
 					sl_form = LU.get_sl_form();
 					sl_tags = LU.get_sl_tags();
+          sl_lemma = LU.get_sl_lemma();
+          tl_lemma = LU.get_tl_lemma();
 
 					if(!tl_form.empty()) //if TL exists
 					{
 						int retval;
 
-						retval = score_module.add_word(gen_id, sl_form, sl_tags, tl_form, arx_file, debug_flag); //Give word to Scoring Module
+						retval = score_module.add_word(gen_id, sl_form, sl_tags, tl_form, sl_lemma, tl_lemma, arx_file, debug_flag); //Give word to Scoring Module
 						//If retval is 0, nothing will be added in side ref
 
 						//If retval is 1, we call get_antecedent() and add it to ref

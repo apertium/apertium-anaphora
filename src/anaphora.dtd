@@ -16,8 +16,9 @@
  -->
  
 <!ELEMENT parameter-item EMPTY>
-<!ATTLIST parameter-item has-tags CDATA #REQUIRED
-                         exclude-tags CDATA #IMPLIED>
+<!ATTLIST parameter-item has-tags CDATA #IMPLIED
+                         exclude-tags CDATA #IMPLIED
+                         lemma CDATA #IMPLIED>
 <!--
     Each 'parameter-item' represents a set of tags, using the attribute "has-tags".
     This will match only Lexical Units which have the tags inside this attribute (space-separated list).
@@ -58,13 +59,15 @@
 -->
 
 <!ELEMENT cat-item EMPTY>
-<!ATTLIST cat-item has-tags CDATA #REQUIRED
-                   exclude-tags CDATA #IMPLIED>
+<!ATTLIST cat-item has-tags CDATA #IMPLIED
+                   exclude-tags CDATA #IMPLIED
+                   lemma CDATA #IMPLIED>
 <!--
-    Each 'cat-item' represents a set of tags, using the attribute "has-tags".
-    This will match only Lexical Units which have the tags inside this attribute (space-separated list).
+    Each 'cat-item' represents a Lexical Unit we want to match, using several attributes.
+    "has-tags" will match only Lexical Units which have the tags inside this attribute (space-separated list).
     Another optional attribute is "exclude-tags", which defines a set of tags that should not be in the
     Lexical Unit for it to match.
+    "lemma" will match Lexical Units that have that lemma.
 -->
 
 <!ELEMENT section-markables (markable+)>
