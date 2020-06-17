@@ -1,5 +1,6 @@
 # Apertium Anaphora Resolution
 ## Google Summer of Code 2019
+[![Build Status](https://travis-ci.com/apertium/apertium-anaphora.svg?branch=master)](https://travis-ci.com/apertium/apertium-anaphora)
 
 ### Documentation
 http://wiki.apertium.org/wiki/Anaphora_Resolution_Module
