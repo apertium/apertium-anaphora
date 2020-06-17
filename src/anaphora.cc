@@ -66,16 +66,11 @@ void help_message(char *progname)
 	wcerr << "USAGE: " << basename(progname) << " arx_file [input [output]]" << endl;
 	wcerr << "       " << basename(progname) << " -z arx_file [input [output]]" << endl;
 	wcerr << "  arx_file   Anaphora Resolution rules file (apertium-xxx-yyy.xxx-yyy.arx)" << endl;
-
-	//wcerr << "  input      input file, standard input by default" << endl;
-	//wcerr << "  output     output file, standard output by default" << endl;
-
 	wcerr << "  -z         null-flushing output on \\0" << endl;
 	wcerr << "  -h         shows this message" << endl;
 
 	exit(EXIT_FAILURE);
 }
-
 
 
 int main(int argc, char **argv)
@@ -188,7 +183,7 @@ int main(int argc, char **argv)
 
 	while(input_char!=EOF)
 	{
-		if(nullFlush && input_char == L'\0') //nullFlush
+		if(nullFlush && input_char == L'\0')
 		{
 			fputwc(input_char, output);
 			fflush(output);
@@ -208,9 +203,9 @@ int main(int argc, char **argv)
 			flag_LU = 0;
 		}
 
-		else if(input_char == L'\\') //dealing with escaped characters
+		else if(input_char == L'\\')
 		{
-			if(flag_LU == 0) // not inside LU
+			if(flag_LU == 0)
 			{
 				fputwc(input_char, output);
 
@@ -218,7 +213,7 @@ int main(int argc, char **argv)
 
 				fputwc(input_char, output);
 			}
-			else //inside LU
+			else
 			{
 				input_stream.push_back(input_char);
 				fputwc(input_char, output);
@@ -231,7 +226,7 @@ int main(int argc, char **argv)
 		}
 		else
 		{
-			if(flag_LU == 0) //Not Part of an LU
+			if(flag_LU == 0)
 			{
 				fputwc(input_char, output);
 
@@ -239,17 +234,17 @@ int main(int argc, char **argv)
 					flag_LU = 1;
 			}
 
-			else if(flag_LU == 1) //Part of an LU
+			else if(flag_LU == 1)
 			{
 				if(input_char == L'$')
 				{
-					gen_id++; //generate ids for LUs
+					gen_id++;
 
 					fputwc(L'/', output); //for adding ref
 
 					flag_LU = 0;
 
-					ParseLexicalUnit LU(input_stream); //Parse Lexical Unit using parse_biltrans
+					ParseLexicalUnit LU(input_stream);
 
 					tl_form = LU.get_tl_form();
 					tl_tags = LU.get_tl_tags();
@@ -258,11 +253,11 @@ int main(int argc, char **argv)
           sl_lemma = LU.get_sl_lemma();
           tl_lemma = LU.get_tl_lemma();
 
-					if(!tl_form.empty()) //if TL exists
+					if(!tl_form.empty())
 					{
 						int retval;
 
-						retval = score_module.add_word(gen_id, sl_form, sl_tags, tl_form, sl_lemma, tl_lemma, arx_file, debug_flag); //Give word to Scoring Module
+						retval = score_module.add_word(gen_id, sl_form, sl_tags, tl_form, sl_lemma, tl_lemma, arx_file, debug_flag);
 						//If retval is 0, nothing will be added in side ref
 
 						//If retval is 1, we call get_antecedent() and add it to ref
@@ -270,7 +265,7 @@ int main(int argc, char **argv)
 						{
 							final_ref = score_module.get_antecedent(debug_flag);
 
-							fputws(final_ref.c_str(), output); //add antecedent to side ref of LU
+							fputws(final_ref.c_str(), output);
 						}
 					}
 
@@ -293,4 +288,3 @@ int main(int argc, char **argv)
 
 	return 0;
 }
-

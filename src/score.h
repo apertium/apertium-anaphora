@@ -35,7 +35,7 @@ class Scoring
 {
 private:
 	deque< vector<unique_LU> > context; //A queue of sentences. Each sentence is a vector of Lexical Units
-	vector<antecedent> antecedent_list; //A list of antecedents
+	vector<antecedent> antecedent_list;
 
 public:
   int add_word(int input_id, wstring input_wordform, vector< wstring > input_pos_tags, wstring input_tl_wordform, wstring input_sl_lemma, wstring input_tl_lemma, ParseArx arx_file, int debug_flag);

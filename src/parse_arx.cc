@@ -28,7 +28,7 @@
 #include <iostream>
 #include <lttoolbox/xml_parse_util.h>
 
-void print_tags(vector<wstring> input) //testing function
+void print_tags(vector<wstring> input)
 {
 	for (size_t i = 0; i < input.size(); ++i)
 	{
@@ -45,7 +45,7 @@ vector<wstring> ParseArx::parseTags (wstring tags)
 
 	for (std::wstring::iterator i = tags.begin(); i != tags.end(); ++i)
 	{
-		if(*i == '\\') //dealing with escaped characters
+		if(*i == '\\')
 		{
 			temptag.push_back(*i);
 			++i;
@@ -62,7 +62,7 @@ vector<wstring> ParseArx::parseTags (wstring tags)
 		}
 	}
 
-	if(!temptag.empty()) //if any tag remaining
+	if(!temptag.empty())
 		temp_tags_list.push_back(temptag);
 
 	return temp_tags_list;
@@ -78,34 +78,34 @@ void ParseArx::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parame
 
   while (cur != NULL)
   {
-      temp_item.has_tags.clear();
-      temp_item.exclude_tags.clear();
-      temp_item.lemma.clear();
-    
-      if ((!xmlStrcmp(cur->name, (const xmlChar *)"parameter-item")))
+    temp_item.has_tags.clear();
+    temp_item.exclude_tags.clear();
+    temp_item.lemma.clear();
+  
+    if ((!xmlStrcmp(cur->name, (const xmlChar *)"parameter-item")))
+    {
+      Attr = xmlGetProp(cur, (const xmlChar *)"has-tags");
+      if (Attr)
       {
-        Attr = xmlGetProp(cur, (const xmlChar *)"has-tags");
-        if (Attr)
-        {
-          temp_item.has_tags = parseTags(XMLParseUtil::towstring(Attr));
-        }
-        
-        Attr = xmlGetProp(cur, (const xmlChar *)"exclude-tags");
-        if (Attr)
-        {
-          temp_item.exclude_tags = parseTags(XMLParseUtil::towstring(Attr));
-        }
-        
-        Attr = xmlGetProp(cur, (const xmlChar *)"lemma");
-        if (Attr)
-        {
-          temp_item.lemma = XMLParseUtil::towstring(Attr);
-        }
-        
-        parameters[parameter_type][parameter_name].push_back(temp_item);
+        temp_item.has_tags = parseTags(XMLParseUtil::towstring(Attr));
+      }
+      
+      Attr = xmlGetProp(cur, (const xmlChar *)"exclude-tags");
+      if (Attr)
+      {
+        temp_item.exclude_tags = parseTags(XMLParseUtil::towstring(Attr));
+      }
+      
+      Attr = xmlGetProp(cur, (const xmlChar *)"lemma");
+      if (Attr)
+      {
+        temp_item.lemma = XMLParseUtil::towstring(Attr);
+      }
+      
+      parameters[parameter_type][parameter_name].push_back(temp_item);
 
-        xmlFree(Attr);
-       }
+      xmlFree(Attr);
+     }
 
 		cur = cur->next;
 	}
@@ -140,20 +140,19 @@ void ParseArx::parseParameters (xmlDocPtr doc, xmlNodePtr cur)
 
 	while (cur != NULL)
 	{
-	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"def-parameter")))
-	    {
-	    	parameter_name = xmlGetProp(cur, (const xmlChar *)"n");
-	    	//fprintf(stderr, "catName: %s\n", Attr);
+    if ((!xmlStrcmp(cur->name, (const xmlChar *)"def-parameter")))
+    {
+      parameter_name = xmlGetProp(cur, (const xmlChar *)"n");
 
-	    	parseParameterTypes(doc,cur, XMLParseUtil::towstring(parameter_name));
-	    	xmlFree(parameter_name);
-	    }
-	    else if ((!xmlStrcmp(cur->name, (const xmlChar *)"delimiter")))
-	    {
-	    	parameter_type = XMLParseUtil::towstring(cur->name);
+      parseParameterTypes(doc,cur, XMLParseUtil::towstring(parameter_name));
+      xmlFree(parameter_name);
+    }
+    else if ((!xmlStrcmp(cur->name, (const xmlChar *)"delimiter")))
+    {
+      parameter_type = XMLParseUtil::towstring(cur->name);
 
-	    	parseParameterItem(doc, cur, parameter_type, L"default"); 
-	    }
+      parseParameterItem(doc, cur, parameter_type, L"default");
+    }
 
 		cur = cur->next;
 	}
@@ -169,34 +168,34 @@ void ParseArx::parseCatItem (xmlDocPtr doc, xmlNodePtr cur, wstring cat_name)
 
   while (cur != NULL)
   {
-      temp_item.has_tags.clear();
-      temp_item.exclude_tags.clear();
-      temp_item.lemma.clear();
-    
-      if ((!xmlStrcmp(cur->name, (const xmlChar *)"cat-item")))
+    temp_item.has_tags.clear();
+    temp_item.exclude_tags.clear();
+    temp_item.lemma.clear();
+  
+    if ((!xmlStrcmp(cur->name, (const xmlChar *)"cat-item")))
+    {
+      Attr = xmlGetProp(cur, (const xmlChar *)"has-tags");
+      if (Attr)
       {
-        Attr = xmlGetProp(cur, (const xmlChar *)"has-tags");
-        if (Attr)
-        {
-          temp_item.has_tags = parseTags(XMLParseUtil::towstring(Attr));
-        }
-        
-        Attr = xmlGetProp(cur, (const xmlChar *)"exclude-tags");
-        if (Attr)
-        {
-          temp_item.exclude_tags = parseTags(XMLParseUtil::towstring(Attr));
-        }
-        
-        Attr = xmlGetProp(cur, (const xmlChar *)"lemma");
-        if (Attr)
-        {
-          temp_item.lemma = XMLParseUtil::towstring(Attr);
-        }
-        
-        cats[cat_name].push_back(temp_item);
+        temp_item.has_tags = parseTags(XMLParseUtil::towstring(Attr));
+      }
+      
+      Attr = xmlGetProp(cur, (const xmlChar *)"exclude-tags");
+      if (Attr)
+      {
+        temp_item.exclude_tags = parseTags(XMLParseUtil::towstring(Attr));
+      }
+      
+      Attr = xmlGetProp(cur, (const xmlChar *)"lemma");
+      if (Attr)
+      {
+        temp_item.lemma = XMLParseUtil::towstring(Attr);
+      }
+      
+      cats[cat_name].push_back(temp_item);
 
-        xmlFree(Attr);
-       }
+      xmlFree(Attr);
+     }
 
 		cur = cur->next;
 	}
@@ -210,14 +209,13 @@ void ParseArx::parseCats (xmlDocPtr doc, xmlNodePtr cur)
 
 	while (cur != NULL)
 	{
-	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"def-cat")))
-	    {
-	    	Attr = xmlGetProp(cur, (const xmlChar *)"n");
-	    	//fprintf(stderr, "catName: %s\n", Attr);
+    if ((!xmlStrcmp(cur->name, (const xmlChar *)"def-cat")))
+    {
+      Attr = xmlGetProp(cur, (const xmlChar *)"n");
 
-	    	parseCatItem(doc,cur, XMLParseUtil::towstring(Attr));
-	    	xmlFree(Attr);
-	    }
+      parseCatItem(doc,cur, XMLParseUtil::towstring(Attr));
+      xmlFree(Attr);
+    }
 
 		cur = cur->next;
 	}
@@ -233,32 +231,28 @@ vector<markable_pattern> ParseArx::parsePatternItem (xmlDocPtr doc, xmlNodePtr c
 
 	while (cur != NULL)
 	{
-	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"pattern-item")))
-	    {
-	    	markable_pattern temp;
+    if ((!xmlStrcmp(cur->name, (const xmlChar *)"pattern-item")))
+    {
+      markable_pattern temp;
 
-	    	Attr = xmlGetProp(cur, (const xmlChar *)"n");
-	    	temp.name = XMLParseUtil::towstring(Attr);
+      Attr = xmlGetProp(cur, (const xmlChar *)"n");
+      temp.name = XMLParseUtil::towstring(Attr);
 
-	    	//wcerr << temp.name;
-	    	//cerr << " ";
+      xmlFree(Attr);
 
-		    xmlFree(Attr);
+      Attr = xmlGetProp(cur, (const xmlChar *)"head");
 
-		    Attr = xmlGetProp(cur, (const xmlChar *)"head");
+      if(Attr != NULL)
+      {
+        temp.head = 1;
+      }
+      else
+        temp.head = 0;
 
-		    if(Attr != NULL)
-		    {
-		    	temp.head = 1;
-		    	//fprintf(stderr, "[HEAD!]");
-		    }
-		    else
-		    	temp.head = 0;
+      xmlFree(Attr);
 
-		    xmlFree(Attr);
-
-		    temp_pattern.push_back(temp);
- 	    }
+      temp_pattern.push_back(temp);
+    }
 
 		cur = cur->next;
 	}
@@ -272,37 +266,34 @@ void ParseArx::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_na
 
 	cur = cur->xmlChildrenNode;
 
-	//wcerr << markable_name;
-	//cerr << "\n";
-
 	while (cur != NULL)
 	{
-	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"pattern")))
-	    {
-	    	vector<markable_pattern> temp_pattern = parsePatternItem(doc,cur);
+    if ((!xmlStrcmp(cur->name, (const xmlChar *)"pattern")))
+    {
+      vector<markable_pattern> temp_pattern = parsePatternItem(doc,cur);
 
-	    	markables[markable_name].push_back(temp_pattern);
-	    }
+      markables[markable_name].push_back(temp_pattern);
+    }
 
-	    else if ((!xmlStrcmp(cur->name, (const xmlChar *)"score")))
-	    {
-	    	Attr = xmlGetProp(cur, (const xmlChar *)"n");
+    else if ((!xmlStrcmp(cur->name, (const xmlChar *)"score")))
+    {
+      Attr = xmlGetProp(cur, (const xmlChar *)"n");
 
-	    	wstring score_ws = XMLParseUtil::towstring(Attr);
-			int score_int = std::stoi(score_ws);
+      wstring score_ws = XMLParseUtil::towstring(Attr);
+    int score_int = std::stoi(score_ws);
 
-	    	xmlChar *parameter_name = xmlGetProp(cur, (const xmlChar *)"parameter");
+      xmlChar *parameter_name = xmlGetProp(cur, (const xmlChar *)"parameter");
 
-	    	if (parameter_name)
-	    	{
-	    		wstring parameter_name_ws = XMLParseUtil::towstring(parameter_name);
-	    		parameter_markables_score[parameter_name_ws][markable_name] = score_int;
-	    	}
-	    	else
-	    	{
-	    		all_markables_score[markable_name] = score_int;
-	    	}
-	    }
+      if (parameter_name)
+      {
+        wstring parameter_name_ws = XMLParseUtil::towstring(parameter_name);
+        parameter_markables_score[parameter_name_ws][markable_name] = score_int;
+      }
+      else
+      {
+        all_markables_score[markable_name] = score_int;
+      }
+    }
 
 		cur = cur->next;
 	}
@@ -316,15 +307,14 @@ void ParseArx::parseMarkables (xmlDocPtr doc, xmlNodePtr cur)
 
 	while (cur != NULL)
 	{
-	    if ((!xmlStrcmp(cur->name, (const xmlChar *)"markable")))
-	    {
-	    	Attr = xmlGetProp(cur, (const xmlChar *)"n");
-	    	//fprintf(stderr, "MarkableName: ");
+    if ((!xmlStrcmp(cur->name, (const xmlChar *)"markable")))
+    {
+      Attr = xmlGetProp(cur, (const xmlChar *)"n");
 
-	    	parsePatterns(doc,cur, XMLParseUtil::towstring(Attr));
+      parsePatterns(doc,cur, XMLParseUtil::towstring(Attr));
 
-	    	xmlFree(Attr);
-	    }
+      xmlFree(Attr);
+    }
 
 		cur = cur->next;
 	}
@@ -341,7 +331,7 @@ int ParseArx::parseDoc(char *docname)
 	if (doc == NULL )
 	{
 		fprintf(stderr,"Document not parsed successfully. \n");
-		return -1; //return error
+		return -1;
 	}
 
 	cur = xmlDocGetRootElement(doc);
@@ -350,14 +340,14 @@ int ParseArx::parseDoc(char *docname)
 	{
 		fprintf(stderr,"Empty Document!\n");
 		xmlFreeDoc(doc);
-		return 1; //return error
+		return 1;
 	}
 
 	if (xmlStrcmp(cur->name, (const xmlChar *) "ref"))
 	{
 		fprintf(stderr,"Document of the wrong type! Root node should be ref.\n");
 		xmlFreeDoc(doc);
-		return 2; //return error
+		return 2;
 	}
 
 	cur = cur->xmlChildrenNode;
@@ -409,24 +399,3 @@ unordered_map<wstring, int> ParseArx::get_parameter_markables_score(wstring para
 {
 	return parameter_markables_score[parameter_name];
 }
-
-/* //Code for Testing
-int main(int argc, char **argv)
-{
-	char *docname;
-
-	if (argc <= 1)
-	{
-		fprintf(stderr, "Usage: %s docname\n", argv[0]);
-		return(0);
-	}
-
-	docname = argv[1];
-
-	ParseArx ref;
-
-	ref.parseDoc(docname);
-
-	return (1);
-}
-*/

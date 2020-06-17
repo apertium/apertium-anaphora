@@ -33,11 +33,11 @@ ParseLexicalUnit::ParseLexicalUnit(wstring input_LU)
 
 	for (std::wstring::iterator i = input_LU.begin(); i != input_LU.end(); ++i)
 	{
-		if(*i == L'\\') //dealing with escaped characters
+		if(*i == L'\\')
 		{
-			if(seenSlash == 0) //sl
+			if(seenSlash == 0)
 			{
-				if(seenTag == 1) //in a tag
+				if(seenTag == 1)
 				{
 					temptag.push_back(*i);
 					sl_form.push_back(*i);
@@ -45,7 +45,7 @@ ParseLexicalUnit::ParseLexicalUnit(wstring input_LU)
 					temptag.push_back(*i);
 					sl_form.push_back(*i);
 				}
-				else //not in a tag
+				else
 				{
 					sl_form.push_back(*i);
           sl_lemma.push_back(*i);
@@ -56,7 +56,7 @@ ParseLexicalUnit::ParseLexicalUnit(wstring input_LU)
 			}
 			else if(seenSlash == 1) //tl (only first entry)
 			{
-				if(seenTag == 1) //in a tag
+				if(seenTag == 1)
 				{
 					temptag.push_back(*i);
 					tl_form.push_back(*i);
@@ -64,7 +64,7 @@ ParseLexicalUnit::ParseLexicalUnit(wstring input_LU)
 					temptag.push_back(*i);
 					tl_form.push_back(*i);
 				}
-				else //not in a tag
+				else
 				{
 					tl_form.push_back(*i);
           tl_lemma.push_back(*i);
@@ -82,25 +82,25 @@ ParseLexicalUnit::ParseLexicalUnit(wstring input_LU)
 		else if(*i == L'/')
 			seenSlash++;
 
-		else if(seenSlash == 0) //sl
+		else if(seenSlash == 0)
 		{
-			sl_form.push_back(*i); //add to the sl form
+			sl_form.push_back(*i);
 
-			if(*i == L'<') //start reading tag
+			if(*i == L'<')
 				seenTag++;
 
-			else if(seenTag == 1) //inside a tag
+			else if(seenTag == 1)
 			{
-				if(*i == L'>') //if tag ends
+				if(*i == L'>')
 				{
 					seenTag--;
-					sl_tags.push_back(temptag); //add tag to list of sl tags
+					sl_tags.push_back(temptag);
 
 					temptag.clear();
 				}
 				else
 				{
-					temptag.push_back(*i); //add char to current tag
+					temptag.push_back(*i);
 				}
 			}
       
@@ -110,25 +110,25 @@ ParseLexicalUnit::ParseLexicalUnit(wstring input_LU)
       }
 		}
 
-		else if(seenSlash == 1) //tl (only first entry in tl)
+		else if(seenSlash == 1)
 		{
-			tl_form.push_back(*i); //add to the tl form
+			tl_form.push_back(*i);
 			
-			if(*i == L'<') //start reading tag
+			if(*i == L'<')
 				seenTag++;
 
-			else if(seenTag == 1) //inside a tag
+			else if(seenTag == 1)
 			{
-				if(*i == L'>') //if tag ends
+				if(*i == L'>')
 				{
 					seenTag--;
-					tl_tags.push_back(temptag); //add tag to list of tl tags
+					tl_tags.push_back(temptag);
 
 					temptag.clear();
 				}
 				else
 				{
-					temptag.push_back(*i); //add char to current tag
+          temptag.push_back(*i);
 				}
 			}
       
@@ -138,7 +138,7 @@ ParseLexicalUnit::ParseLexicalUnit(wstring input_LU)
       }
 		}
 
-		else //if tl has more than one entry
+		else
 		{
 			break;
 		}
@@ -174,44 +174,3 @@ wstring ParseLexicalUnit::get_tl_lemma()
 {
   return tl_lemma;
 }
-
-/* //Uncomment to test this code
-
-void print_tags(vector< wstring > input)
-{
-	for (int i = 0; i < input.size(); i++)
-	{
-		wcout << input[i];
-		cout << " ";
-	}
-}
-
-int main()
-{
-	wstring inputlu;
-	char input_char;
-
-	input_char = fgetc(stdin);
-
-	while(input_char != '\n')
-	{
-		inputlu.push_back(input_char);
-
-		input_char = fgetc(stdin);
-	}
-
-	ParseLexicalUnit lu(inputlu);
-
-	cout << "SL: ";
-	wcout << lu.get_sl_form();
-	cout << endl << "SL tags: ";
-	print_tags(lu.get_sl_tags());
-	cout << endl << "TL: ";
-	wcout << lu.get_tl_form();
-	cout << endl << "TL tags: ";
-	print_tags(lu.get_tl_tags());
-	cout << endl;
-
-	return 0;
-}
-*/

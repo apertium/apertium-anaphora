@@ -28,7 +28,7 @@
 
 using namespace std;
 
-void print_markable(acceptable_patterns inp) //testing function
+void print_markable(acceptable_patterns inp)
 {
 	for(acceptable_patterns::iterator i = inp.begin(); i != inp.end(); i++)
 	{
@@ -55,10 +55,10 @@ int contains_any(vector<wstring> tags, vector<wstring> candidates)
 	for(vector<wstring>::iterator it=candidates.begin();it!=candidates.end();++it)
 	{
 		if(std::find(tags.begin(), tags.end(), *it) != tags.end())
-			return 1; //if any of the tags in candidates matches the tags list
+			return 1;
 	}
 
-	return 0; //if no matches
+	return 0;
 }
 
 void toLower(basic_string<wchar_t>& s)
@@ -79,7 +79,7 @@ int check_acceptable_tags(vector<wstring> input_tags, wstring input_sl_lemma, ac
     vector<wstring> temp_tags = i->has_tags;
     vector<wstring> temp_exclude_tags = i->exclude_tags;
     
-		for(std::vector<wstring>::iterator j = temp_tags.begin(); j != temp_tags.end(); ++j) //check for the tags in has-tags
+		for(std::vector<wstring>::iterator j = temp_tags.begin(); j != temp_tags.end(); ++j)
 		{
 			if(*j == L"*") //ignore * in the tags list
 				continue;
@@ -96,9 +96,9 @@ int check_acceptable_tags(vector<wstring> input_tags, wstring input_sl_lemma, ac
       continue;
     }
     
-    for(std::vector<wstring>::iterator j = temp_exclude_tags.begin(); j != temp_exclude_tags.end(); ++j) //check for the tags in exclude-tags
+    for(std::vector<wstring>::iterator j = temp_exclude_tags.begin(); j != temp_exclude_tags.end(); ++j)
     {
-      if(contains(input_tags, *j)) //if the exclude-tag IS in the input LU tags
+      if(contains(input_tags, *j))
       {
         flag_contains_all = 0;
         break;
@@ -137,17 +137,16 @@ int check_acceptable_tags(vector<wstring> input_tags, wstring input_sl_lemma, ac
     {
       continue;
     }
-    else //if any tag list fully matched (i.e. has-tags present, exclude-tags absent)
+    else
     {
       return 1;
     }
 	}
 
-	return 0; //if it didn't return 1 then no tag list was fully matched
+	return 0;
 }
 
 parameter_return check_pattern_name(vector<wstring> input_tags, wstring input_sl_lemma, unordered_map<wstring, acceptable_tags> parameter_names)
-//find out if any of the anaphors match wrt tags, and if yes, return the unique name
 {
 	parameter_return retval;
 	retval.found = 0;
@@ -175,13 +174,11 @@ deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, Pa
 	unordered_map<wstring, acceptable_patterns> arx_markables = arx_file.get_markables();
 	unordered_map<wstring, acceptable_tags> arx_cats = arx_file.get_cats();
 
-	for (unordered_map<wstring, acceptable_patterns>::iterator it = arx_markables.begin(); it != arx_markables.end(); it++ ) //go through markables defined in xml file
+	for (unordered_map<wstring, acceptable_patterns>::iterator it = arx_markables.begin(); it != arx_markables.end(); it++ )
 	{
 		//for each markable
 		wstring markable_name = it->first;
 		acceptable_patterns patterns_list = it->second;
-
-		//print_markable(patterns_list);
 
 		for(acceptable_patterns::iterator i = patterns_list.begin(); i!=patterns_list.end(); ++i) //go through patterns in the markable
 		{
@@ -200,9 +197,7 @@ deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, Pa
 
 					for(size_t x = 0; x < len_pattern; ++x)
 					{
-						//this is the window -- check if pattern matches
-
-						acceptable_tags pattern_item_tags = arx_cats[current_pattern[x].name]; //get pattern item tags from def-cats
+						acceptable_tags pattern_item_tags = arx_cats[current_pattern[x].name];
 
 						if(check_acceptable_tags((*(n+x)).pos_tags, (*(n+x)).sl_lemma, pattern_item_tags)) //comparing current LU tags to pattern tags and lemma
 						{
@@ -214,28 +209,19 @@ deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, Pa
 							match_flag = 0;
 							break;
 						}
-
-						//wcerr << (*(n+x)).wordform;
 					}
 
-					if(match_flag == 1) //if the entire pattern matched
+					if(match_flag == 1)
 					{
 						//Add Property to the LUs
-						/*
-						cerr << "\n";
-						wcerr << markable_name;
-						cerr << " Pattern Matched at: ";
-						wcerr << (*n).wordform;
-						cerr << "\n";
-						*/
 
 						for(size_t x = 0; x < len_pattern; ++x)
 						{
-							((*(n+x)).properties).push_back(markable_name); //add markable name to properties
+							((*(n+x)).properties).push_back(markable_name);
 
 							if(current_pattern[x].head == 1)
 							{
-								((*(n+x)).properties).push_back(L"head"); // add "head" to properties
+								((*(n+x)).properties).push_back(L"head"); //
 							}
 						}
 
@@ -247,4 +233,3 @@ deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, Pa
 
 	return context;
 }
-
