@@ -5,3 +5,6 @@ cmake_install.cmake
 install_manifest.txt
 apertium-anaphora
 *.pc
+CTestTestfile.cmake
+Testing/
+apertium-validate-anaphora

@@ -1,0 +1,23 @@
+name: Apertium Anaphora CI Build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: dependencies
+      run: |
+           sudo apt-get -qy update
+           sudo apt-get -qfy install wget ca-certificates
+           wget -q https://apertium.projectjj.com/apt/install-nightly.sh -O - | sudo bash
+           sudo apt-get -qfy install --no-install-recommends build-essential cmake lttoolbox-dev pkg-config libxml2-dev
+    - name: cmake
+      run: cmake .
+    - name: build
+      run: cmake --build . -v -j 4
+    - name: tests
+      run: ctest -V
+    - name: make install
+      run: sudo cmake --install .
