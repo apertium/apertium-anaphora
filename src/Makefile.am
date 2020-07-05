@@ -1,10 +1,14 @@
 AM_LDFLAGS=$(LIBS)
 
+apertiumdir = $(prefix)/share/apertium
+
 bin_PROGRAMS = apertium-anaphora 
 
 GENERATEDSCRIPTS = apertium-validate-anaphora
 
 apertium_anaphora_SOURCES = anaphora.cc  parse_arx.cc  parse_biltrans.cc  pattern_arx.cc  score.cc
+
+apertium_DATA = anaphora.dtd
 
 bin_SCRIPTS =  $(GENERATEDSCRIPTS)
 
