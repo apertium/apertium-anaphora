@@ -54,6 +54,28 @@ AX_CHECK_COMPILE_FLAG([-std=c++20], [CXXFLAGS="$CXXFLAGS -std=c++20"], [
  ])
 ])
 
+AC_PATH_PROG(XMLLINT, xmllint, no)
+if test x$ac_cv_path_XMLLINT = x
+then
+  AC_MSG_ERROR([You don't have xmllint installed.])
+fi
+if test x$ac_cv_path_XMLLINT = xno
+then
+  AC_MSG_ERROR([You don't have xmllint installed.])
+fi
+
+AC_PATH_PROG(BASH, bash, no)
+if test x$ac_cv_path_BASH = x
+then
+  AC_MSG_ERROR([You don't have bash installed.])
+fi
+if test x$ac_cv_path_BASH = xno
+then
+  AC_MSG_ERROR([You don't have bash installed.])
+fi
+
+
+
 AC_CONFIG_FILES([
                  apertium-anaphora.pc
                  Makefile
