@@ -6,4 +6,4 @@ SUBDIRS = src
 EXTRA_DIST=autogen.sh
 
 test:
-	pushd tests/ && bash test.sh ../src/apertium-anaphora && popd
+	pushd $(abs_srcdir)/tests/ && bash test.sh $(abs_builddir)/src/apertium-anaphora && popd

@@ -8,3 +8,17 @@ apertium-anaphora
 CTestTestfile.cmake
 Testing/
 apertium-validate-anaphora
+INSTALL
+Makefile.in
+aclocal.m4
+autom4te.cache
+build
+configure
+depcomp
+install-sh
+missing
+src/Makefile.in
+config.log
+config.status
+.deps
+*.o

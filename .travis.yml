@@ -6,12 +6,13 @@ compiler:
 
 before_install:
   - wget https://apertium.projectjj.com/apt/install-nightly.sh -O - | sudo bash
-  - sudo apt-get install -qfy build-essential cmake lttoolbox-dev pkg-config libxml2-dev
+  - sudo apt-get install -qfy build-essential autoconf autotools-dev lttoolbox-dev pkg-config libxml2-dev
 
 script:
   - $CXX --version
   - export V=1 VERBOSE=1
-  - cmake .
-  - cmake --build . -j 4
-  - ctest -V
-  - cmake --install .
+  - autoreconf -fvi
+  - ./configure
+  - make -j4
+  - make test
+  - sudo make install
