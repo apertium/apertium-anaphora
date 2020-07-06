@@ -1,4 +1,4 @@
-#!/bin/bash
+
 if [[ $# != 1 ]]; then
     echo "USAGE: $(basename "$0") <input_file>"
     exit 1
@@ -11,4 +11,3 @@ if [[ ! -e "$FILE1" ]]; then
     exit 1
 fi
 
-xmllint --dtdvalid @CMAKE_INSTALL_FULL_DATADIR@/apertium-anaphora/anaphora.dtd --noout "$FILE1"

@@ -1,13 +1,13 @@
 # Apertium Anaphora Resolution
-## Google Summer of Code 2019
+
 [![Build Status](https://travis-ci.com/apertium/apertium-anaphora.svg?branch=master)](https://travis-ci.com/apertium/apertium-anaphora)
 
 ### Documentation
 http://wiki.apertium.org/wiki/Anaphora_Resolution_Module
 
 ### How to Run
-- `./cmake.sh`
-- `make -j4`
+- `./autogen.sh [--prefix=/path/to/your/prefix]`
+- `make`
 - `sudo make install`
 - Usage: `apertium-anaphora [-z] apertium-xxx-yyy.xxx-yyy.arx [input [output]]`
 
@@ -26,3 +26,7 @@ http://wiki.apertium.org/wiki/Anaphora_Resolution_Module
 This package is licensed under the [GNU General Public License](https://www.gnu.org/licenses/licenses.html#GPL) as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
 If it becomes necessary, we are open to dual-licensing the package under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+
+### Acknowledgements
+
+Google Summer of Code 2019
