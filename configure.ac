@@ -1,6 +1,6 @@
 AC_PREREQ(2.61)
 
-AC_INIT([apertium-anaphora], [1.0.0], [khanna.tanmai@gmail.com])
+AC_INIT([apertium-anaphora], [1.0.1], [khanna.tanmai@gmail.com])
 AM_INIT_AUTOMAKE
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -11,7 +11,7 @@ AC_LANG_CPLUSPLUS
 CFLAGS="-Wall -Wextra $CFLAGS"
 CXXFLAGS="-Wall -Wextra $CXXFLAGS"
 
-PKG_CHECK_MODULES([LTTOOLBOX], [lttoolbox >= 3.5.2])
+PKG_CHECK_MODULES([LTTOOLBOX], [lttoolbox >= 3.5.3])
 AC_SUBST(LTTOOLBOX_CFLAGS)
 AC_SUBST(LTTOOLBOX_LIBS)
 
