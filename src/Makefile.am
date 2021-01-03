@@ -15,7 +15,7 @@ apertium_anaphora_DATA = anaphora.dtd
 
 apertium-validate-anaphora: Makefile.am validate-header.sh
 	@echo "Creating apertium-validate-anaphora script"
-	@echo "#!$(BASH)" > $@
+	@echo "#!/usr/bin/env bash" > $@
 	@cat $(abs_srcdir)/validate-header.sh >> $@
 	@echo "xmllint --dtdvalid \"$(apertium_anaphoradir)\"/anaphora.dtd --noout \"\$$FILE1\"" >>$@
 	@chmod a+x $@

@@ -1,6 +1,6 @@
 AC_PREREQ(2.61)
 
-AC_INIT([apertium-anaphora], [1.0.1], [khanna.tanmai@gmail.com])
+AC_INIT([apertium-anaphora], [1.0.2], [khanna.tanmai@gmail.com])
 AM_INIT_AUTOMAKE
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -35,16 +35,6 @@ AX_CHECK_COMPILE_FLAG([-std=c++20], [CXXFLAGS="$CXXFLAGS -std=c++20"], [
   ])
  ])
 ])
-
-AC_PATH_PROG(BASH, bash, no)
-if test x$ac_cv_path_BASH = x
-then
-  AC_MSG_ERROR([You don't have bash installed.])
-fi
-if test x$ac_cv_path_BASH = xno
-then
-  AC_MSG_ERROR([You don't have bash installed.])
-fi
 
 AC_CONFIG_FILES([
                  apertium-anaphora.pc
