@@ -1,6 +1,5 @@
-Table 1
-Note: Only third person possessive determiners were analysed. What matters here is not the gender but the number of the final output.																									
-																									
+Catalan-Italian-Evaluation
+			
 Line	No change		Change				Without anaphora	With anaphora																	
 	Correct	Incorrect	Correct	Incorrect			Correct	Correct																	
 	76	13	5	14		108	90	81																	
@@ -76,4 +75,5 @@ Line	No change		Change				Without anaphora	With anaphora
 4020	2																								
 4021				1																					
 4025	2																								
-4028		1																							
+4028		1																	
+Note that only third person possessive determiners were analysed. What matters here is not the gender but the number of the final output.						
