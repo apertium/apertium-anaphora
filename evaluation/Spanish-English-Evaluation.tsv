@@ -1,0 +1,267 @@
+Table 1
+Evaluation of Anaphora Resolution on Third Person Possessive Determiners																									
+																									
+"Note: Out of 1000 sentences, these 258 sentences had possessive determiners. If it isn’t in third person, it is given a score of 0."																									
+																									
+Line	No change		Change		Comments	Total 3rd Person	Without anaphora	With anaphora																	
+	Correct	Incorrect	Correct	Incorrect			Correct	Correct																	
+	33	53	32	2		120	35	65																	
+																									
+1					“His Señorías” should change to Her but this isn’t anaphora.																				
+2	0				First Person Pronoun																				
+3					“His Señorías” should change to Her but this isn’t anaphora.																				
+4	1			1	Real world info needed																				
+5	0				First Person Pronoun																				
+6		1			Clause detection would correct this																				
+7					“His Señorías” should change to Her but this isn’t anaphora.																				
+8	1																								
+9	0				First Person Pronoun																				
+10	1				Translation says “ella” but it is supposed to be “his”																				
+11				0	“su” is supposed to be “your”																				
+12				0	“su” is supposed to be “your”																				
+13	0				First Person Pronoun																				
+14			1		Identified antecedent but “Group” is marked singular? Give “its” maybe																				
+15	1				"Proper noun, could be his/her?"																				
+16		1			Parliament marked singular																				
+17		1			Commission marked singular																				
+18			1																						
+19		1			Should have detected Mrs																				
+20	0				First Person Pronoun																				
+21	0				First Person Pronoun																				
+22	0				First Person Pronoun																				
+23		1			Parliament marked singular																				
+24		1			Commission marked singular																				
+25	0				First Person Pronoun																				
+26	0				First Person Pronoun																				
+27																									
+28	0				First Person Pronoun																				
+29	0				First Person Pronoun																				
+30				0	“su” is supposed to be “your”																				
+31	0				First Person Pronoun																				
+32		1																							
+33	0				First Person Pronoun																				
+34					“His Señorías” should change to Her but this isn’t anaphora.																				
+35	0				First Person Pronoun																				
+36	0				First Person Pronoun																				
+37	0				First Person Pronoun																				
+38	0				First Person Pronoun																				
+39	0				First Person Pronoun																				
+40		1																							
+41	1																								
+42	1																								
+43	0				First Person Pronoun																				
+44	0				First Person Pronoun																				
+45	1																								
+46		1																							
+47	0				First Person Pronoun																				
+48	0				First Person Pronoun																				
+49	0				First Person Pronoun																				
+50	1																								
+51					“His Señorías” should change to Her but this isn’t anaphora.																				
+52			1																						
+53	0				First Person Pronoun																				
+54			1																						
+55		1																							
+56		1																							
+57				0	“su” is supposed to be “your”																				
+58		1																							
+59	0				First Person Pronoun																				
+60	0				First Person Pronoun																				
+61	0				First Person Pronoun																				
+62	0				First Person Pronoun																				
+63	0				First Person Pronoun																				
+64	0				First Person Pronoun																				
+65	1																								
+66	1																								
+67	0				First Person Pronoun																				
+68		1																							
+69			1																						
+70	0				First Person Pronoun																				
+71	0				First Person Pronoun																				
+72	1																								
+73	0				First Person Pronoun																				
+74	0				First Person Pronoun																				
+75	1																								
+76			1																						
+77	1																								
+78	0				First Person Pronoun																				
+79			1																						
+80	0				First Person Pronoun																				
+81	1																								
+82			1																						
+83	0				First Person Pronoun																				
+84	0				First Person Pronoun																				
+85	0				First Person Pronoun																				
+86		1																							
+87	1																								
+88	1																								
+89	0				First Person Pronoun																				
+90	0				First Person Pronoun																				
+91	0				First Person Pronoun																				
+92	0				First Person Pronoun																				
+93	0				First Person Pronoun																				
+94			1		Anaphora actually got correct output! “Mrs” doesn’t have <f> tag in English.																				
+95		1			Should be its not his																				
+96	0				First Person Pronoun																				
+97	0				First Person Pronoun																				
+98	0				First Person Pronoun																				
+99	0				First Person Pronoun																				
+100			1																						
+101		1			Should be its not his																				
+102	1																								
+103	0				First Person Pronoun																				
+104	0				First Person Pronoun																				
+105	0				First Person Pronoun																				
+106	0				First Person Pronoun																				
+107	0				First Person Pronoun																				
+108	0				First Person Pronoun																				
+109	0				First Person Pronoun																				
+110			2		Good example																				
+111		1			Should be its not his																				
+112		1			Europe marked as singular																				
+113		1			Commission marked singular																				
+114	0				First Person Pronoun																				
+115		1			Should be its not his																				
+116	0				First Person Pronoun																				
+117	0				First Person Pronoun																				
+118		1			Should be its not his																				
+119	0				First Person Pronoun																				
+120	1																								
+121	1				If his can be used for “European citizen” ?																				
+122		1			Should be its not his																				
+123			1																						
+124	0				First Person Pronoun																				
+125	1																								
+126			1																						
+127			1		Good example (antecedent from previous context)																				
+128	0				First Person Pronoun																				
+129				0	“su” is supposed to be “your”																				
+130	0				First Person Pronoun																				
+131		1			Should be its not his																				
+132		1			Commission marked singular																				
+133		1			Should be its not his																				
+134	0				First Person Pronoun																				
+135		1			Antecedent in PP																				
+136	0				First Person Pronoun																				
+137	1																								
+138			1																						
+139	0				First Person Pronoun																				
+140				1	Changed his to their																				
+141		1			Antecedent is pronoun																				
+142	0				First Person Pronoun																				
+143	0				First Person Pronoun																				
+144		1																							
+145	1																								
+146	0				First Person Pronoun																				
+147					“His Señorías” should change to Her but this isn’t anaphora.																				
+148					“His Señorías” should change to Her but this isn’t anaphora.																				
+149					“His Señorías” should change to Her but this isn’t anaphora.																				
+150					“His Señorías” should change to Her but this isn’t anaphora.																				
+151	0				First Person Pronoun																				
+152					“His Señorías” should change to Her but this isn’t anaphora.																				
+153	1																								
+154	1																								
+155		1			Commission marked singular																				
+156				0	“su” is supposed to be “your”																				
+157		1			“His Señorías” should change to Her but this isn’t anaphora. After that the pronoun following can also be made “her”																				
+158		1			Should be its not his																				
+159	0				First Person Pronoun																				
+160					“His Señorías” should change to Her but this isn’t anaphora.																				
+161					“His Señorías” should change to Her but this isn’t anaphora.																				
+162					“His Señorías” should change to Her but this isn’t anaphora.																				
+163					“His Señorías” should change to Her but this isn’t anaphora.																				
+164		1			Should be its not his																				
+165					“His Señorías” should change to Her but this isn’t anaphora.																				
+166	0				First Person Pronoun																				
+167	0				First Person Pronoun																				
+168					“His Señorías” should change to Her but this isn’t anaphora.																				
+169	0				First Person Pronoun																				
+170	0				First Person Pronoun																				
+171	1	1			Commission marked singular																				
+172		0			“su” is supposed to be “your”																				
+173		0			"“su"" is supposed to be “this"""																				
+174	1																								
+175	0				First Person Pronoun																				
+176	1																								
+177	0				First Person Pronoun																				
+178	0				First Person Pronoun																				
+179			1																						
+180		1			Should be its not his																				
+181	0				First Person Pronoun																				
+182	0				First Person Pronoun																				
+183		1			Commission marked singular																				
+184		1			Commission marked singular																				
+185	0				First Person Pronoun																				
+186		1																							
+187	0				First Person Pronoun																				
+188	0				First Person Pronoun																				
+189	0				First Person Pronoun																				
+190		1			Antecedent is pronoun																				
+191	0				First Person Pronoun																				
+192	0				First Person Pronoun																				
+193		1			Should be its not his																				
+194	0				First Person Pronoun																				
+195	0				First Person Pronoun																				
+196		1			Commission marked singular																				
+197		1			Commission marked singular																				
+198			1																						
+199		1			Commission marked singular																				
+200			1																						
+201	0				First Person Pronoun																				
+202		1			Antecedent is pronoun																				
+203	0				First Person Pronoun																				
+204			2																						
+205	0				First Person Pronoun																				
+206	0				First Person Pronoun																				
+207	1																								
+208	0				First Person Pronoun																				
+209	0				First Person Pronoun																				
+210	0				First Person Pronoun																				
+211			1																						
+212			1																						
+213	0				First Person Pronoun																				
+214			1																						
+215	0				First Person Pronoun																				
+216	0				First Person Pronoun																				
+217		0			“su” is supposed to be “your”																				
+218	0				First Person Pronoun																				
+219	1																								
+220	0				First Person Pronoun																				
+221	0				First Person Pronoun																				
+222	0				First Person Pronoun																				
+223			1																						
+224			1																						
+225	0				First Person Pronoun																				
+226		2			Commission marked singular																				
+227			1																						
+228			1																						
+229	0				First Person Pronoun																				
+230		1			Should be its not his																				
+231		0			“su” is supposed to be “your”																				
+232			1																						
+233	0				First Person Pronoun																				
+234	0				First Person Pronoun																				
+235		1			Commission marked singular																				
+236		1			Should be its not his																				
+237	0																								
+238		1			Group marked singular																				
+239					“His Señorías” should change to Her but this isn’t anaphora.																				
+240		1			"Should be its not his, technically it should be in Incorrect change but that would imply original was correct, which is not true"																				
+241			1																						
+242			1																						
+243		1			Supposed to be “these”																				
+244	0				First Person Pronoun																				
+245	0				First Person Pronoun																				
+246	1																								
+247		1			"Should be its not his, technically it should be in Incorrect change but that would imply original was correct, which is not true"																				
+248		1			Should be its not his																				
+249	0				First Person Pronoun																				
+250	1																								
+251			1																						
+252	0				First Person Pronoun																				
+253	0				First Person Pronoun																				
+254	0				First Person Pronoun																				
+255	0				First Person Pronoun																				
+256	1																								
+257	0				First Person Pronoun																				
+258	1																								
