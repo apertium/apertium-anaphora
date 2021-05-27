@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.com/apertium/apertium-anaphora.svg?branch=master)](https://travis-ci.com/apertium/apertium-anaphora)
 
 ### Documentation
-http://wiki.apertium.org/wiki/Anaphora_Resolution_Module
+https://wiki.apertium.org/wiki/Anaphora_Resolution_Module
 
 ### How to Run
 - `./autogen.sh [--prefix=/path/to/your/prefix]`
