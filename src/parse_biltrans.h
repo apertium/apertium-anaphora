@@ -21,6 +21,7 @@
 
 #include <vector>
 #include <string>
+#include <lttoolbox/ustring.h>
 
 using namespace std;
 
@@ -34,69 +35,69 @@ private:
 	/**
    	 * Source language word and tags
      */
-	wstring sl_form;
+	UString sl_form;
 
 	/**
    	 * Target language word and tags
      */
-	wstring tl_form;
+	UString tl_form;
 
 	/**
    	 * Source language tags
      */
-	vector< wstring > sl_tags;
+	vector< UString > sl_tags;
 
 	/**
    	 * Target language tags
      */
-	vector< wstring > tl_tags;
-  
+	vector< UString > tl_tags;
+
   /**
       * Source language lemma
      */
-  wstring sl_lemma;
-  
+  UString sl_lemma;
+
   /**
       * Target language lemma
      */
-  wstring tl_lemma;
+  UString tl_lemma;
 
 public:
 	/**
    	 * Constructor to fill all variables
    	 * @param input_LU one lexical unit between ^ and $ (excluded)
      */
-	ParseLexicalUnit(wstring input_LU);
+	ParseLexicalUnit(UString input_LU);
 
 	/**
    	 * Return the Source Language Form
      */
-	wstring get_sl_form();
+	UString get_sl_form();
 
 	/**
    	 * Return the Target Language Form
      */
-	wstring get_tl_form();
+	UString get_tl_form();
 
 	/**
    	 * Return the Source Language Tags
      */
-	vector< wstring > get_sl_tags();
+	vector< UString > get_sl_tags();
 
 	/**
    	 * Return the Target Language Form
      */
-	vector< wstring > get_tl_tags();
-  
+	vector< UString > get_tl_tags();
+
   /**
       * Return the Source Language Lemma
      */
-  wstring get_sl_lemma();
-  
+  UString get_sl_lemma();
+
   /**
       * Return the Target Language Lemma
      */
-  wstring get_tl_lemma();
+  UString get_tl_lemma();
 
 };
 

@@ -25,6 +25,8 @@
 #include <iostream>
 #include <algorithm>
 #include <cwctype>
+#include <unicode/utf16.h>
+#include <unicode/uchar.h>
 
 using namespace std;
 
@@ -36,13 +38,13 @@ void print_markable(acceptable_patterns inp)
 
 		for(vector<markable_pattern>::iterator j = (*i).begin(); j != (*i).end(); j++)
 		{
-			wcerr << (*j).name;
+			cerr << (*j).name;
 			cerr << "\n";
 		}
 	}
 }
 
-int contains(vector<wstring> tags, wstring tag)
+int contains(vector<UString> tags, UString tag)
 {
 	if(std::find(tags.begin(), tags.end(), tag) != tags.end())
 		return 1;
@@ -50,9 +52,9 @@ int contains(vector<wstring> tags, wstring tag)
 		return 0;
 }
 
-int contains_any(vector<wstring> tags, vector<wstring> candidates)
+int contains_any(vector<UString> tags, vector<UString> candidates)
 {
-	for(vector<wstring>::iterator it=candidates.begin();it!=candidates.end();++it)
+	for(vector<UString>::iterator it=candidates.begin();it!=candidates.end();++it)
 	{
 		if(std::find(tags.begin(), tags.end(), *it) != tags.end())
 			return 1;
@@ -61,42 +63,46 @@ int contains_any(vector<wstring> tags, vector<wstring> candidates)
 	return 0;
 }
 
-void toLower(basic_string<wchar_t>& s)
+void toLower(UString& s)
 {
-   for (basic_string<wchar_t>::iterator p = s.begin(); p != s.end(); ++p)
-   {
-      *p = towlower(*p);
-   }
+	UString temp;
+	size_t i = 0;
+	size_t len = s.size();
+	UChar32 c;
+	while (i < len) {
+		U16_NEXT(s, i, len, c);
+		temp += u_tolower(c);
+	}
+	s.swap(temp);
 }
 
-int check_acceptable_tags(vector<wstring> input_tags, wstring input_sl_lemma, acceptable_tags check_tags) //check has-tags, exclude-tags, lemma
+int check_acceptable_tags(vector<UString> input_tags, UString input_sl_lemma, acceptable_tags check_tags) //check has-tags, exclude-tags, lemma
 {
 	for (acceptable_tags::iterator i = check_tags.begin(); i != check_tags.end(); ++i)
 	{
 
 		int flag_contains_all = 1;
 
-    vector<wstring> temp_tags = i->has_tags;
-    vector<wstring> temp_exclude_tags = i->exclude_tags;
-    
-		for(std::vector<wstring>::iterator j = temp_tags.begin(); j != temp_tags.end(); ++j)
-		{
-			if(*j == L"*") //ignore * in the tags list
-				continue;
+    vector<UString> temp_tags = i->has_tags;
+    vector<UString> temp_exclude_tags = i->exclude_tags;
 
-			if(!contains(input_tags, *j)) //if the has-tag is NOT in the input LU tags
-			{
-				flag_contains_all = 0;
-				break;
-			}
+	for (auto& j : temp_tags) {
+		if(j == "*"_u) //ignore * in the tags list
+			continue;
+
+		if(!contains(input_tags, j)) {
+			//if the has-tag is NOT in the input LU tags
+			flag_contains_all = 0;
+			break;
 		}
-    
+	}
+
     if(flag_contains_all == 0)
     {
       continue;
     }
-    
-    for(std::vector<wstring>::iterator j = temp_exclude_tags.begin(); j != temp_exclude_tags.end(); ++j)
+
+    for(std::vector<UString>::iterator j = temp_exclude_tags.begin(); j != temp_exclude_tags.end(); ++j)
     {
       if(contains(input_tags, *j))
       {
@@ -104,23 +110,23 @@ int check_acceptable_tags(vector<wstring> input_tags, wstring input_sl_lemma, ac
         break;
       }
     }
-    
+
     if(flag_contains_all == 0)
     {
       continue;
     }
-    
+
     if(!(i->lemma).empty())
     {
-      wstring temp_lemma = i->lemma;
-      
+      UString temp_lemma = i->lemma;
+
       if(input_sl_lemma.length() == temp_lemma.length())
       {
         if(input_sl_lemma.compare(temp_lemma) != 0)
         {
           toLower(input_sl_lemma);
           toLower(temp_lemma);
-          
+
           if(input_sl_lemma.compare(temp_lemma) != 0)
           {
             flag_contains_all = 0;
@@ -132,7 +138,7 @@ int check_acceptable_tags(vector<wstring> input_tags, wstring input_sl_lemma, ac
         flag_contains_all = 0;
       }
     }
-    
+
     if(flag_contains_all == 0)
     {
       continue;
@@ -146,14 +152,14 @@ int check_acceptable_tags(vector<wstring> input_tags, wstring input_sl_lemma, ac
 	return 0;
 }
 
-parameter_return check_pattern_name(vector<wstring> input_tags, wstring input_sl_lemma, unordered_map<wstring, acceptable_tags> parameter_names)
+parameter_return check_pattern_name(vector<UString> input_tags, UString input_sl_lemma, unordered_map<UString, acceptable_tags> parameter_names)
 {
 	parameter_return retval;
 	retval.found = 0;
 
-	for (unordered_map<wstring, acceptable_tags>::iterator it = parameter_names.begin(); it != parameter_names.end(); it++)
+	for (unordered_map<UString, acceptable_tags>::iterator it = parameter_names.begin(); it != parameter_names.end(); it++)
 	{
-		wstring parameter_name = it->first;
+		UString parameter_name = it->first;
 		acceptable_tags parameter_tags= it->second;
 
 		if(check_acceptable_tags(input_tags, input_sl_lemma, parameter_tags))
@@ -164,20 +170,20 @@ parameter_return check_pattern_name(vector<wstring> input_tags, wstring input_sl
 			return retval;
 		}
 	}
-	
+
 	return retval;
 }
 
 
 deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, ParseArx arx_file)
 {
-	unordered_map<wstring, acceptable_patterns> arx_markables = arx_file.get_markables();
-	unordered_map<wstring, acceptable_tags> arx_cats = arx_file.get_cats();
+	unordered_map<UString, acceptable_patterns> arx_markables = arx_file.get_markables();
+	unordered_map<UString, acceptable_tags> arx_cats = arx_file.get_cats();
 
-	for (unordered_map<wstring, acceptable_patterns>::iterator it = arx_markables.begin(); it != arx_markables.end(); it++ )
+	for (unordered_map<UString, acceptable_patterns>::iterator it = arx_markables.begin(); it != arx_markables.end(); it++ )
 	{
 		//for each markable
-		wstring markable_name = it->first;
+		UString markable_name = it->first;
 		acceptable_patterns patterns_list = it->second;
 
 		for(acceptable_patterns::iterator i = patterns_list.begin(); i!=patterns_list.end(); ++i) //go through patterns in the markable
@@ -221,7 +227,7 @@ deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, Pa
 
 							if(current_pattern[x].head == 1)
 							{
-								((*(n+x)).properties).push_back(L"head"); //
+								((*(n+x)).properties).push_back("head"_u); //
 							}
 						}
 

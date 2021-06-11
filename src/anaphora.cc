@@ -23,7 +23,7 @@
 #include "pattern_arx.h"
 
 #include <lttoolbox/lt_locale.h>
-
+#include <lttoolbox/input_file.h>
 
 #include <cstdio>
 #include <cstring>
@@ -36,22 +36,9 @@
 
 using namespace std;
 
-FILE * open_input(string const &filename)
+UFILE * open_output(string const &filename)
 {
-  FILE *input = fopen(filename.c_str(), "r");
-  if(!input)
-  {
-    wcerr << "Error: can't open input file '";
-    wcerr << filename.c_str() << "'." << endl;
-    exit(EXIT_FAILURE);
-  }
-
-  return input;
-}
-
-FILE * open_output(string const &filename)
-{
-  FILE *output = fopen(filename.c_str(), "w");
+	UFILE *output = u_fopen(filename.c_str(), "w", NULL, NULL);
   if(!output)
   {
     wcerr << "Error: can't open output file '";
@@ -132,22 +119,23 @@ int main(int argc, char **argv)
 		}
 	}
 
-	FILE *input = stdin, *output = stdout;
+	InputFile input;
+	UFILE* output = u_finit(stdout, NULL, NULL);
 
 	switch(argc - optind)
 	{
 		case 1: // if only one argument left, it has to be the arx_file
-			arxFileName = argv[argc - 1]; 
+			arxFileName = argv[argc - 1];
 			break;
 
 		case 2: // if two arguments, it has to be arx_file and input_file
 			arxFileName = argv[argc - 2];
-			input = open_input(argv[argc - 1]); 
+			input.open_or_exit(argv[argc - 1]);
 			break;
 
 		case 3: // if three arguments, it has to be arx_file, input file and output file
 			arxFileName = argv[argc - 3];
-			input = open_input(argv[argc - 2]); 
+			input.open_or_exit(argv[argc - 2]);
 			output = open_output(argv[argc - 1]);
 			break;
 
@@ -156,20 +144,20 @@ int main(int argc, char **argv)
 			break;
 	}
 
-	wchar_t input_char;
+	UChar32 input_char;
 
-	wstring input_stream;
+	UString input_stream;
 
-	wstring final_ref;
+	UString final_ref;
 	Scoring score_module;
 	unsigned int gen_id = 0;
 
-	wstring sl_form;
-	wstring tl_form;
-	vector<wstring> sl_tags;
-	vector<wstring> tl_tags;
-  wstring sl_lemma;
-  wstring tl_lemma;
+	UString sl_form;
+	UString tl_form;
+	vector<UString> sl_tags;
+	vector<UString> tl_tags;
+	UString sl_lemma;
+	UString tl_lemma;
 
 	ParseArx arx_file;
 	int parse_arx_retval = arx_file.parseDoc(arxFileName);
@@ -179,22 +167,22 @@ int main(int argc, char **argv)
 
 	int flag_LU = 0;
 
-	input_char = fgetwc(input);
+	input_char = input.get();
 
-	while(input_char!=EOF)
+	while(input_char!=U_EOF)
 	{
-		if(nullFlush && input_char == L'\0')
+		if(nullFlush && input_char == '\0')
 		{
-			fputwc(input_char, output);
-			fflush(output);
+			u_fputc(input_char, output);
+			u_fflush(output);
 
 			input_stream.clear();
 			sl_form.clear();
 			tl_form.clear();
 			sl_tags.clear();
 			tl_tags.clear();
-      sl_lemma.clear();
-      tl_lemma.clear();
+			sl_lemma.clear();
+			tl_lemma.clear();
 			gen_id = 0;
 			score_module.clear();
 
@@ -203,24 +191,24 @@ int main(int argc, char **argv)
 			flag_LU = 0;
 		}
 
-		else if(input_char == L'\\')
+		else if(input_char == '\\')
 		{
 			if(flag_LU == 0)
 			{
-				fputwc(input_char, output);
+				u_fputc(input_char, output);
 
-				input_char = fgetwc(input);
+				input_char = input.get();
 
-				fputwc(input_char, output);
+				u_fputc(input_char, output);
 			}
 			else
 			{
 				input_stream.push_back(input_char);
-				fputwc(input_char, output);
+				u_fputc(input_char, output);
 
-				input_char = fgetwc(input);
+				input_char = input.get();
 
-				fputwc(input_char, output);
+				u_fputc(input_char, output);
 				input_stream.push_back(input_char);
 			}
 		}
@@ -228,19 +216,19 @@ int main(int argc, char **argv)
 		{
 			if(flag_LU == 0)
 			{
-				fputwc(input_char, output);
+				u_fputc(input_char, output);
 
-				if(input_char == L'^')
+				if(input_char == '^')
 					flag_LU = 1;
 			}
 
 			else if(flag_LU == 1)
 			{
-				if(input_char == L'$')
+				if(input_char == '$')
 				{
 					gen_id++;
 
-					fputwc(L'/', output); //for adding ref
+					u_fputc('/', output); //for adding ref
 
 					flag_LU = 0;
 
@@ -250,8 +238,8 @@ int main(int argc, char **argv)
 					tl_tags = LU.get_tl_tags();
 					sl_form = LU.get_sl_form();
 					sl_tags = LU.get_sl_tags();
-          sl_lemma = LU.get_sl_lemma();
-          tl_lemma = LU.get_tl_lemma();
+					sl_lemma = LU.get_sl_lemma();
+					tl_lemma = LU.get_tl_lemma();
 
 					if(!tl_form.empty())
 					{
@@ -265,7 +253,7 @@ int main(int argc, char **argv)
 						{
 							final_ref = score_module.get_antecedent(debug_flag);
 
-							fputws(final_ref.c_str(), output);
+							write(final_ref, output);
 						}
 					}
 
@@ -276,15 +264,15 @@ int main(int argc, char **argv)
 					input_stream.push_back(input_char);
 				}
 
-				fputwc(input_char, output);
+				u_fputc(input_char, output);
 
 			}
 		}
 
-		input_char = fgetwc(input);
+		input_char = input.get();
 	}
 
-	//fclose(fin);
+	u_fclose(output);
 
 	return 0;
 }

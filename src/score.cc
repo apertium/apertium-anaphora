@@ -37,22 +37,17 @@ void showq(deque < vector<unique_LU> > gq)
     cerr << "\n";
     for (std::vector<unique_LU>::iterator i = temp_sentence.begin(); i != temp_sentence.end(); ++i)
     {
-      wcerr << (*i).tl_wordform;
+      cerr << (*i).tl_wordform;
 
-      for (std::vector<wstring>::iterator k = (*i).pos_tags.begin(); k != (*i).pos_tags.end(); ++k)
-      {
-        cerr << "<";
-        wcerr << (*k);
-        cerr << ">";
-      }
+	  for (auto& k : (*i).pos_tags) {
+		  cerr << "<" << k << ">";
+	  }
 
       cerr << ":";
 
-      for (std::vector<wstring>::iterator l = (*i).properties.begin(); l != (*i).properties.end(); ++l)
-      {
-        cerr << " ";
-        wcerr << (*l);
-      }
+	  for (auto& l : (*i).properties) {
+		  cerr << " " << l;
+	  }
 
       cerr << "\t";
     }
@@ -62,9 +57,9 @@ void showq(deque < vector<unique_LU> > gq)
   cerr << '\n';
 }
 
-int Scoring::add_word(int input_id, wstring input_wordform, vector< wstring > input_pos_tags, wstring input_tl_wordform, wstring input_sl_lemma, wstring input_tl_lemma, ParseArx arx_file, int debug_flag)
+int Scoring::add_word(int input_id, UString input_wordform, vector< UString > input_pos_tags, UString input_tl_wordform, UString input_sl_lemma, UString input_tl_lemma, ParseArx arx_file, int debug_flag)
 {
-	vector<wstring> temp_prop;
+	vector<UString> temp_prop;
 	parameters_datatype arx_parameters = arx_file.get_parameters();
 
 	unique_LU input_LU = {input_id, input_wordform, input_tl_wordform, input_sl_lemma, input_tl_lemma, input_pos_tags, temp_prop};
@@ -76,7 +71,7 @@ int Scoring::add_word(int input_id, wstring input_wordform, vector< wstring > in
 
 		context.push_back(sentence);
 
-    if(check_acceptable_tags(input_LU.pos_tags, input_LU.sl_lemma, arx_parameters[L"delimiter"][L"default"]) )
+    if(check_acceptable_tags(input_LU.pos_tags, input_LU.sl_lemma, arx_parameters["delimiter"_u]["default"_u]) )
 		{
 			vector<unique_LU> new_sentence;
 
@@ -85,7 +80,7 @@ int Scoring::add_word(int input_id, wstring input_wordform, vector< wstring > in
 	}
 	else
 	{
-    if(check_acceptable_tags(input_LU.pos_tags, input_LU.sl_lemma, arx_parameters[L"delimiter"][L"default"]))
+    if(check_acceptable_tags(input_LU.pos_tags, input_LU.sl_lemma, arx_parameters["delimiter"_u]["default"_u]))
 		{
 			context.back().push_back(input_LU);
 
@@ -97,26 +92,26 @@ int Scoring::add_word(int input_id, wstring input_wordform, vector< wstring > in
 				context.pop_front();
 		}
 
-		else 
+		else
 		{
-      parameter_return retval = check_pattern_name(input_LU.pos_tags, input_LU.sl_lemma, arx_parameters[L"anaphor"]);
+      parameter_return retval = check_pattern_name(input_LU.pos_tags, input_LU.sl_lemma, arx_parameters["anaphor"_u]);
 
 			if(retval.found == 1) //check if tags,lemma of current word match with anaphor in arx file
 			{
 				unique_LU anaphor_LU = input_LU;
 
-				vector <wstring> temp_pos_tags = anaphor_LU.pos_tags;
-				temp_pos_tags.push_back(L"anaphor");
+				vector <UString> temp_pos_tags = anaphor_LU.pos_tags;
+				temp_pos_tags.push_back("anaphor"_u);
 				anaphor_LU.pos_tags = temp_pos_tags;
 
-				
+
 				context.back().push_back(anaphor_LU);
 
 				apply_indicators(anaphor_LU, arx_file, retval.parameter_name, debug_flag);
 
 				context.back().pop_back();
 				context.back().push_back(input_LU);
-				
+
 				return 1; //To show that something will be added in side ref
 			}
 			else
@@ -124,13 +119,13 @@ int Scoring::add_word(int input_id, wstring input_wordform, vector< wstring > in
 				context.back().push_back(input_LU); //add word to the latest added sentence in the queue
 			}
 		}
-		
+
 	}
 
 	return 0;
 }
 
-void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file, wstring parameter_name, int debug_flag)
+void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file, UString parameter_name, int debug_flag)
 {
 	int distance_marker = 2; //starts from 2 for current sentence and reduces till -1 as we go to previous sentences
 	int temp_score;
@@ -142,15 +137,15 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file, wstring par
 
 	distance_marker = distance_marker - context_with_prop.size() + 1; //set distance to earliest sentence based on number of sentences in context
 
-	unordered_map<wstring, int> all_markables_score = arx_file.get_all_markables_score();
-	unordered_map<wstring, int> parameter_markables_score = arx_file.get_parameter_markables_score(parameter_name);
+	unordered_map<UString, int> all_markables_score = arx_file.get_all_markables_score();
+	unordered_map<UString, int> parameter_markables_score = arx_file.get_parameter_markables_score(parameter_name);
 
 	if(debug_flag)
 	{
 		cerr << "\n** For anaphor: ";
-		fputws(anaphor.wordform.c_str(), stderr);
+		cerr << anaphor.wordform;
 		cerr << "/";
-		fputws(anaphor.tl_wordform.c_str(), stderr);
+		cerr << anaphor.tl_wordform;
 		cerr << ", Context - with markables **\n";
 	}
 
@@ -164,13 +159,13 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file, wstring par
 			if(debug_flag)
 			{
 				cerr << "\n";
-				wcerr << (*j).wordform;
+				cerr << (*j).wordform;
 				cerr << ": ";
 				print_tags((*j).properties);
 				cerr << "\n";
 			}
 
-			if(check_acceptable_tags((*j).pos_tags, (*j).sl_lemma, arx_file.get_parameters()[L"antecedent"][parameter_name]))
+			if(check_acceptable_tags((*j).pos_tags, (*j).sl_lemma, arx_file.get_parameters()["antecedent"_u][parameter_name]))
 			{
 				temp_score = 0;
 
@@ -191,7 +186,7 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file, wstring par
 					//Impeding Indicators
 
 					//Indicators from XML file (iterate through all markables that provided a score without mentioning parameter_name)
-					for(unordered_map<wstring, int>::iterator x = all_markables_score.begin(); x != all_markables_score.end(); ++x)
+					for(unordered_map<UString, int>::iterator x = all_markables_score.begin(); x != all_markables_score.end(); ++x)
 					{
 						if(contains(antecedent_LU.properties, x->first))
 						{
@@ -200,7 +195,7 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file, wstring par
 					}
 
 					//Now get the scores from the markables that mentioned this specific parameter name
-					for(unordered_map<wstring, int>::iterator x = parameter_markables_score.begin(); x != parameter_markables_score.end(); ++x)
+					for(unordered_map<UString, int>::iterator x = parameter_markables_score.begin(); x != parameter_markables_score.end(); ++x)
 					{
 						if(contains(antecedent_LU.properties, x->first))
 						{
@@ -214,7 +209,7 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file, wstring par
 				else
 				{
 					//cerr << "\nAgreement Failed for:";
-					//wcerr << antecedent_LU.wordform;
+					//cerr << antecedent_LU.wordform;
 					//cerr << "\n";
 				}
 			}
@@ -225,13 +220,13 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file, wstring par
 	}
 }
 
-int Scoring::check_agreement(vector<wstring> antecedent_tags, vector<wstring> anaphor_tags)
+int Scoring::check_agreement(vector<UString> antecedent_tags, vector<UString> anaphor_tags)
 {
 	/*
-	if(contains(anaphor_tags, L"f") && contains(antecedent_tags, L"m"))
+	if(contains(anaphor_tags, "f") && contains(antecedent_tags, "m"))
 		return 0;
 
-	if(contains(anaphor_tags, L"m") && contains(antecedent_tags, L"f"))
+	if(contains(anaphor_tags, "m") && contains(antecedent_tags, "f"))
 		return 0;
 		*/
 
@@ -239,7 +234,7 @@ int Scoring::check_agreement(vector<wstring> antecedent_tags, vector<wstring> an
 }
 
 
-wstring Scoring::get_antecedent(int debug_flag)
+UString Scoring::get_antecedent(int debug_flag)
 {
 	unique_LU final_antecedent_LU;
 	antecedent final_antecedent = {final_antecedent_LU, -5};
@@ -254,10 +249,10 @@ wstring Scoring::get_antecedent(int debug_flag)
 		if(debug_flag)
 		{
 			cerr << "\n" << (*it).LU.id << ": ";
-			fputws((*it).LU.wordform.c_str(), stderr);
+			cerr << (*it).LU.wordform;
 			cerr << " : " << (*it).score << "\n";
 		}
-		
+
 		if((*it).score >= final_antecedent.score)
 			final_antecedent = (*it);
 	}
@@ -267,9 +262,9 @@ wstring Scoring::get_antecedent(int debug_flag)
 	if(debug_flag)
 	{
 		cerr << "\n" << "** Final Antecedent: ";
-		fputws(final_antecedent.LU.wordform.c_str(), stderr);
+		cerr << final_antecedent.LU.wordform;
 		cerr << "/";
-		fputws(final_antecedent.LU.tl_wordform.c_str(), stderr);
+		cerr << final_antecedent.LU.tl_wordform;
 		cerr << " **\n";
 	}
 

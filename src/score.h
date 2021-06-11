@@ -38,10 +38,10 @@ private:
 	vector<antecedent> antecedent_list;
 
 public:
-  int add_word(int input_id, wstring input_wordform, vector< wstring > input_pos_tags, wstring input_tl_wordform, wstring input_sl_lemma, wstring input_tl_lemma, ParseArx arx_file, int debug_flag);
-	void apply_indicators(unique_LU anaphor, ParseArx arx_file, wstring parameter_name, int debug_flag);
-	int check_agreement(vector<wstring> antecedent_tags, vector<wstring> anaphor_tags);
-	wstring get_antecedent(int debug_flag);
+  int add_word(int input_id, UString input_wordform, vector< UString > input_pos_tags, UString input_tl_wordform, UString input_sl_lemma, UString input_tl_lemma, ParseArx arx_file, int debug_flag);
+	void apply_indicators(unique_LU anaphor, ParseArx arx_file, UString parameter_name, int debug_flag);
+	int check_agreement(vector<UString> antecedent_tags, vector<UString> anaphor_tags);
+	UString get_antecedent(int debug_flag);
 	void clear();
 };
 

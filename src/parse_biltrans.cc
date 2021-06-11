@@ -24,14 +24,14 @@
 
 using namespace std;
 
-ParseLexicalUnit::ParseLexicalUnit(wstring input_LU)
+ParseLexicalUnit::ParseLexicalUnit(UString input_LU)
 {
 	int seenSlash = 0;
 	int seenTag = 0;
 
-	wstring temptag;
+	UString temptag;
 
-	for (std::wstring::iterator i = input_LU.begin(); i != input_LU.end(); ++i)
+	for (UString::iterator i = input_LU.begin(); i != input_LU.end(); ++i)
 	{
 		if(*i == L'\\')
 		{
@@ -103,7 +103,7 @@ ParseLexicalUnit::ParseLexicalUnit(wstring input_LU)
 					temptag.push_back(*i);
 				}
 			}
-      
+
       else
       {
         sl_lemma.push_back(*i);
@@ -113,7 +113,7 @@ ParseLexicalUnit::ParseLexicalUnit(wstring input_LU)
 		else if(seenSlash == 1)
 		{
 			tl_form.push_back(*i);
-			
+
 			if(*i == L'<')
 				seenTag++;
 
@@ -131,7 +131,7 @@ ParseLexicalUnit::ParseLexicalUnit(wstring input_LU)
           temptag.push_back(*i);
 				}
 			}
-      
+
       else
       {
         tl_lemma.push_back(*i);
@@ -145,32 +145,32 @@ ParseLexicalUnit::ParseLexicalUnit(wstring input_LU)
 	}
 }
 
-wstring ParseLexicalUnit::get_sl_form()
+UString ParseLexicalUnit::get_sl_form()
 {
 	return sl_form;
 }
 
-wstring ParseLexicalUnit::get_tl_form()
+UString ParseLexicalUnit::get_tl_form()
 {
 	return tl_form;
 }
 
-vector< wstring > ParseLexicalUnit::get_sl_tags()
+vector< UString > ParseLexicalUnit::get_sl_tags()
 {
 	return sl_tags;
 }
 
-vector< wstring > ParseLexicalUnit::get_tl_tags()
+vector< UString > ParseLexicalUnit::get_tl_tags()
 {
 	return tl_tags;
 }
 
-wstring ParseLexicalUnit::get_sl_lemma()
+UString ParseLexicalUnit::get_sl_lemma()
 {
   return sl_lemma;
 }
 
-wstring ParseLexicalUnit::get_tl_lemma()
+UString ParseLexicalUnit::get_tl_lemma()
 {
   return tl_lemma;
 }

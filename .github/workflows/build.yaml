@@ -12,7 +12,7 @@ jobs:
            sudo apt-get -qy update
            sudo apt-get -qfy install wget ca-certificates
            wget -q https://apertium.projectjj.com/apt/install-nightly.sh -O - | sudo bash
-           sudo apt-get -qfy install --no-install-recommends build-essential autoconf autotools-dev lttoolbox-dev pkg-config libxml2-dev
+           sudo apt-get -qfy install --no-install-recommends build-essential autoconf autotools-dev lttoolbox-dev pkg-config libxml2-dev libutfcpp-dev
     - name: autoreconf
       run: autoreconf -fvi
     - name: configure

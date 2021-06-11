@@ -6,7 +6,7 @@ compiler:
 
 before_install:
   - wget https://apertium.projectjj.com/apt/install-nightly.sh -O - | sudo bash
-  - sudo apt-get install -qfy build-essential autoconf autotools-dev lttoolbox-dev pkg-config libxml2-dev
+  - sudo apt-get install -qfy build-essential autoconf autotools-dev lttoolbox-dev pkg-config libxml2-dev libutfcpp-dev
 
 script:
   - $CXX --version

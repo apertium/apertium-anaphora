@@ -31,57 +31,57 @@
 using namespace std;
 
 struct item { //for cat-item and parameter-item
-  vector<wstring> has_tags;
-  vector<wstring> exclude_tags;
-  wstring lemma;
+  vector<UString> has_tags;
+  vector<UString> exclude_tags;
+  UString lemma;
 };
 
 typedef vector<item> acceptable_tags;
 
 struct markable_pattern
 {
-	wstring name;
+	UString name;
 	int head;
 };
 
 typedef vector< vector<markable_pattern> > acceptable_patterns;
 
-typedef unordered_map< wstring, unordered_map<wstring, acceptable_tags> > parameters_datatype;
+typedef unordered_map< UString, unordered_map<UString, acceptable_tags> > parameters_datatype;
 
-void print_tags(vector< wstring > input);
+void print_tags(vector< UString > input);
 
 class ParseArx
 {
 private:
 	parameters_datatype parameters; //parameter type mapped to its parameter types, i.e. anaphor/antecedent mapped to a map which contains n="detpos" and n="verbal", etc.
-	unordered_map<wstring, acceptable_tags> cats; //cat name mapped to acceptable tag lists
+	unordered_map<UString, acceptable_tags> cats; //cat name mapped to acceptable tag lists
 
-	unordered_map<wstring, acceptable_patterns> markables; //markable name mapped to acceptable pattern lists. Also each pattern has a head == 1
-	unordered_map<wstring, int> all_markables_score; //markable name mapped to score of markable, will be applied on all anaphors
-	unordered_map<wstring, unordered_map<wstring, int> > parameter_markables_score; //parameter name mapped to a mapping of markable and score (when parameter name is explicitly mentioned in arx)
+	unordered_map<UString, acceptable_patterns> markables; //markable name mapped to acceptable pattern lists. Also each pattern has a head == 1
+	unordered_map<UString, int> all_markables_score; //markable name mapped to score of markable, will be applied on all anaphors
+	unordered_map<UString, unordered_map<UString, int> > parameter_markables_score; //parameter name mapped to a mapping of markable and score (when parameter name is explicitly mentioned in arx)
 
 public:
 	int parseDoc(char *docname);
-	void parseParameterTypes (xmlDocPtr doc, xmlNodePtr cur, wstring parameter_name);
-	void parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parameter_name, wstring parameter_type);
+	void parseParameterTypes (xmlDocPtr doc, xmlNodePtr cur, UString parameter_name);
+	void parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, UString parameter_name, UString parameter_type);
 	void parseParameters (xmlDocPtr doc, xmlNodePtr cur);
 
 	void parseCats (xmlDocPtr doc, xmlNodePtr cur);
-	void parseCatItem (xmlDocPtr doc, xmlNodePtr cur, wstring cat_name);
+	void parseCatItem (xmlDocPtr doc, xmlNodePtr cur, UString cat_name);
 
 	void parseMarkables (xmlDocPtr doc, xmlNodePtr cur);
-	void parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_name);
+	void parsePatterns (xmlDocPtr doc, xmlNodePtr cur, UString markable_name);
 	vector<markable_pattern> parsePatternItem (xmlDocPtr doc, xmlNodePtr cur);
 
-	vector<wstring> parseTags (wstring tags);
+	vector<UString> parseTags (UString tags);
 
 	parameters_datatype get_parameters();
-	unordered_map<wstring, acceptable_tags> get_cats();
+	unordered_map<UString, acceptable_tags> get_cats();
 
-	unordered_map<wstring, acceptable_patterns> get_markables();
+	unordered_map<UString, acceptable_patterns> get_markables();
 
-	unordered_map<wstring, int> get_all_markables_score();
-	unordered_map<wstring, int> get_parameter_markables_score(wstring parameter_name);
+	unordered_map<UString, int> get_all_markables_score();
+	unordered_map<UString, int> get_parameter_markables_score(UString parameter_name);
 };
 
 #endif

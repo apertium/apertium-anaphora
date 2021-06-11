@@ -28,22 +28,20 @@
 #include <iostream>
 #include <lttoolbox/xml_parse_util.h>
 
-void print_tags(vector<wstring> input)
+void print_tags(vector<UString> input)
 {
-	for (size_t i = 0; i < input.size(); ++i)
-	{
-		wcerr << input[i];
-		wcerr << " ";
+	for (auto& it : input) {
+		cerr << it << " ";
 	}
 }
 
-vector<wstring> ParseArx::parseTags (wstring tags)
+vector<UString> ParseArx::parseTags (UString tags)
 {
-	vector<wstring> temp_tags_list;
+	vector<UString> temp_tags_list;
 
-	wstring temptag;
+	UString temptag;
 
-	for (std::wstring::iterator i = tags.begin(); i != tags.end(); ++i)
+	for (UString::iterator i = tags.begin(); i != tags.end(); ++i)
 	{
 		if(*i == '\\')
 		{
@@ -68,12 +66,12 @@ vector<wstring> ParseArx::parseTags (wstring tags)
 	return temp_tags_list;
 }
 
-void ParseArx::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parameter_type, wstring parameter_name)
-//parameter_name: detpos, verbal, etc., parameter_type: anaphor, antecedent, etc. 
+void ParseArx::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, UString parameter_type, UString parameter_name)
+//parameter_name: detpos, verbal, etc., parameter_type: anaphor, antecedent, etc.
 {
 	xmlChar *Attr;
 	cur = cur->xmlChildrenNode;
-  
+
 	item temp_item;
 
   while (cur != NULL)
@@ -81,27 +79,28 @@ void ParseArx::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parame
     temp_item.has_tags.clear();
     temp_item.exclude_tags.clear();
     temp_item.lemma.clear();
-  
+
     if ((!xmlStrcmp(cur->name, (const xmlChar *)"parameter-item")))
     {
+
       Attr = xmlGetProp(cur, (const xmlChar *)"has-tags");
       if (Attr)
       {
-        temp_item.has_tags = parseTags(XMLParseUtil::towstring(Attr));
+        temp_item.has_tags = parseTags(to_ustring((const char*)Attr));
       }
-      
+
       Attr = xmlGetProp(cur, (const xmlChar *)"exclude-tags");
       if (Attr)
       {
-        temp_item.exclude_tags = parseTags(XMLParseUtil::towstring(Attr));
+        temp_item.exclude_tags = parseTags(to_ustring((const char*)Attr));
       }
-      
+
       Attr = xmlGetProp(cur, (const xmlChar *)"lemma");
       if (Attr)
       {
-        temp_item.lemma = XMLParseUtil::towstring(Attr);
+        temp_item.lemma = to_ustring((const char*)Attr);
       }
-      
+
       parameters[parameter_type][parameter_name].push_back(temp_item);
 
       xmlFree(Attr);
@@ -112,9 +111,9 @@ void ParseArx::parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, wstring parame
     return;
 }
 
-void ParseArx::parseParameterTypes (xmlDocPtr doc, xmlNodePtr cur, wstring parameter_name)
+void ParseArx::parseParameterTypes (xmlDocPtr doc, xmlNodePtr cur, UString parameter_name)
 {
-	wstring parameter_type;
+	UString parameter_type;
 
 	cur = cur->xmlChildrenNode;
 
@@ -122,7 +121,7 @@ void ParseArx::parseParameterTypes (xmlDocPtr doc, xmlNodePtr cur, wstring param
 	{
 		if(cur->type == XML_ELEMENT_NODE)
 		{
-			parameter_type = XMLParseUtil::towstring(cur->name);
+			parameter_type = to_ustring((const char*)cur->name);
 
       parseParameterItem(doc, cur, parameter_type, parameter_name);
     }
@@ -135,7 +134,7 @@ void ParseArx::parseParameterTypes (xmlDocPtr doc, xmlNodePtr cur, wstring param
 void ParseArx::parseParameters (xmlDocPtr doc, xmlNodePtr cur)
 {
 	xmlChar *parameter_name;
-	wstring parameter_type;
+	UString parameter_type;
 	cur = cur->xmlChildrenNode;
 
 	while (cur != NULL)
@@ -144,14 +143,14 @@ void ParseArx::parseParameters (xmlDocPtr doc, xmlNodePtr cur)
     {
       parameter_name = xmlGetProp(cur, (const xmlChar *)"n");
 
-      parseParameterTypes(doc,cur, XMLParseUtil::towstring(parameter_name));
+      parseParameterTypes(doc,cur, to_ustring((const char*)parameter_name));
       xmlFree(parameter_name);
     }
     else if ((!xmlStrcmp(cur->name, (const xmlChar *)"delimiter")))
     {
-      parameter_type = XMLParseUtil::towstring(cur->name);
+      parameter_type = to_ustring((const char*)cur->name);
 
-      parseParameterItem(doc, cur, parameter_type, L"default");
+      parseParameterItem(doc, cur, parameter_type, "default"_u);
     }
 
 		cur = cur->next;
@@ -159,7 +158,7 @@ void ParseArx::parseParameters (xmlDocPtr doc, xmlNodePtr cur)
     return;
 }
 
-void ParseArx::parseCatItem (xmlDocPtr doc, xmlNodePtr cur, wstring cat_name)
+void ParseArx::parseCatItem (xmlDocPtr doc, xmlNodePtr cur, UString cat_name)
 {
 	xmlChar *Attr;
 	cur = cur->xmlChildrenNode;
@@ -171,27 +170,27 @@ void ParseArx::parseCatItem (xmlDocPtr doc, xmlNodePtr cur, wstring cat_name)
     temp_item.has_tags.clear();
     temp_item.exclude_tags.clear();
     temp_item.lemma.clear();
-  
+
     if ((!xmlStrcmp(cur->name, (const xmlChar *)"cat-item")))
     {
       Attr = xmlGetProp(cur, (const xmlChar *)"has-tags");
       if (Attr)
       {
-        temp_item.has_tags = parseTags(XMLParseUtil::towstring(Attr));
+        temp_item.has_tags = parseTags(to_ustring((const char*)Attr));
       }
-      
+
       Attr = xmlGetProp(cur, (const xmlChar *)"exclude-tags");
       if (Attr)
       {
-        temp_item.exclude_tags = parseTags(XMLParseUtil::towstring(Attr));
+        temp_item.exclude_tags = parseTags(to_ustring((const char*)Attr));
       }
-      
+
       Attr = xmlGetProp(cur, (const xmlChar *)"lemma");
       if (Attr)
       {
-        temp_item.lemma = XMLParseUtil::towstring(Attr);
+        temp_item.lemma = to_ustring((const char*)Attr);
       }
-      
+
       cats[cat_name].push_back(temp_item);
 
       xmlFree(Attr);
@@ -213,7 +212,7 @@ void ParseArx::parseCats (xmlDocPtr doc, xmlNodePtr cur)
     {
       Attr = xmlGetProp(cur, (const xmlChar *)"n");
 
-      parseCatItem(doc,cur, XMLParseUtil::towstring(Attr));
+      parseCatItem(doc,cur, to_ustring((const char*)Attr));
       xmlFree(Attr);
     }
 
@@ -236,7 +235,7 @@ vector<markable_pattern> ParseArx::parsePatternItem (xmlDocPtr doc, xmlNodePtr c
       markable_pattern temp;
 
       Attr = xmlGetProp(cur, (const xmlChar *)"n");
-      temp.name = XMLParseUtil::towstring(Attr);
+      temp.name = to_ustring((const char*)Attr);
 
       xmlFree(Attr);
 
@@ -260,7 +259,7 @@ vector<markable_pattern> ParseArx::parsePatternItem (xmlDocPtr doc, xmlNodePtr c
     return temp_pattern;
 }
 
-void ParseArx::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_name)
+void ParseArx::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, UString markable_name)
 {
 	xmlChar *Attr;
 
@@ -279,14 +278,14 @@ void ParseArx::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, wstring markable_na
     {
       Attr = xmlGetProp(cur, (const xmlChar *)"n");
 
-      wstring score_ws = XMLParseUtil::towstring(Attr);
-    int score_int = std::stoi(score_ws);
+      UString score_ws = to_ustring((const char*)Attr);
+    int score_int = stoi(score_ws);
 
       xmlChar *parameter_name = xmlGetProp(cur, (const xmlChar *)"parameter");
 
       if (parameter_name)
       {
-        wstring parameter_name_ws = XMLParseUtil::towstring(parameter_name);
+        UString parameter_name_ws = to_ustring((const char*)parameter_name);
         parameter_markables_score[parameter_name_ws][markable_name] = score_int;
       }
       else
@@ -311,7 +310,7 @@ void ParseArx::parseMarkables (xmlDocPtr doc, xmlNodePtr cur)
     {
       Attr = xmlGetProp(cur, (const xmlChar *)"n");
 
-      parsePatterns(doc,cur, XMLParseUtil::towstring(Attr));
+      parsePatterns(doc,cur, to_ustring((const char*)Attr));
 
       xmlFree(Attr);
     }
@@ -380,22 +379,22 @@ parameters_datatype ParseArx::get_parameters()
 	return parameters;
 }
 
-unordered_map<wstring, acceptable_tags> ParseArx::get_cats()
+unordered_map<UString, acceptable_tags> ParseArx::get_cats()
 {
 	return cats;
 }
 
-unordered_map<wstring, acceptable_patterns> ParseArx::get_markables()
+unordered_map<UString, acceptable_patterns> ParseArx::get_markables()
 {
 	return markables;
 }
 
-unordered_map<wstring, int> ParseArx::get_all_markables_score()
+unordered_map<UString, int> ParseArx::get_all_markables_score()
 {
 	return all_markables_score;
 }
 
-unordered_map<wstring, int> ParseArx::get_parameter_markables_score(wstring parameter_name)
+unordered_map<UString, int> ParseArx::get_parameter_markables_score(UString parameter_name)
 {
 	return parameter_markables_score[parameter_name];
 }
