@@ -27,6 +27,7 @@
 #include <unordered_map>
 #include <iostream>
 #include <lttoolbox/xml_parse_util.h>
+#include <lttoolbox/string_utils.h>
 
 void print_tags(vector<UString> input)
 {
@@ -279,7 +280,7 @@ void ParseArx::parsePatterns (xmlDocPtr doc, xmlNodePtr cur, UString markable_na
       Attr = xmlGetProp(cur, (const xmlChar *)"n");
 
       UString score_ws = to_ustring((const char*)Attr);
-    int score_int = stoi(score_ws);
+	  int score_int = StringUtils::stoi(score_ws);
 
       xmlChar *parameter_name = xmlGetProp(cur, (const xmlChar *)"parameter");
 

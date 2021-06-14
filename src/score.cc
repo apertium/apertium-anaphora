@@ -186,20 +186,18 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file, UString par
 					//Impeding Indicators
 
 					//Indicators from XML file (iterate through all markables that provided a score without mentioning parameter_name)
-					for(unordered_map<UString, int>::iterator x = all_markables_score.begin(); x != all_markables_score.end(); ++x)
-					{
-						if(contains(antecedent_LU.properties, x->first))
+					for (auto& x : all_markables_score) {
+						if(contains(antecedent_LU.properties, x.first))
 						{
-							temp_score += x->second;
+							temp_score += x.second;
 						}
 					}
 
 					//Now get the scores from the markables that mentioned this specific parameter name
-					for(unordered_map<UString, int>::iterator x = parameter_markables_score.begin(); x != parameter_markables_score.end(); ++x)
-					{
-						if(contains(antecedent_LU.properties, x->first))
+					for (auto& x : parameter_markables_score) {
+						if(contains(antecedent_LU.properties, x.first))
 						{
-							temp_score += x->second;
+							temp_score += x.second;
 						}
 					}
 

@@ -32,8 +32,8 @@ struct unique_LU
 	int id;
 	UString wordform;
 	UString tl_wordform;
-  UString sl_lemma;
-  UString tl_lemma;
+	UString sl_lemma;
+	UString tl_lemma;
 	vector<UString> pos_tags;
 	vector<UString> properties;
 };
@@ -50,11 +50,11 @@ struct parameter_return
 	UString parameter_name;
 };
 
-int contains(vector<UString> tags, UString tag);
-int contains_any(vector<UString> tags, vector<UString> candidates);
+bool contains(const vector<UString>& tags, const UString& tag);
+bool contains_any(const vector<UString>& tags, const vector<UString>& candidates);
 
-int check_acceptable_tags(vector<UString> input_tags, UString input_sl_lemma, acceptable_tags check_tags);
-parameter_return check_pattern_name(vector<UString> input_tags, UString input_sl_lemma, unordered_map<UString, acceptable_tags> parameter_names);
+bool check_acceptable_tags(const vector<UString>& input_tags, const UString& input_sl_lemma, const acceptable_tags& check_tags);
+parameter_return check_pattern_name(const vector<UString>& input_tags, const UString& input_sl_lemma, const unordered_map<UString, acceptable_tags>& parameter_names);
 
 deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, ParseArx arx_file);
 

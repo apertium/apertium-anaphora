@@ -24,148 +24,82 @@
 #include <deque>
 #include <iostream>
 #include <algorithm>
-#include <cwctype>
-#include <unicode/utf16.h>
-#include <unicode/uchar.h>
+#include <lttoolbox/string_utils.h>
 
 using namespace std;
 
 void print_markable(acceptable_patterns inp)
 {
-	for(acceptable_patterns::iterator i = inp.begin(); i != inp.end(); i++)
-	{
+	for (auto& i : inp) {
 		cerr <<"Pattern:\n";
 
-		for(vector<markable_pattern>::iterator j = (*i).begin(); j != (*i).end(); j++)
-		{
-			cerr << (*j).name;
-			cerr << "\n";
+		for (auto& j : i) {
+			cerr << j.name << endl;
 		}
 	}
 }
 
-int contains(vector<UString> tags, UString tag)
+bool
+contains(const vector<UString>& tags, const UString& tag)
 {
-	if(std::find(tags.begin(), tags.end(), tag) != tags.end())
-		return 1;
-	else
-		return 0;
+	return (std::find(tags.begin(), tags.end(), tag) != tags.end());
 }
 
-int contains_any(vector<UString> tags, vector<UString> candidates)
+bool
+contains_any(const vector<UString>& tags, const vector<UString>& candidates)
 {
-	for(vector<UString>::iterator it=candidates.begin();it!=candidates.end();++it)
-	{
-		if(std::find(tags.begin(), tags.end(), *it) != tags.end())
-			return 1;
+	for (auto& it : candidates) {
+		if(std::find(tags.begin(), tags.end(), it) != tags.end())
+			return true;
 	}
 
-	return 0;
+	return false;
 }
 
-void toLower(UString& s)
+bool
+check_acceptable_tags(const vector<UString>& input_tags, const UString& input_sl_lemma, const acceptable_tags& check_tags) //check has-tags, exclude-tags, lemma
 {
-	UString temp;
-	size_t i = 0;
-	size_t len = s.size();
-	UChar32 c;
-	while (i < len) {
-		U16_NEXT(s, i, len, c);
-		temp += u_tolower(c);
-	}
-	s.swap(temp);
-}
+	for (auto& i : check_tags) {
+		bool flag_contains_all = true;
 
-int check_acceptable_tags(vector<UString> input_tags, UString input_sl_lemma, acceptable_tags check_tags) //check has-tags, exclude-tags, lemma
-{
-	for (acceptable_tags::iterator i = check_tags.begin(); i != check_tags.end(); ++i)
-	{
+		for (auto& j : i.has_tags) {
+			if(j == "*"_u) //ignore * in the tags list
+				continue;
 
-		int flag_contains_all = 1;
-
-    vector<UString> temp_tags = i->has_tags;
-    vector<UString> temp_exclude_tags = i->exclude_tags;
-
-	for (auto& j : temp_tags) {
-		if(j == "*"_u) //ignore * in the tags list
-			continue;
-
-		if(!contains(input_tags, j)) {
-			//if the has-tag is NOT in the input LU tags
-			flag_contains_all = 0;
-			break;
+			if(!contains(input_tags, j)) {
+				//if the has-tag is NOT in the input LU tags
+				flag_contains_all = false;
+				break;
+			}
 		}
+
+		if (!flag_contains_all) continue;
+
+		if (contains_any(input_tags, i.exclude_tags)) continue;
+
+		if (!i.lemma.empty()) {
+			if (!StringUtils::caseequal(input_sl_lemma, i.lemma)) {
+				flag_contains_all = false;
+				continue;
+			}
+		}
+
+		if (flag_contains_all) return true;
 	}
 
-    if(flag_contains_all == 0)
-    {
-      continue;
-    }
-
-    for(std::vector<UString>::iterator j = temp_exclude_tags.begin(); j != temp_exclude_tags.end(); ++j)
-    {
-      if(contains(input_tags, *j))
-      {
-        flag_contains_all = 0;
-        break;
-      }
-    }
-
-    if(flag_contains_all == 0)
-    {
-      continue;
-    }
-
-    if(!(i->lemma).empty())
-    {
-      UString temp_lemma = i->lemma;
-
-      if(input_sl_lemma.length() == temp_lemma.length())
-      {
-        if(input_sl_lemma.compare(temp_lemma) != 0)
-        {
-          toLower(input_sl_lemma);
-          toLower(temp_lemma);
-
-          if(input_sl_lemma.compare(temp_lemma) != 0)
-          {
-            flag_contains_all = 0;
-          }
-        }
-      }
-      else
-      {
-        flag_contains_all = 0;
-      }
-    }
-
-    if(flag_contains_all == 0)
-    {
-      continue;
-    }
-    else
-    {
-      return 1;
-    }
-	}
-
-	return 0;
+	return false;
 }
 
-parameter_return check_pattern_name(vector<UString> input_tags, UString input_sl_lemma, unordered_map<UString, acceptable_tags> parameter_names)
+parameter_return check_pattern_name(const vector<UString>& input_tags, const UString& input_sl_lemma, const unordered_map<UString, acceptable_tags>& parameter_names)
 {
 	parameter_return retval;
 	retval.found = 0;
 
-	for (unordered_map<UString, acceptable_tags>::iterator it = parameter_names.begin(); it != parameter_names.end(); it++)
-	{
-		UString parameter_name = it->first;
-		acceptable_tags parameter_tags= it->second;
-
-		if(check_acceptable_tags(input_tags, input_sl_lemma, parameter_tags))
+	for (auto& it : parameter_names) {
+		if(check_acceptable_tags(input_tags, input_sl_lemma, it.second))
 		{
 			retval.found = 1;
-			retval.parameter_name = parameter_name;
+			retval.parameter_name = it.first;
 
 			return retval;
 		}
