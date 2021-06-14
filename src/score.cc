@@ -28,33 +28,29 @@
 
 using namespace std;
 
-void showq(deque < vector<unique_LU> > gq)
+void showq(const deque < vector<unique_LU> >& gq)
 {
-  for(std::deque < vector<unique_LU> >::iterator j = gq.begin(); j != gq.end(); ++j)
-  {
-    vector<unique_LU> temp_sentence = *j;
+	for (auto& temp_sentence : gq) {
+		cerr << "\n";
+		for (auto& i : temp_sentence) {
+			cerr << i.tl_wordform;
 
-    cerr << "\n";
-    for (std::vector<unique_LU>::iterator i = temp_sentence.begin(); i != temp_sentence.end(); ++i)
-    {
-      cerr << (*i).tl_wordform;
+			for (auto& k : i.pos_tags) {
+				cerr << "<" << k << ">";
+			}
 
-	  for (auto& k : (*i).pos_tags) {
-		  cerr << "<" << k << ">";
-	  }
+			cerr << ":";
 
-      cerr << ":";
+			for (auto& l : i.properties) {
+				cerr << " " << l;
+			}
 
-	  for (auto& l : (*i).properties) {
-		  cerr << " " << l;
-	  }
+			cerr << "\t";
+		}
 
-      cerr << "\t";
-    }
-
-    cerr << "\n";
-  }
-  cerr << '\n';
+		cerr << "\n";
+	}
+	cerr << '\n';
 }
 
 int Scoring::add_word(int input_id, UString input_wordform, vector< UString > input_pos_tags, UString input_tl_wordform, UString input_sl_lemma, UString input_tl_lemma, ParseArx arx_file, int debug_flag)
@@ -71,7 +67,7 @@ int Scoring::add_word(int input_id, UString input_wordform, vector< UString > in
 
 		context.push_back(sentence);
 
-    if(check_acceptable_tags(input_LU.pos_tags, input_LU.sl_lemma, arx_parameters["delimiter"_u]["default"_u]) )
+		if(check_acceptable_tags(input_LU.pos_tags, input_LU.sl_lemma, arx_parameters["delimiter"_u]["default"_u]) )
 		{
 			vector<unique_LU> new_sentence;
 
@@ -80,7 +76,7 @@ int Scoring::add_word(int input_id, UString input_wordform, vector< UString > in
 	}
 	else
 	{
-    if(check_acceptable_tags(input_LU.pos_tags, input_LU.sl_lemma, arx_parameters["delimiter"_u]["default"_u]))
+		if(check_acceptable_tags(input_LU.pos_tags, input_LU.sl_lemma, arx_parameters["delimiter"_u]["default"_u]))
 		{
 			context.back().push_back(input_LU);
 
@@ -94,7 +90,7 @@ int Scoring::add_word(int input_id, UString input_wordform, vector< UString > in
 
 		else
 		{
-      parameter_return retval = check_pattern_name(input_LU.pos_tags, input_LU.sl_lemma, arx_parameters["anaphor"_u]);
+			parameter_return retval = check_pattern_name(input_LU.pos_tags, input_LU.sl_lemma, arx_parameters["anaphor"_u]);
 
 			if(retval.found == 1) //check if tags,lemma of current word match with anaphor in arx file
 			{
@@ -150,26 +146,22 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file, UString par
 	}
 
 	//Start going through sentences(earliest to current) and apply all indicators to modify scores of the NPs
-	for(deque< vector<unique_LU> >::iterator i = context_with_prop.begin(); i!=context_with_prop.end(); ++i)
-	{
+	for (auto& i : context_with_prop) {
 		firstNP = 1;
 
-		for (vector<unique_LU>::iterator j = (*i).begin(); j!=(*i).end(); ++j)
-		{
+		for (auto& antecedent_LU : i) {
 			if(debug_flag)
 			{
 				cerr << "\n";
-				cerr << (*j).wordform;
+				cerr << antecedent_LU.wordform;
 				cerr << ": ";
-				print_tags((*j).properties);
+				print_tags(antecedent_LU.properties);
 				cerr << "\n";
 			}
 
-			if(check_acceptable_tags((*j).pos_tags, (*j).sl_lemma, arx_file.get_parameters()["antecedent"_u][parameter_name]))
+			if(check_acceptable_tags(antecedent_LU.pos_tags, antecedent_LU.sl_lemma, arx_file.get_parameters()["antecedent"_u][parameter_name]))
 			{
 				temp_score = 0;
-
-				unique_LU antecedent_LU = *j;
 
 				if(check_agreement(antecedent_LU.pos_tags, anaphor.pos_tags))
 				{
@@ -218,7 +210,7 @@ void Scoring::apply_indicators(unique_LU anaphor, ParseArx arx_file, UString par
 	}
 }
 
-int Scoring::check_agreement(vector<UString> antecedent_tags, vector<UString> anaphor_tags)
+int Scoring::check_agreement(const vector<UString>& antecedent_tags, const vector<UString>& anaphor_tags)
 {
 	/*
 	if(contains(anaphor_tags, "f") && contains(antecedent_tags, "m"))
@@ -242,17 +234,16 @@ UString Scoring::get_antecedent(int debug_flag)
 		cerr << "\n** Final Scores **\n";
 	}
 
-	for(vector<antecedent>::iterator it=antecedent_list.begin();it!=antecedent_list.end();++it) //read from furthest to nearest
-	{
+	for (auto& it : antecedent_list) { //read from furthest to nearest
 		if(debug_flag)
 		{
-			cerr << "\n" << (*it).LU.id << ": ";
-			cerr << (*it).LU.wordform;
-			cerr << " : " << (*it).score << "\n";
+			cerr << "\n" << it.LU.id << ": ";
+			cerr << it.LU.wordform;
+			cerr << " : " << it.score << "\n";
 		}
 
-		if((*it).score >= final_antecedent.score)
-			final_antecedent = (*it);
+		if(it.score >= final_antecedent.score)
+			final_antecedent = it;
 	}
 
 	antecedent_list.clear();

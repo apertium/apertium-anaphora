@@ -29,7 +29,7 @@
 
 using namespace std;
 
-void showq(deque < vector<unique_LU> > gq);
+void showq(const deque < vector<unique_LU> >& gq);
 
 class Scoring
 {
@@ -40,7 +40,7 @@ private:
 public:
   int add_word(int input_id, UString input_wordform, vector< UString > input_pos_tags, UString input_tl_wordform, UString input_sl_lemma, UString input_tl_lemma, ParseArx arx_file, int debug_flag);
 	void apply_indicators(unique_LU anaphor, ParseArx arx_file, UString parameter_name, int debug_flag);
-	int check_agreement(vector<UString> antecedent_tags, vector<UString> anaphor_tags);
+	int check_agreement(const vector<UString>& antecedent_tags, const vector<UString>& anaphor_tags);
 	UString get_antecedent(int debug_flag);
 	void clear();
 };

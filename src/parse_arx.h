@@ -19,14 +19,10 @@
 #ifndef _PARSEARX_
 #define _PARSEARX_
 
-#include <cstdio>
-#include <string>
-#include <cstdlib>
 #include <vector>
-#include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 #include <unordered_map>
-#include <lttoolbox/xml_parse_util.h>
+#include <lttoolbox/ustring.h>
 
 using namespace std;
 
@@ -48,7 +44,7 @@ typedef vector< vector<markable_pattern> > acceptable_patterns;
 
 typedef unordered_map< UString, unordered_map<UString, acceptable_tags> > parameters_datatype;
 
-void print_tags(vector< UString > input);
+void print_tags(const vector< UString >& input);
 
 class ParseArx
 {
@@ -60,20 +56,21 @@ private:
 	unordered_map<UString, int> all_markables_score; //markable name mapped to score of markable, will be applied on all anaphors
 	unordered_map<UString, unordered_map<UString, int> > parameter_markables_score; //parameter name mapped to a mapping of markable and score (when parameter name is explicitly mentioned in arx)
 
+	xmlDocPtr curDoc = nullptr;
+	vector<UString> parseTags (const UString& tags);
+	void parseParameterTypes (xmlNodePtr cur, UString parameter_name);
+	void parseParameterItem (xmlNodePtr cur, UString parameter_name, UString parameter_type);
+	void parseParameters (xmlNodePtr cur);
+
+	void parseCats (xmlNodePtr cur);
+	void parseCatItem (xmlNodePtr cur, UString cat_name);
+
+	void parseMarkables (xmlNodePtr cur);
+	void parsePatterns (xmlNodePtr cur, UString markable_name);
+	vector<markable_pattern> parsePatternItem (xmlNodePtr cur);
+
 public:
 	int parseDoc(char *docname);
-	void parseParameterTypes (xmlDocPtr doc, xmlNodePtr cur, UString parameter_name);
-	void parseParameterItem (xmlDocPtr doc, xmlNodePtr cur, UString parameter_name, UString parameter_type);
-	void parseParameters (xmlDocPtr doc, xmlNodePtr cur);
-
-	void parseCats (xmlDocPtr doc, xmlNodePtr cur);
-	void parseCatItem (xmlDocPtr doc, xmlNodePtr cur, UString cat_name);
-
-	void parseMarkables (xmlDocPtr doc, xmlNodePtr cur);
-	void parsePatterns (xmlDocPtr doc, xmlNodePtr cur, UString markable_name);
-	vector<markable_pattern> parsePatternItem (xmlDocPtr doc, xmlNodePtr cur);
-
-	vector<UString> parseTags (UString tags);
 
 	parameters_datatype get_parameters();
 	unordered_map<UString, acceptable_tags> get_cats();
