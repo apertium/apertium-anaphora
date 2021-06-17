@@ -33,7 +33,7 @@ ParseLexicalUnit::ParseLexicalUnit(UString input_LU)
 
 	for (UString::iterator i = input_LU.begin(); i != input_LU.end(); ++i)
 	{
-		if(*i == L'\\')
+		if(*i == '\\')
 		{
 			if(seenSlash == 0)
 			{
@@ -79,19 +79,19 @@ ParseLexicalUnit::ParseLexicalUnit(UString input_LU)
 			}
 		}
 
-		else if(*i == L'/')
+		else if(*i == '/')
 			seenSlash++;
 
 		else if(seenSlash == 0)
 		{
 			sl_form.push_back(*i);
 
-			if(*i == L'<')
+			if(*i == '<')
 				seenTag++;
 
 			else if(seenTag == 1)
 			{
-				if(*i == L'>')
+				if(*i == '>')
 				{
 					seenTag--;
 					sl_tags.push_back(temptag);
@@ -114,12 +114,12 @@ ParseLexicalUnit::ParseLexicalUnit(UString input_LU)
 		{
 			tl_form.push_back(*i);
 
-			if(*i == L'<')
+			if(*i == '<')
 				seenTag++;
 
 			else if(seenTag == 1)
 			{
-				if(*i == L'>')
+				if(*i == '>')
 				{
 					seenTag--;
 					tl_tags.push_back(temptag);

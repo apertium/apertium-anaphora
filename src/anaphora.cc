@@ -41,8 +41,8 @@ UFILE * open_output(string const &filename)
 	UFILE *output = u_fopen(filename.c_str(), "w", NULL, NULL);
   if(!output)
   {
-    wcerr << "Error: can't open output file '";
-    wcerr << filename.c_str() << "'." << endl;
+    cerr << "Error: can't open output file '";
+    cerr << filename.c_str() << "'." << endl;
     exit(EXIT_FAILURE);
   }
   return output;
@@ -50,11 +50,11 @@ UFILE * open_output(string const &filename)
 
 void help_message(char *progname)
 {
-	wcerr << "USAGE: " << basename(progname) << " arx_file [input [output]]" << endl;
-	wcerr << "       " << basename(progname) << " -z arx_file [input [output]]" << endl;
-	wcerr << "  arx_file   Anaphora Resolution rules file (apertium-xxx-yyy.xxx-yyy.arx)" << endl;
-	wcerr << "  -z         null-flushing output on \\0" << endl;
-	wcerr << "  -h         shows this message" << endl;
+	cerr << "USAGE: " << basename(progname) << " arx_file [input [output]]" << endl;
+	cerr << "       " << basename(progname) << " -z arx_file [input [output]]" << endl;
+	cerr << "  arx_file   Anaphora Resolution rules file (apertium-xxx-yyy.xxx-yyy.arx)" << endl;
+	cerr << "  -z         null-flushing output on \\0" << endl;
+	cerr << "  -h         shows this message" << endl;
 
 	exit(EXIT_FAILURE);
 }
