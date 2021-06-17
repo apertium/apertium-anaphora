@@ -1,6 +1,6 @@
 AC_PREREQ(2.61)
 
-AC_INIT([apertium-anaphora], [1.0.2], [khanna.tanmai@gmail.com])
+AC_INIT([apertium-anaphora], [1.1.0], [khanna.tanmai@gmail.com])
 AM_INIT_AUTOMAKE
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -11,7 +11,7 @@ AC_LANG_CPLUSPLUS
 CFLAGS="-Wall -Wextra $CFLAGS"
 CXXFLAGS="-Wall -Wextra $CXXFLAGS"
 
-PKG_CHECK_MODULES([LTTOOLBOX], [lttoolbox >= 3.5.3])
+PKG_CHECK_MODULES([LTTOOLBOX], [lttoolbox >= 3.6.0])
 AC_SUBST(LTTOOLBOX_CFLAGS)
 AC_SUBST(LTTOOLBOX_LIBS)
 
@@ -22,6 +22,8 @@ AC_SUBST(LIBXML_LIBS)
 PKG_CHECK_MODULES([ICU], [icu-i18n icu-io icu-uc])
 AC_SUBST(ICU_CFLAGS)
 AC_SUBST(ICU_LIBS)
+
+AC_CHECK_HEADER([utf8.h], [], [AC_MSG_ERROR([You don't have utfcpp installed.])])
 
 CPPFLAGS="$CPPFLAGS $CFLAGS $LTTOOLBOX_CFLAGS $LIBXML_CFLAGS $ICU_CFLAGS"
 LIBS="$LIBS $LTTOOLBOX_LIBS $LIBXML_LIBS $ICU_LIBS"
