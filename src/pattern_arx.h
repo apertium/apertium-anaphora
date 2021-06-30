@@ -30,12 +30,12 @@ using namespace std;
 struct unique_LU
 {
 	int id;
-	wstring wordform;
-	wstring tl_wordform;
-  wstring sl_lemma;
-  wstring tl_lemma;
-	vector<wstring> pos_tags;
-	vector<wstring> properties;
+	UString wordform;
+	UString tl_wordform;
+	UString sl_lemma;
+	UString tl_lemma;
+	vector<UString> pos_tags;
+	vector<UString> properties;
 };
 
 struct antecedent
@@ -47,15 +47,14 @@ struct antecedent
 struct parameter_return
 {
 	int found;
-	wstring parameter_name;
+	UString parameter_name;
 };
 
-int contains(vector<wstring> tags, wstring tag);
-int contains_any(vector<wstring> tags, vector<wstring> candidates);
-void toLower(basic_string<wchar_t>& s);
+bool contains(const vector<UString>& tags, const UString& tag);
+bool contains_any(const vector<UString>& tags, const vector<UString>& candidates);
 
-int check_acceptable_tags(vector<wstring> input_tags, wstring input_sl_lemma, acceptable_tags check_tags);
-parameter_return check_pattern_name(vector<wstring> input_tags, wstring input_sl_lemma, unordered_map<wstring, acceptable_tags> parameter_names);
+bool check_acceptable_tags(const vector<UString>& input_tags, const UString& input_sl_lemma, const acceptable_tags& check_tags);
+parameter_return check_pattern_name(const vector<UString>& input_tags, const UString& input_sl_lemma, const unordered_map<UString, acceptable_tags>& parameter_names);
 
 deque< vector<unique_LU> > add_properties(deque< vector<unique_LU> > context, ParseArx arx_file);
 
