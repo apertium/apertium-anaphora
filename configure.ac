@@ -40,6 +40,14 @@ AX_CHECK_COMPILE_FLAG([-std=c++20], [CXXFLAGS="$CXXFLAGS -std=c++20"], [
  ])
 ])
 
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+#include <unicode/umachine.h>
+#include <type_traits>
+]],[[
+using namespace std;
+static_assert(!is_same<UChar,char16_t>::value, "UChar == char16_t");
+   ]])], [AC_DEFINE([UCHAR_NOT_CHAR16_T], [1], [UChar != char16_t])])
+
 AC_CONFIG_FILES([
                  apertium-anaphora.pc
                  Makefile

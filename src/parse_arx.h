@@ -40,6 +40,17 @@ struct markable_pattern
 	int head;
 };
 
+#ifdef UCHAR_NOT_CHAR16_T
+namespace std {
+    template<> struct hash<UString> {
+		size_t operator ()(const UString& str) const {
+			auto u16 = reinterpret_cast<const std::u16string*>(&str);
+			return std::hash<std::u16string>{}(*u16);
+		}
+	};
+}
+#endif
+
 typedef vector< vector<markable_pattern> > acceptable_patterns;
 
 typedef unordered_map< UString, unordered_map<UString, acceptable_tags> > parameters_datatype;
