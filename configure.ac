@@ -1,6 +1,6 @@
 AC_PREREQ(2.61)
 
-AC_INIT([apertium-anaphora], [1.1.0], [khanna.tanmai@gmail.com])
+AC_INIT([apertium-anaphora], [1.1.1], [khanna.tanmai@gmail.com])
 AM_INIT_AUTOMAKE
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -11,7 +11,7 @@ AC_LANG_CPLUSPLUS
 CFLAGS="-Wall -Wextra $CFLAGS"
 CXXFLAGS="-Wall -Wextra $CXXFLAGS"
 
-PKG_CHECK_MODULES([LTTOOLBOX], [lttoolbox >= 3.6.0])
+PKG_CHECK_MODULES([LTTOOLBOX], [lttoolbox >= 3.7.1])
 AC_SUBST(LTTOOLBOX_CFLAGS)
 AC_SUBST(LTTOOLBOX_LIBS)
 
@@ -28,12 +28,12 @@ LIBS="$LIBS $LTTOOLBOX_LIBS $LIBXML_LIBS $ICU_LIBS"
 
 # Checks for highest supported C++ standard
 AC_LANG(C++)
-for version in 23 2b 20 2a 17 1z 14 1y; do
+for version in 23 2b 20 2a 17; do
   version_flag="-std=c++${version}"
   AX_CHECK_COMPILE_FLAG([${version_flag}], [break], [version_flag=none])
 done
 AS_IF([test "$version_flag" == none], [
-  AC_MSG_ERROR([Could not enable at least C++1y (C++14) - upgrade your compiler])
+  AC_MSG_ERROR([Could not enable at least C++17 - upgrade your compiler])
 ])
 CXXFLAGS="$CXXFLAGS ${version_flag}"
 
