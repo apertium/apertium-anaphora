@@ -1,0 +1,13 @@
+root{
+    anaphora_desc{"USAGE: {program} arx_file [input [output]]\n"
+                  "       {program} -z arx_file [input [output]]\n"
+                  "  arx_file   Anaphora Resolution rules file (apertium-xxx-yyy.xxx-yyy.arx)\n"
+                  "  -z         null-flushing output on \\0\n"
+                  "  -h         shows this message\n"}
+    
+
+    APAN1000{"ERROR APAN1000: Unable to access \"{file_name}\"."}
+    APAN1001{"ERROR APAN1001: Document not parsed successfully."}
+    APAN1002{"ERROR APAN1002: Empty Document!"}
+    APAN1003{"ERROR APAN1003: Document of the wrong type! Root node should be ref."}
+}

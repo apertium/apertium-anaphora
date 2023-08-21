@@ -1,9 +1,13 @@
 pkgconfigdir = $(libdir)/pkgconfig
 dist_pkgconfig_DATA = apertium-anaphora.pc
 
-SUBDIRS = src
+SUBDIRS = src locales
 
 EXTRA_DIST=autogen.sh
 
 test:
 	pushd $(abs_srcdir)/tests/ && bash test.sh $(abs_builddir)/src/apertium-anaphora && popd
+
+export LTTB_I18N_DATA=$(datadir)/lttoolbox/lttoolbox.dat
+export LOCALES_DIR=$(datadir)/$(PACKAGE_NAME)
+export APAN_I18N_DATA=$(LOCALES_DIR)/apan.dat

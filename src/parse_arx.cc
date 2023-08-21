@@ -22,6 +22,7 @@
 #include <iostream>
 #include <lttoolbox/string_utils.h>
 #include <lttoolbox/xml_walk_util.h>
+#include <i18n.h>
 
 void print_tags(const vector<UString>& input)
 {
@@ -186,7 +187,7 @@ int ParseArx::parseDoc(char *docname)
 
 	if (curDoc == nullptr )
 	{
-		fprintf(stderr,"Document not parsed successfully. \n");
+		I18n(APAN_I18N_DATA, "apan").error("APAN1001", {}, {}, false);
 		return -1;
 	}
 
@@ -194,14 +195,14 @@ int ParseArx::parseDoc(char *docname)
 
 	if (cur == NULL)
 	{
-		fprintf(stderr,"Empty Document!\n");
+		I18n(APAN_I18N_DATA, "apan").error("APAN1002", {}, {}, false);
 		xmlFreeDoc(curDoc);
 		return 1;
 	}
 
 	if (xmlStrcmp(cur->name, (const xmlChar *) "ref"))
 	{
-		fprintf(stderr,"Document of the wrong type! Root node should be ref.\n");
+		I18n(APAN_I18N_DATA, "apan").error("APAN1003", {}, {}, false);
 		xmlFreeDoc(curDoc);
 		return 2;
 	}
