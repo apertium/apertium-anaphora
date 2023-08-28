@@ -6,7 +6,7 @@ root{
                   "  -h         shows this message\n"}
     
 
-    APAN1000{"ERROR APAN1000: Unable to access \"{file_name}\"."}
+    APAN1000{"ERROR APAN1000: Unable to access file \"{file}\"."}
     APAN1001{"ERROR APAN1001: Document not parsed successfully."}
     APAN1002{"ERROR APAN1002: Empty Document!"}
     APAN1003{"ERROR APAN1003: Document of the wrong type! Root node should be ref."}
