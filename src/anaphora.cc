@@ -33,7 +33,7 @@
 #include <vector>
 #include <libgen.h>
 #include <getopt.h>
-#include <i18n.h>
+#include <lttoolbox/i18n.h>
 #include <unicode/ustream.h>
 
 using namespace std;
@@ -43,14 +43,14 @@ UFILE * open_output(string const &filename)
 	UFILE *output = u_fopen(filename.c_str(), "w", NULL, NULL);
   if(!output)
   {
-	I18n(APAN_I18N_DATA, "apan").error("APAN1000", {"file"}, {filename.c_str()}, true);
+	I18n(ANA_I18N_DATA, "ana").error("ANA80000", {"file"}, {filename.c_str()}, true);
   }
   return output;
 }
 
 void help_message(char *progname)
 {
-	cerr << I18n(APAN_I18N_DATA, "apan").format("anaphora_desc", {"program"}, {basename(progname)});
+	cerr << I18n(ANA_I18N_DATA, "ana").format("anaphora_desc", {"program"}, {basename(progname)});
 	exit(EXIT_FAILURE);
 }
 

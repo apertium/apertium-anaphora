@@ -6,8 +6,8 @@ root{
                   "  -h         shows this message\n"}
     
 
-    APAN1000{"ERROR APAN1000: Unable to access file \"{file}\"."}
-    APAN1001{"ERROR APAN1001: Document not parsed successfully."}
-    APAN1002{"ERROR APAN1002: Empty Document!"}
-    APAN1003{"ERROR APAN1003: Document of the wrong type! Root node should be ref."}
+    ANA80000{"ERROR ANA80000: Unable to access file \"{file}\"."}
+    ANA80010{"ERROR ANA80010: Document not parsed successfully."}
+    ANA80020{"ERROR ANA80020: Empty Document!"}
+    ANA80030{"ERROR ANA80030: Document of the wrong type! Root node should be ref."}
 }

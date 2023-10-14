@@ -23,8 +23,6 @@ PKG_CHECK_MODULES([ICU], [icu-i18n icu-io icu-uc])
 AC_SUBST(ICU_CFLAGS)
 AC_SUBST(ICU_LIBS)
 
-PKG_CHECK_MODULES(I18N, [i18n], CPPFLAGS="$CPPFLAGS $I18N_CFLAGS"; LIBS="$LIBS $I18N_LIBS")
-
 AC_CHECK_HEADER([utf8cpp/utf8.h], [CPPFLAGS="-I/usr/include/utf8cpp/ $CPPFLAGS"], [
   AC_CHECK_HEADER([utf8.h], [], [AC_MSG_ERROR([You don't have utfcpp installed.])])
 ])
