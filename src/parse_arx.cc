@@ -187,7 +187,7 @@ int ParseArx::parseDoc(char *docname)
 
 	if (curDoc == nullptr )
 	{
-		I18n(ANA_I18N_DATA, "ana").error("ANA80010", {}, {}, false);
+		I18n(ANA_I18N_DATA, "ana").error("ANA80010", ALTfalse);
 		return -1;
 	}
 
@@ -195,14 +195,14 @@ int ParseArx::parseDoc(char *docname)
 
 	if (cur == NULL)
 	{
-		I18n(ANA_I18N_DATA, "ana").error("ANA80020", {}, {}, false);
+		I18n(ANA_I18N_DATA, "ana").error("ANA80020", ALTfalse);
 		xmlFreeDoc(curDoc);
 		return 1;
 	}
 
 	if (xmlStrcmp(cur->name, (const xmlChar *) "ref"))
 	{
-		I18n(ANA_I18N_DATA, "ana").error("ANA80030", {}, {}, false);
+		I18n(ANA_I18N_DATA, "ana").error("ANA80030", ALTfalse);
 		xmlFreeDoc(curDoc);
 		return 2;
 	}
