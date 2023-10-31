@@ -22,3 +22,10 @@ config.log
 config.status
 .deps
 *.o
+
+/.vscode/
+/locales/Makefile
+/locales/Makefile.in
+*.res
+*.dat
+/configure~

@@ -1,4 +1,6 @@
 AM_LDFLAGS=$(LIBS)
+AM_CPPFLAGS = -DANA_I18N_DATA='"$(ANA_I18N_DATA)"' -DALT_I18N_DATA='"$(ALT_I18N_DATA)"'
+
 
 bin_PROGRAMS = apertium-anaphora
 bin_SCRIPTS = apertium-validate-anaphora

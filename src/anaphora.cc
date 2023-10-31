@@ -33,6 +33,8 @@
 #include <vector>
 #include <libgen.h>
 #include <getopt.h>
+#include <lttoolbox/i18n.h>
+#include <unicode/ustream.h>
 
 using namespace std;
 
@@ -41,21 +43,14 @@ UFILE * open_output(string const &filename)
 	UFILE *output = u_fopen(filename.c_str(), "w", NULL, NULL);
   if(!output)
   {
-    cerr << "Error: can't open output file '";
-    cerr << filename.c_str() << "'." << endl;
-    exit(EXIT_FAILURE);
+	I18n(ANA_I18N_DATA, "ana").error("ANA80000", {"file"}, {filename.c_str()}, true);
   }
   return output;
 }
 
 void help_message(char *progname)
 {
-	cerr << "USAGE: " << basename(progname) << " arx_file [input [output]]" << endl;
-	cerr << "       " << basename(progname) << " -z arx_file [input [output]]" << endl;
-	cerr << "  arx_file   Anaphora Resolution rules file (apertium-xxx-yyy.xxx-yyy.arx)" << endl;
-	cerr << "  -z         null-flushing output on \\0" << endl;
-	cerr << "  -h         shows this message" << endl;
-
+	cerr << I18n(ANA_I18N_DATA, "ana").format("anaphora_desc", {"program"}, {basename(progname)});
 	exit(EXIT_FAILURE);
 }
 

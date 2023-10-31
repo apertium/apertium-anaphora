@@ -53,5 +53,6 @@ AC_CONFIG_FILES([
                  apertium-anaphora.pc
                  Makefile
                  src/Makefile
+                 locales/Makefile
                  ])
 AC_OUTPUT
